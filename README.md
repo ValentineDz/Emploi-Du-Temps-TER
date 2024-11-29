@@ -1,6 +1,7 @@
-#  Conception et réalisation de la mise en place d’un emploi du temps
+#  Projet TER : Conception et réalisation de la mise en place d’un emploi du temps
 
 ## Réunions de projet : 
+Dans ce document vous trouverez les planning et les comptes-rendus relatifs aux réunions réalisées dans le cadre du projet TER : Conception et réalisation de la mise en place d’un emploi du temps. 
 
 ### Plannings des réunions :
 
@@ -49,5 +50,5 @@ Tous nos comptes-rendus et autres documents sont disponibles dans un Google Driv
 |---------------|--------------------------------|
 | Lundi 29/11   | Indisponible.                  | 
 
-
+---
 
