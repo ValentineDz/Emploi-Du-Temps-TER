@@ -2,6 +2,7 @@
 
 ## Réunions de projet : 
 Dans ce document vous trouverez les planning et les comptes-rendus relatifs aux réunions réalisées dans le cadre du projet TER : Conception et réalisation de la mise en place d’un emploi du temps. 
+Vous pouvez accéder à tous les comptes-rendus via [le lien suivant](https://drive.google.com/drive/folders/14-HWxcOXcnJf5WjjvTNWQ2tMvVvIMdCz?usp=sharing).
 
 ### Plannings des réunions :
 
