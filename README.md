@@ -33,6 +33,22 @@ Vous pouvez accéder à l'outil de gestion de projet Trello [via l'invitation su
 
 ---
 
+### Contacts 
 
+Damien Pellier : damien.pellier@imag.fr 
 
+Commanditaire(s) : 
+Aurélie Landry : aurelie.landry@univ-grenoble-alpes.fr
+
+Groupe 1 : 
+Kylian Deschamps : kylian.deschamps@etu.univ-grenoble-alpes.fr 
+Valentine Duez-Faurie : valentine.duez-faurie@etu.univ-grenoble-alpes.fr 
+Kadir Eramil : kadir.eramil@etu.univ-grenoble-alpes.fr 
+
+Groupe 2 : 
+Jean-Baptiste Arbaut : jean-baptiste.arbaut@etu.univ-grenoble-alpes.fr 
+Aubry Pilloud : aubry.pilloud@etu.univ-grenoble-alpes.fr 
+Célia Tropel : celia.tropel@etu.univ-grenoble-alpes.fr 
+
+---
 
