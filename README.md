@@ -24,7 +24,7 @@ Vous pouvez accéder à tous les comptes-rendus via [le lien suivant](https://dr
 #### Planning des réunions avec M. Laffond (principal du collège de Pont-en-Royan) : 
 | Date          | Horaire        | Lieux        | Commentaires      |
 |---------------|----------------|--------------|-------------------|
-| Lundi 29/11   | 9:00           | A distance   |                   |
+| Lundi 29/11   | 9:00 à 10H30   | A distance   |                   |
 
 ---
 
@@ -49,7 +49,7 @@ Tous nos comptes-rendus et autres documents sont disponibles dans un Google Driv
 #### Comptes-rendus des réunions avec M. Laffond : 
 | Date          | Lien vers le compte-rendu      |
 |---------------|--------------------------------|
-| Lundi 29/11   | Indisponible.                  | 
+| Lundi 29/11   | [Disponible.](https://docs.google.com/document/d/1c1PaARlNbUlCOR-6Fg6_qn1dMRsEOxmr5fEl9aVTPu8/edit?usp=drive_link)               | 
 
 ---
 
