@@ -51,8 +51,8 @@ Groupe 2 :
 - Célia Tropel : celia.tropel@etu.univ-grenoble-alpes.fr 
 
 ---
-### Dates importantes
-- Choix définitif du sujet : 10/10/2024.
+### Dates importantes 
+- Choix définitif du sujet : 10/10/2024.✅
 - Début du stage une journée par semaine : 14/10/2024.
 - Date de la première soutenance : 20/01/2025 et 27/01/2025.
 - Début des 7 semaines de stages : 05/05/2025.
