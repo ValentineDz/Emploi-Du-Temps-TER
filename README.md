@@ -13,7 +13,7 @@ Vous pouvez accéder à tous les comptes-rendus via [le lien suivant](https://dr
 | Mardi 5/11    | 13:30 à 14:30  | BMD   | Déplacé le 12/11  |
 | Mardi 19/11   | 10:30 à 11:30  | IMAG  |                   |
 | Vendredi 6/12 | 14:45 à 15:45  | IMAG  | Déplacé le 13/12  |
-| Jeudi 19/12   | 13:00 à 15:00  | BMD   |                   |
+| A définir si besoin. |               |       |                   |
 
 #### Planning des réunions avec M. Pellier : 
 | Date          | Horaire        | Lieux | Commentaires      |
@@ -37,8 +37,8 @@ Tous nos comptes-rendus et autres documents sont disponibles dans un Google Driv
 | Vendredi 18/10  | [Disponible.](https://docs.google.com/document/d/19j1hzim2e27nhcKxCi77yMV4aj-cnOw0hsWdzVjNWHc/edit?usp=drive_link)              |
 | Mardi 12/11     | [Disponible.](https://docs.google.com/document/d/1hEV5GoCbWaAZ-oB2LAaD061vDI9b1B-9DN2GvrutGDM/edit?usp=drive_link)              |
 | Mardi 19/11     | [Disponible.](https://docs.google.com/document/d/1vwlQ4idLEg4V13RzEKO263JuRVc5lv81G5z9w9icwqI/edit?usp=sharing)                 |
-| Vendredi 13/12  | Indisponible.                  |
-| Jeudi 19/12     | Indisponible.                  |
+| Vendredi 13/12  | [Disponible.](https://docs.google.com/document/d/17V32L7mI2Qzjys-0kH8ytFm0MMDEZbacNlHBP8HYwAw/edit?usp=sharing)                 |
+| Non défini      | Indisponible.                  |
 
 #### Comptes-rendus des réunions avec M. Pellier : 
 | Date          | Lien vers le compte-rendu      |
