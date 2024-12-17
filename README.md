@@ -22,6 +22,7 @@ Vous pouvez accéder à l'outil de gestion de projet Trello [via l'invitation su
 | Nom                       | Description    | 
 |---------------------------|----------------|
 | Organisation du Projet    | Présentation des différents acteurs du projet et de l'oragnisation du Google drive.  | 
+| Echéancier                | Première version du Gantt |
 
 #### Description des documents relatifs au projet : 
 | Nom                                                | Description    | 
@@ -30,6 +31,7 @@ Vous pouvez accéder à l'outil de gestion de projet Trello [via l'invitation su
 |Idées & propositions pour l'application + Questions | Document ayant servit de base pour la création de la grille d'entretien. |
 |Présentation Projet & Utilisation des Données       | Document permettant d'introduire le projet à M. Laffond. Avec un point sur l'utilisation des données (RGPD). |
 |Squelette du Cahier des Charges                     | Sequette du cahier des charges contenant nos notes, mis à disposition pour Mme. Landry en amont de nos réunions pour répondre à d'aventuelles questions. |
+|Dossier contenant toutes les conventions de TER.      | En cours de complétion.   |
 
 ---
 
