@@ -19,19 +19,21 @@ Vous pouvez accéder à l'outil de gestion de projet Trello [via l'invitation su
 ### Description des documents à disposition sur le drive : 
 
 #### Description des documents relatifs à la gestion de projet : 
+[Lien.](https://drive.google.com/drive/folders/189bBvaXNsyEjTNG3iaVXO0WQ8KaDxHea?usp=sharing)
 | Nom                       | Description    | 
 |---------------------------|----------------|
 | Organisation du Projet    | Présentation des différents acteurs du projet et de l'oragnisation du Google drive.  | 
-| Echéancier                | Première version du Gantt |
+| Echéancier                | Diagramme de Gantt, voir date de la version directement sur le document. |
 
 #### Description des documents relatifs au projet : 
+[Lien.](https://drive.google.com/drive/folders/1A3VCdZdZZUSmMKo5c7HoZu2C7Ld2FmUB?usp=sharing)
 | Nom                                                | Description    | 
 |----------------------------------------------------|----------------|
-| Grille Entretien                                   | Grille contenant toutes les contraintes liées à la création d'un emploi du temps que nous avons pu lister et les questions diverses pour M. Laffond. | 
-|Idées & propositions pour l'application + Questions | Document ayant servit de base pour la création de la grille d'entretien. |
-|Présentation Projet & Utilisation des Données       | Document permettant d'introduire le projet à M. Laffond. Avec un point sur l'utilisation des données (RGPD). |
-|Squelette du Cahier des Charges                     | Sequette du cahier des charges contenant nos notes, mis à disposition pour Mme. Landry en amont de nos réunions pour répondre à d'aventuelles questions. |
-|Dossier contenant toutes les conventions de TER.      | En cours de complétion.   |
+| 1- Documents à Destination du Collèges   | Grille d'entretien : contenant toutes les contraintes liées à la création d'un emploi du temps que nous avons pu lister et les questions diverses pour le collège. Présentation Projet & Utilisation des Données : Document permettant d'introduire le projet au collège. Avec un point sur l'utilisation des données (RGPD). Idées & propositions pour l'application + Questions : Document ayant servit de base pour la création de la grille d'entretien. |
+| 2- Analyses réalisées durant le S1 | Analyse des solvers et d'un outil de gestion et de création d'emploi du temps. |
+| 3- Modèles Documents | Modèles des documents à fournir pour permettre à Mme. Landry d'avoir les attentes pour chaque document. |
+| 4- Documents .doc pour Rendus du S1 | Rendus .doc finaux du S1.|
+| 5- Documents .pdf pour Rendus du S1 | Rendus PDF finaux du S1.|
 
 ---
 
