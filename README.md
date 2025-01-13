@@ -1,4 +1,4 @@
-#  Projet TER : Conception et réalisation de la mise en place d’un emploi du temps
+#  Projet TER : Conception d'un outil d'expérimentation de scénarios et de génération d'emploi du temps
 
 ## Réunions de projet : 
 Dans ce document vous trouverez les planning et les comptes-rendus relatifs aux réunions réalisées dans le cadre du projet TER : Conception et réalisation de la mise en place d’un emploi du temps. 
