@@ -1,4 +1,4 @@
-# Projet TER : Conception et réalisation de la mise en place d’un emploi du temps
+# Projet TER : Conception d'un outil d'expérimentation de scénarios et de génération d'emploi du temps
 
 ## Introduction :
 Dans le cadre de notre première année de Master MIASHS (Mathématiques et Informatique Appliquées aux Sciences Humaines et Sociales), parcours Informatique et Cognition, nous devons mener un projet sur l’année, appelé "TER". Ce projet vise à nous plonger dans une situation concrète impliquant des commanditaires, des attentes et des enjeux spécifiques.
@@ -16,3 +16,5 @@ Vous trouverez les branches suivantes :
 - La branche main.
 - La branche de Gestion de projet contenant le lien vers tous les docuements que nous avons mis a disposition.
 - La branche des Comptes-rendus de réunions.
+
+Les rendus du semestre 1 est à disposition dans le Wiki du GitHub. 
