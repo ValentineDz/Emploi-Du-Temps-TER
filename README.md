@@ -1,4 +1,4 @@
-# Projet TER : Conception et réalisation de la mise en place d’un emploi du temps
+# Projet TER : Conception d'un outil d'expérimentation de scénarios et de génération d'emploi du temps
 
 ## Gestion de Projet : 
 Dans cette partie vous trouverez toutes les informations et documents relatives à la gestion de projet du TER : Conception et réalisation de la mise en place d’un emploi du temps.
