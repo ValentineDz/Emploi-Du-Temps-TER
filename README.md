@@ -14,6 +14,15 @@ Nous avons la possibilité d'échanger avec M. LAffond, principal du collège de
 ## Organisation du GitHub :
 Vous trouverez sur ce readme, toutes les informations concernant la gestion du projet et les réunions effectuées durant ce TER. 
 
+### Script
+Vous trouverez dans ce dossier `Code` les fichiers `Noyau.py` et `requirements.txt`. Pour lancer le code il faut suivre les étapes :
+```sh
+py -m venv ./.venv
+py -m pip install -r ./requirements.txt
+py Noyau.py
+```
+
+
 ## Gestion de Projet : 
 Dans cette partie vous trouverez toutes les informations et documents relatives à la gestion de projet du TER : 
 Conception et réalisation de la mise en place d’un emploi du temps.

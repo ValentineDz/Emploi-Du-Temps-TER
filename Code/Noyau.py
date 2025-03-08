@@ -1,5 +1,6 @@
 from ortools.sat.python import cp_model
 import random
+from tabulate import tabulate
 
 # Définition des constantes
 JOURS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"]
@@ -183,13 +184,10 @@ for niveau in ["6e", "5e", "4e", "3e"]:
     print(f"Vérification pour le niveau {niveau}:")
     print(f"→ Maths en {niveau} : {PROFESSEURS['Maths'][niveau]}")
 
-
-
 # Création du solveur et résolution du modèle
 solver = cp_model.CpSolver()
 status = solver.Solve(model)
 
-from tabulate import tabulate
 # Génère l'emploi du temps
 for classe in CLASSES:
     print(f"\nEmploi du temps de la classe {classe}:\n")
@@ -230,7 +228,3 @@ for classe in CLASSES:
 
     # Affichage du tableau sous forme de grille
     print(tabulate(table, headers, tablefmt="grid"))
-
-
-
-
