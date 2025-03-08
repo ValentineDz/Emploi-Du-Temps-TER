@@ -1,4 +1,4 @@
-#  Projet TER : Conception d'un outil d'expérimentation de scénarios et de génération d'emploi du temps
+# Projet TER : Conception d'un outil d'expérimentation de scénarios et de génération d'emploi du temps
 
 ## Introduction :
 Dans le cadre de notre première année de Master MIASHS (Mathématiques et Informatique Appliquées aux Sciences Humaines et Sociales), parcours Informatique et Cognition, nous devons mener un projet sur l’année, appelé "TER". Ce projet vise à nous plonger dans une situation concrète impliquant des commanditaires, des attentes et des enjeux spécifiques.
@@ -120,6 +120,8 @@ Tous nos comptes-rendus et autres documents sont disponibles dans un Google Driv
 | Mardi 12/11     | [Disponible.](https://docs.google.com/document/d/1hEV5GoCbWaAZ-oB2LAaD061vDI9b1B-9DN2GvrutGDM/edit?usp=drive_link)              |
 | Mardi 19/11     | [Disponible.](https://docs.google.com/document/d/1vwlQ4idLEg4V13RzEKO263JuRVc5lv81G5z9w9icwqI/edit?usp=sharing)                 |
 | Vendredi 13/12  | [Disponible.](https://docs.google.com/document/d/17V32L7mI2Qzjys-0kH8ytFm0MMDEZbacNlHBP8HYwAw/edit?usp=sharing)                 |
+| Mardi 28/01/25  | [Disponible.](https://docs.google.com/document/d/1f7xcn9sCZqc1YIGdilG3WVGqesGv6qXEGUL2c66meA8/edit?usp=sharing)                 |
+| Mardi 25/02/25  | [Disponible.](https://docs.google.com/document/d/1xNiVHXc0uXaORRZBfr5kUru-20tJtivT2jcjzWe_gsc/edit?usp=sharing)                 |
 | Non défini      | Indisponible.                  |
 
 #### Comptes-rendus des réunions avec M. Pellier : 
@@ -127,10 +129,18 @@ Tous nos comptes-rendus et autres documents sont disponibles dans un Google Driv
 |---------------|--------------------------------|
 | Lundi 25/11   | [Disponible.](https://docs.google.com/document/d/1r5LVkF3i_B06AGJ7l0VcHQb5Z9K7Z5xGD-l5kd96IN8/edit?usp=drive_link)              | 
 | Lundi 9/12    | [Disponible.](https://docs.google.com/document/d/1Bmut9727WWYQLW4OpAmYXQuxHltM_DKmm_mboLxJnJQ/edit?usp=sharing)                 | 
+| Lundi 24/02/25 | [Disponible.](https://docs.google.com/document/d/1hICSjv9KX2fJcgaANBZprWZjzdoCWJdR5NpxaZvARto/edit?usp=sharing)                |
+
 
 #### Comptes-rendus des réunions avec M. Laffond : 
 | Date          | Lien vers le compte-rendu      |
 |---------------|--------------------------------|
 | Lundi 29/11   | [Disponible.](https://docs.google.com/document/d/1c1PaARlNbUlCOR-6Fg6_qn1dMRsEOxmr5fEl9aVTPu8/edit?usp=drive_link)              | 
 
+
+#### Comptes-rendus des réunions avec Mme. Laundry et M. Pellier
+
+| Date          | Lien vers le compte-rendu      |
+|---------------|--------------------------------|
+| Jeudi 06/02/25   | [Disponible.](https://docs.google.com/document/d/1Sar047fmiqhPx4zmmlY8ZBObPDKikvfgvPFT9qzfjM8/edit?usp=sharing)              | 
 ---
