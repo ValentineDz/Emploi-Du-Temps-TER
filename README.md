@@ -12,12 +12,7 @@ Pour répondre à cette demande, nous devons produire un outil capable de trouve
 Nous avons la possibilité d'échanger avec M. LAffond, principal du collège de Pont-en-Royan, il nous apporte un regard métier et l'accès un cas concrèt.
 
 ## Organisation du GitHub :
-Vous trouverez les branches suivantes : 
-- La branche main.
-- La branche de Gestion de projet contenant le lien vers tous les docuements que nous avons mis a disposition.
-- La branche des Comptes-rendus de réunions.
-
-Les rendus du semestre 1 est à disposition dans le Wiki du GitHub. 
+Vous trouverez sur ce readme, toutes les informations concernant la gestion du projet et les réunions effectuées durant ce TER. 
 
 ## Gestion de Projet : 
 Dans cette partie vous trouverez toutes les informations et documents relatives à la gestion de projet du TER : 
