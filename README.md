@@ -7,14 +7,79 @@ Nous sommes répartis en deux groupes de trois étudiants, travaillant en collab
 ## Sujet :
 L'objectif est de créer un outil permettant de tester des scénarios de contraintes afin de pouvoir comparer les différents emplois du temps générés. 
 
-## Organisation du projet : 
+## Organisation du projet :
 Pour répondre à cette demande, nous devons produire un outil capable de trouver des solutions en fonction de contraintes fortes et/ou faibles en sélectionnant un solver capable de réaliser cela. Cet algorithme devra répondre un maximum au besoin du collège. Ensuite, nous devons concevoir les interfaces associées, par exemple pour saisir les contraintes, les caractéristiques des classes, etc.
 Nous avons la possibilité d'échanger avec M. LAffond, principal du collège de Pont-en-Royan, il nous apporte un regard métier et l'accès un cas concrèt.
 
-## Organisation du GitHub : 
+## Organisation du GitHub :
 Vous trouverez les branches suivantes : 
 - La branche main.
 - La branche de Gestion de projet contenant le lien vers tous les docuements que nous avons mis a disposition.
 - La branche des Comptes-rendus de réunions.
 
 Les rendus du semestre 1 est à disposition dans le Wiki du GitHub. 
+
+## Gestion de Projet : 
+Dans cette partie vous trouverez toutes les informations et documents relatives à la gestion de projet du TER : 
+Conception et réalisation de la mise en place d’un emploi du temps.
+
+### Accès aux documents : 
+
+#### Accès au Google Drive : 
+- Vous pouvez accéder à tous les comptes-rendus via [le lien suivant](https://drive.google.com/drive/folders/14-HWxcOXcnJf5WjjvTNWQ2tMvVvIMdCz?usp=sharing). Veillerer vous référer à la branche "Comptes-rendus-de-Réunions" pour plus de détails.
+- Vous pouvez accéder à toute la gestion de projet via [le lien suivant](https://drive.google.com/drive/folders/189bBvaXNsyEjTNG3iaVXO0WQ8KaDxHea?usp=sharing).
+- Vous pouvez accéder à tous les documents mis à disposition via [le lien suiavnt](https://drive.google.com/drive/folders/1A3VCdZdZZUSmMKo5c7HoZu2C7Ld2FmUB?usp=sharing).
+
+#### Accès au Trello (outil de gestion de projet) : 
+Vous pouvez accéder à l'outil de gestion de projet Trello [via l'invitation suivante](https://trello.com/invite/b/6718f9e1feb58c144f2da44b/ATTIe87930ff516125d7c3939c526abd151953855765/m1-miashs-ic-ter-edt). (Attention la demande doit être accépté par l'administrateur du Trello, Tropel Célia, en cas de problème de connexion veuiller nous contacter à l'adresse mail suivante :  celia.tropel@etu.univ-grenoble-alpes.fr).
+
+### Description des documents à disposition sur le drive : 
+
+#### Documents relatifs à la gestion de projet : 
+[Lien.](https://drive.google.com/drive/folders/189bBvaXNsyEjTNG3iaVXO0WQ8KaDxHea?usp=sharing)
+
+| Nom                       | Description    | 
+|---------------------------|----------------|
+| Organisation du Projet    | Présentation des différents acteurs du projet et de l'oragnisation du Google drive.  | 
+| Echéancier                | Diagramme de Gantt, voir date de la version directement sur le document. |
+
+#### Documents relatifs au projet : 
+[Lien.](https://drive.google.com/drive/folders/1A3VCdZdZZUSmMKo5c7HoZu2C7Ld2FmUB?usp=sharing)
+| Nom                                                | Description    | 
+|----------------------------------------------------|----------------|
+| 1- Documents à Destination du Collèges   | Grille d'entretien : contenant toutes les contraintes liées à la création d'un emploi du temps que nous avons pu lister et les questions diverses pour le collège. Présentation Projet & Utilisation des Données : Document permettant d'introduire le projet au collège. Avec un point sur l'utilisation des données (RGPD). Idées & propositions pour l'application + Questions : Document ayant servit de base pour la création de la grille d'entretien. |
+| 2- Analyses réalisées durant le S1 | Analyse des solvers et d'un outil de gestion et de création d'emploi du temps. |
+| 3- Modèles Documents | Modèles des documents à fournir pour permettre à Mme. Landry d'avoir les attentes pour chaque document. |
+| 4- Documents .doc pour Rendus du S1 | Rendus .doc finaux du S1.|
+| 5- Documents .pdf pour Rendus du S1 | Rendus PDF finaux du S1.|
+
+---
+
+### Contacts 
+
+- Damien Pellier : damien.pellier@imag.fr 
+
+Commanditaire(s) : 
+- Aurélie Landry : aurelie.landry@univ-grenoble-alpes.fr
+
+Groupe 1 : 
+- Kylian Deschamps : kylian.deschamps@etu.univ-grenoble-alpes.fr 
+- Valentine Duez-Faurie : valentine.duez-faurie@etu.univ-grenoble-alpes.fr 
+- Kadir Eramil : kadir.eramil@etu.univ-grenoble-alpes.fr 
+
+Groupe 2 : 
+- Jean-Baptiste Arbaut : jean-baptiste.arbaut@etu.univ-grenoble-alpes.fr 
+- Aubry Pilloud : aubry.pilloud@etu.univ-grenoble-alpes.fr 
+- Célia Tropel : celia.tropel@etu.univ-grenoble-alpes.fr 
+
+---
+
+### Dates importantes 
+- Choix définitif du sujet : 10/10/2024.✅
+- Début du stage une journée par semaine : 14/10/2024.
+- Date de la première soutenance : 20/01/2025 et 27/01/2025.
+- Début des 7 semaines de stages : 05/05/2025.
+- Soutenance finale : 19/06/2025.
+
+---
+
