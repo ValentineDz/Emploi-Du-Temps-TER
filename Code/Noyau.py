@@ -1,39 +1,57 @@
 from ortools.sat.python import cp_model
+import csv
 import random
 from tabulate import tabulate
 
-# Définition des constantes
+# 1) LECTURE DES CSV
+# ==================
+
+# Lecture du volume horaire (par niveau et matière)
+volume_horaire = {}
+with open("volume_horaire.csv", "r", encoding="utf-8") as f:
+    reader = csv.DictReader(f)  # On lit les en-têtes : Niveau, Matiere, Heures
+    for row in reader:
+        niveau = row["Niveau"]       # ex. "6e"
+        matiere = row["Matiere"]     # ex. "Maths"
+        heures = int(row["Heures"])  # ex. 5
+
+        if niveau not in volume_horaire:
+            volume_horaire[niveau] = {}
+        volume_horaire[niveau][matiere] = heures
+
+# Lecture des profs (un prof par matière/niveau, ou "*" pour tous les niveaux)
+profs = {}
+with open("profs.csv", "r", encoding="utf-8") as f:
+    reader = csv.DictReader(f)  # Colonnes : Matiere, Niveau, Professeur
+    for row in reader:
+        matiere = row["Matiere"]       # ex: "Maths"
+        niveau = row["Niveau"]         # ex: "6e" ou "*"
+        professeur = row["Professeur"] # ex: "M. Dupont"
+
+        if matiere not in profs:
+            profs[matiere] = {}
+
+        if niveau == "*":
+            profs[matiere]["defaut"] = professeur
+        else:
+            profs[matiere][niveau] = professeur
+
+# 2) AUTRES CONSTANTES
+# ====================
 JOURS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"]
 HEURES = ["8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h"]
-MATIERES = ["Maths", "Français", "Histoire", "SVT", "Anglais", "Physique", "Techno", "EPS", "Arts Plastiques", "Musique"]
 
-# Déclaration des professeurs avec leur matière attribuée
-PROFESSEURS = {
-    "Maths": {"6e": "M. Dupont", "5e": "M. Lemoine", "4e": "M. Didier", "3e": "M. Didier"},
-    "Français": "Mme Bernard",
-    "Histoire": "M. Martin",
-    "SVT": "Mme Durand",
-    "Anglais": "M. Thomas",
-    "Physique": "Mme Petit",
-    "Techno": "M. Robert",
-    "EPS": "Mme Richard",
-    "Arts Plastiques": "M. Morel",
-    "Musique": "Mme Lefebvre"
-}
-
-
-# Volume horaire par niveau
-VOLUME_HORAIRE = {
-    "6e": {"Maths": 5, "Français": 4, "Histoire": 3, "SVT": 2, "Anglais": 2, "Physique": 3, "Techno": 2, "EPS": 2, "Arts Plastiques": 2, "Musique": 2},
-    "5e": {"Maths": 5, "Français": 4, "Histoire": 3, "SVT": 2, "Anglais": 2, "Physique": 3, "Techno": 2, "EPS": 2, "Arts Plastiques": 2, "Musique": 2},
-    "4e": {"Maths": 5, "Français": 4, "Histoire": 3, "SVT": 2, "Anglais": 2, "Physique": 3, "Techno": 2, "EPS": 2, "Arts Plastiques": 2, "Musique": 2},
-    "3e": {"Maths": 5, "Français": 4, "Histoire": 3, "SVT": 2, "Anglais": 2, "Physique": 3, "Techno": 2, "EPS": 2, "Arts Plastiques": 2, "Musique": 2}
-}
+# On conserve la liste de toutes les matières pour l'indexation
+# (si tu veux qu'elle soit aussi dynamique, tu pourrais la lire d'un CSV).
+MATIERES = [
+    "Maths", "Français", "Histoire", "SVT", "Anglais",
+    "Physique", "Techno", "EPS", "Arts Plastiques", "Musique"
+]
 
 NIVEAUX = ["6e", "5e", "4e", "3e"]
 CLASSES = [f"{niveau}{i+1}" for niveau in NIVEAUX for i in range(2)]
 
-# 🔵 Affectation manuelle des salles pour les matières spécialisées
+# Affectation manuelle des salles spécialisées
 AFFECTATION_PROF_SALLE = {
     "Mme Lefebvre": "Salle_Musique",
     "Mme Richard": "Gymnase",
@@ -41,190 +59,213 @@ AFFECTATION_PROF_SALLE = {
     "Mme Petit": "Laboratoire",
 }
 
-# 🔵 Définition des salles générales
 SALLES_GENERALES = ["Salle_1", "Salle_2", "Salle_3", "Salle_4"]
 
-# 🔵 Liste des professeurs qui n'ont pas de salle attitrée (évite les doublons avec les matières spécialisées)
+# Répartition des professeurs qui n'ont pas de salle dédiée dans les salles générales
 professeurs_sans_salle = set()
 
-for matiere, prof in PROFESSEURS.items():
-    if isinstance(prof, dict):  # Gestion spéciale pour les profs de Maths avec plusieurs niveaux
-        for niveau, prof_nom in prof.items():  # Parcourir chaque niveau (6e, 5e, 4e, 3e)
-            if prof_nom not in AFFECTATION_PROF_SALLE:
-                professeurs_sans_salle.add(prof_nom)
-    elif prof not in AFFECTATION_PROF_SALLE:
-        professeurs_sans_salle.add(prof)
+# On parcourt les profs
+for matiere, contenu in profs.items():
+    # contenu peut être un dict { "6e":"M. Dupont", "5e":"..." } ou { "defaut":"Mme Bernard" }
+    # On récupère toutes les valeurs (noms de profs) :
+    all_profs = []
+    for key, val in contenu.items():
+        if key == "defaut":
+            all_profs.append(val)
+        else:
+            all_profs.append(val)
 
-professeurs_sans_salle = list(professeurs_sans_salle)  # Convertir en liste après suppression des doublons
+    # on ajoute ces profs dans un set
+    for prof_nom in all_profs:
+        # s'ils n'ont pas de salle spécialisée, on les met dans professeurs_sans_salle
+        if prof_nom not in AFFECTATION_PROF_SALLE:
+            professeurs_sans_salle.add(prof_nom)
 
-# 🔵 Répartir les professeurs restants dans les salles générales (rotation si manque de salles)
+professeurs_sans_salle = list(professeurs_sans_salle)  # Convertir en liste
 for i, prof in enumerate(professeurs_sans_salle):
     AFFECTATION_PROF_SALLE[prof] = SALLES_GENERALES[i % len(SALLES_GENERALES)]
 
-# 🔵 Affichage de la répartition des profs et salles
 print("Répartition des professeurs sur les salles :")
 for prof, salle in AFFECTATION_PROF_SALLE.items():
     print(f"{prof} → {salle}")
 
-
-# Initialisation du modèle
+# 3) MODELE OR-TOOLS
+# ==================
 model = cp_model.CpModel()
 
-# Définition d'un nombre fixe de salles (ex: 10 salles disponibles)
-NOMBRE_DE_SALLES = 10  
+NOMBRE_DE_SALLES = 10  # ex. 10 salles disponibles
 
-# Initialisation des variables d'emploi du temps et d'affectation des salles
+# Variables (emploi du temps + salles)
 emploi_du_temps = {}
 emploi_du_temps_salles = {}
 
 for classe in CLASSES:
     for j, jour in enumerate(JOURS):
         for h, heure in enumerate(HEURES):
-            emploi_du_temps[(classe, j, h)] = model.NewIntVar(0, len(MATIERES), f"{classe}_{jour}_{heure}")
-            emploi_du_temps_salles[(classe, j, h)] = model.NewIntVar(0, NOMBRE_DE_SALLES, f"salle_{classe}_{jour}_{heure}")
+            emploi_du_temps[(classe, j, h)] = model.NewIntVar(
+                0, len(MATIERES), f"{classe}_{jour}_{heure}")
+            emploi_du_temps_salles[(classe, j, h)] = model.NewIntVar(
+                0, NOMBRE_DE_SALLES, f"salle_{classe}_{jour}_{heure}"
+            )
 
-# Contraintes :
+# CONTRAINTES
 for classe in CLASSES:
-    niveau_classe = classe[:2]  # Extraire le niveau de la classe
-    matieres_disponibles = list(VOLUME_HORAIRE[niveau_classe].keys())
+    niveau_classe = classe[:2]  # ex. "6e"
+
+    # Liste des matières (selon ce qui existe dans volume_horaire[niveau])
+    matieres_disponibles = list(volume_horaire[niveau_classe].keys())
+
     for j, jour in enumerate(JOURS):
         for h in range(len(HEURES)):
-            # Pause déjeuner de 12h à 13h
+            # Pause déjeuner 12h-13h
             if h == 4:
                 model.Add(emploi_du_temps[(classe, j, h)] == 0)
             # Pas de cours le mercredi après-midi
             if j == 2 and h > 4:
                 model.Add(emploi_du_temps[(classe, j, h)] == 0)
-        
-        # Assurer une répartition équilibrée des matières en respectant le volume horaire
+
+        # Pas plus de 2 fois la même matière par jour
         for matiere in matieres_disponibles:
             occurrences = []
             for h in range(len(HEURES)):
                 if h != 4 and not (j == 2 and h > 4):
-                    var = model.NewBoolVar(f"{classe}_{jour}_{h}_{matiere}")
-                    model.Add(emploi_du_temps[(classe, j, h)] == MATIERES.index(matiere) + 1).OnlyEnforceIf(var)
-                    model.Add(emploi_du_temps[(classe, j, h)] != MATIERES.index(matiere) + 1).OnlyEnforceIf(var.Not())
-                    occurrences.append(var)
-            model.Add(sum(occurrences) <= 2)  # Pas plus de 2 fois par jour
+                    is_matiere = model.NewBoolVar(f"{classe}_{jour}_{h}_{matiere}")
+                    model.Add(emploi_du_temps[(classe, j, h)] == MATIERES.index(matiere) + 1).OnlyEnforceIf(is_matiere)
+                    model.Add(emploi_du_temps[(classe, j, h)] != MATIERES.index(matiere) + 1).OnlyEnforceIf(is_matiere.Not())
+                    occurrences.append(is_matiere)
+            model.Add(sum(occurrences) <= 2)
 
-    # Assurer le respect du volume horaire
+    # Respect du volume horaire global
     for matiere in matieres_disponibles:
+        heures_total = volume_horaire[niveau_classe][matiere]
         occurrences = []
         for j, jour in enumerate(JOURS):
             for h in range(len(HEURES)):
                 if h != 4 and not (j == 2 and h > 4):
-                    var = model.NewBoolVar(f"{classe}_{jour}_{h}_{matiere}_count")
-                    model.Add(emploi_du_temps[(classe, j, h)] == MATIERES.index(matiere) + 1).OnlyEnforceIf(var)
-                    model.Add(emploi_du_temps[(classe, j, h)] != MATIERES.index(matiere) + 1).OnlyEnforceIf(var.Not())
-                    occurrences.append(var)
-        model.Add(sum(occurrences) == VOLUME_HORAIRE[niveau_classe][matiere])
-        
-        
-#  Bloquer uniquement M. Martin le mercredi matin
+                    is_matiere = model.NewBoolVar(f"{classe}_{jour}_{h}_{matiere}_count")
+                    model.Add(emploi_du_temps[(classe, j, h)] == MATIERES.index(matiere) + 1).OnlyEnforceIf(is_matiere)
+                    model.Add(emploi_du_temps[(classe, j, h)] != MATIERES.index(matiere) + 1).OnlyEnforceIf(is_matiere.Not())
+                    occurrences.append(is_matiere)
+
+        model.Add(sum(occurrences) == heures_total)
+
+# Bloquer M. Martin le mercredi matin (s’il est le prof d’Histoire)
 for classe in CLASSES:
-    niveau_classe = classe[:2]  # Extraire le niveau de la classe (6e, 5e, etc.)
+    niveau_classe = classe[:2]
 
-    # Vérifier si cette classe a M. Martin comme prof d'Histoire
-    if "Histoire" in VOLUME_HORAIRE[niveau_classe]:
-        prof_histoire = PROFESSEURS["Histoire"]
-        
-        # Si la classe est bien enseignée par M. Martin, on applique la contrainte
+    # Vérif si "Histoire" fait partie du volume horaire
+    if "Histoire" in volume_horaire[niveau_classe]:
+        # Récupérer le prof d'Histoire
+        prof_h = profs["Histoire"]
+        # Si c'est un dict, on prend soit le niveau, soit "defaut"
+        if isinstance(prof_h, dict):
+            prof_histoire = prof_h.get(niveau_classe, prof_h.get("defaut", "Prof inconnu"))
+        else:
+            prof_histoire = prof_h
+
         if prof_histoire == "M. Martin":
-            for heure in range(4):  # Matin = de 8h à 12h (heures 0 à 3)
-                model.Add(emploi_du_temps[(classe, 2, heure)] != MATIERES.index("Histoire") + 1)  # 2 = Mercredi
-                
-          
-
+            # Interdire l'affectation de la matière Histoire (index) le mercredi matin (0..3)
+            idx_histoire = MATIERES.index("Histoire") + 1
+            for heure in range(4):
+                model.Add(emploi_du_temps[(classe, 2, heure)] != idx_histoire)
 
 # Minimiser les heures de permanence
-total_permanence = model.NewIntVar(0, len(CLASSES) * len(JOURS) * len(HEURES), "total_permanence")
+total_permanence = model.NewIntVar(0, len(CLASSES)*len(JOURS)*len(HEURES), "total_permanence")
 permanence_vars = []
+
 for classe in CLASSES:
     for j, jour in enumerate(JOURS):
-        for h in range(1, len(HEURES) - 1):  # On évite les premières et dernières heures de la journée
+        for h in range(1, len(HEURES)-1):
             permanence = model.NewBoolVar(f"permanence_{classe}_{jour}_{h}")
             model.Add(emploi_du_temps[(classe, j, h)] == 0).OnlyEnforceIf(permanence)
             model.Add(emploi_du_temps[(classe, j, h)] != 0).OnlyEnforceIf(permanence.Not())
             permanence_vars.append(permanence)
 
 model.Add(total_permanence == sum(permanence_vars))
-model.Minimize(total_permanence)
 
+# Ajouter une contrainte optionnelle pour éviter que Mme Petit enseigne le jeudi après-midi
+conflit_M_Petit = model.NewIntVar(0, 10, "conflit_M_Petit")
+conflits = []
 
-
-# Ajouter une contrainte optionnelle pour éviter que M. Petit enseigne le jeudi après-midi
-conflit_M_Petit = model.NewIntVar(0, 10, "conflit_M_Petit")  # Variable d'écart
-
-conflits = []  # Liste des conflits à minimiser
 for classe in CLASSES:
-    niveau_classe = classe[:2]  # Récupérer le niveau de la classe
+    niveau_classe = classe[:2]
+    if "Physique" in volume_horaire[niveau_classe]:
+        # Récupérer le prof de Physique
+        prof_p = profs["Physique"]
+        if isinstance(prof_p, dict):
+            prof_phys = prof_p.get(niveau_classe, prof_p.get("defaut", "Prof inconnu"))
+        else:
+            prof_phys = prof_p
 
-    # Vérifier si M. Petit est professeur de Physique dans cette classe
-    if "Physique" in VOLUME_HORAIRE[niveau_classe]:
-        prof_physique = PROFESSEURS["Physique"]
-        
-        if prof_physique == "Mme Petit":  # On vérifie bien que cette classe a Mme Petit
-            for heure in range(5, 9):  # Après-midi = 13h-17h (indices 5 à 8)
-                conflit = model.NewBoolVar(f"conflit_Petit_{classe}_Jeudi_{heure}")
-                
-                # Si Physique est attribué à ce créneau, on active la variable de conflit
-                model.Add(emploi_du_temps[(classe, 3, heure)] == MATIERES.index("Physique") + 1).OnlyEnforceIf(conflit)
-                model.Add(emploi_du_temps[(classe, 3, heure)] != MATIERES.index("Physique") + 1).OnlyEnforceIf(conflit.Not())
-                
-                conflits.append(conflit)  # On ajoute ce conflit à la liste
+        if prof_phys == "Mme Petit":
+            # Jeudi = j=3, l'après-midi = heures 5..8
+            for heure in range(5, 9):
+                c = model.NewBoolVar(f"conflit_Petit_{classe}_Jeudi_{heure}")
+                idx_physique = MATIERES.index("Physique") + 1
 
-# Somme de tous les conflits pour Mme Petit
+                model.Add(emploi_du_temps[(classe, 3, heure)] == idx_physique).OnlyEnforceIf(c)
+                model.Add(emploi_du_temps[(classe, 3, heure)] != idx_physique).OnlyEnforceIf(c.Not())
+                conflits.append(c)
+
 model.Add(conflit_M_Petit == sum(conflits))
 
-# Ajout de la minimisation des conflits de Mme Petit dans la fonction objectif
-model.Minimize(total_permanence + conflit_M_Petit)  # On minimise aussi ce conflit
+# On minimise (trous + conflits)
+model.Minimize(total_permanence + conflit_M_Petit)
 
+# PETIT DEBUG
+for niveau in NIVEAUX:
+    if "Maths" in volume_horaire[niveau]:
+        prof_m = profs["Maths"]
+        if isinstance(prof_m, dict):
+            p = prof_m.get(niveau, prof_m.get("defaut", "Inconnu"))
+        else:
+            p = prof_m
+        print(f"Vérification: Maths en {niveau} = {p}")
 
-for niveau in ["6e", "5e", "4e", "3e"]:
-    print(f"Vérification pour le niveau {niveau}:")
-    print(f"→ Maths en {niveau} : {PROFESSEURS['Maths'][niveau]}")
-
-# Création du solveur et résolution du modèle
+# 4) LANCEMENT DU SOLVEUR
+# =======================
 solver = cp_model.CpSolver()
 status = solver.Solve(model)
 
-# Génère l'emploi du temps
-for classe in CLASSES:
-    print(f"\nEmploi du temps de la classe {classe}:\n")
+# 5) AFFICHAGE DU RÉSULTAT
+# ========================
+if status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+    for classe in CLASSES:
+        print(f"\nEmploi du temps de la classe {classe}:\n")
+        headers = ["Jour/Heure"] + HEURES
+        table = []
 
-    # En-tête des heures
-    headers = ["Jour/Heure"] + HEURES
-    table = []
+        for j, jour in enumerate(JOURS):
+            row = [jour]
+            for h, heure in enumerate(HEURES):
+                matiere_index = solver.Value(emploi_du_temps[(classe, j, h)])
+                salle_index = solver.Value(emploi_du_temps_salles[(classe, j, h)])
 
-    for j, jour in enumerate(JOURS):
-        row = [jour]  # Première colonne = jour
-        for h, heure in enumerate(HEURES):
-            matiere_index = solver.Value(emploi_du_temps[(classe, j, h)])
-            salle_index = solver.Value(emploi_du_temps_salles[(classe, j, h)])
+                if matiere_index > 0:
+                    matiere = MATIERES[matiere_index - 1]
+                    # Récupération du prof
+                    p = profs[matiere]
+                    if isinstance(p, dict):
+                        prof_nom = p.get(classe[:2], p.get("defaut", "Prof inconnu"))
+                    else:
+                        prof_nom = p
 
-            if matiere_index > 0:
-                # Récupération de la matière et du professeur associé
-                matiere = MATIERES[matiere_index - 1]
+                    # Choix de salle
+                    # (Ici, tu n'as pas de vraie contrainte multi-classe,
+                    #  donc on se contente d'un index ou d'AFFECTATION_PROF_SALLE)
+                    # On a pas défini 'SALLES' => on simplifie
+                    if salle_index > 0:
+                        # On n'a pas de dictionnaire SALLES, on utilise l'affectation manuelle
+                        salle = AFFECTATION_PROF_SALLE.get(prof_nom, "Salle inconnue")
+                    else:
+                        salle = AFFECTATION_PROF_SALLE.get(prof_nom, "Salle inconnue")
 
-                if isinstance(PROFESSEURS[matiere], dict):  # Gestion spéciale pour Maths
-                    niveau_classe = classe[:2]  # Extraire "6e", "5e", "4e" ou "3e"
-                    prof = PROFESSEURS[matiere].get(niveau_classe, "Prof inconnu")  # Sélectionner le bon prof selon le niveau
+                    row.append(f"{matiere}\n{prof_nom}\n[{salle}]")
                 else:
-                    prof = PROFESSEURS[matiere]  # Matières avec un seul professeur
+                    row.append("---")
 
-                # Vérification de l'affectation des salles
-                if salle_index > 0 and salle_index <= len(SALLES):
-                    salle = list(SALLES.keys())[salle_index - 1]  # Salle affectée par OR-Tools
-                else:
-                    # Utiliser l'affectation manuelle des salles spécialisées ou générales
-                    salle = AFFECTATION_PROF_SALLE.get(prof, "Salle inconnue")
+            table.append(row)
 
-                # Ajouter les données dans la ligne correspondante
-                row.append(f"{matiere}\n{prof}\n[{salle}]")  # Affichage sur plusieurs lignes
-            else:
-                row.append("---")  # Case vide si aucun cours n'est affecté
-
-        table.append(row)
-
-    # Affichage du tableau sous forme de grille
-    print(tabulate(table, headers, tablefmt="grid"))
+        print(tabulate(table, headers, tablefmt="grid"))
+else:
+    print("❌ Aucune solution trouvée.")
