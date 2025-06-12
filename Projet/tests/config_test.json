@@ -1,0 +1,74 @@
+{
+  "jours": ["Lundi", "Mardi", "Mercredi"],
+  "heures": ["8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h"],
+  "matieres": ["Maths", "Français", "SVT", "Physique", "Techno"],
+  "classes_base": ["6e1", "6e2"],
+  "sousGroupes_matieres": {
+    "Scientifique": ["Maths", "SVT", "Physique", "Techno"]
+  },
+  "capacites_classes": {
+    "6e1": 20
+  },
+  "professeurs": {
+    "Maths": { "6e": ["Dupont"] },
+    "Français": "Martin",
+    "SVT": { "6e": ["Durand"] },
+    "Physique": { "6e": ["Petit"] },
+    "Techno": { "6e": ["Lemoine"] }
+  },
+  "volume_horaire": {
+    "6e": {
+      "Maths": 2,
+      "Français": 1,
+      "SVT": 1,
+      "Physique": 1,
+      "Techno": 1
+    }
+  },
+  "indisponibilites_profs": {
+    "Dupont": { "Lundi": [0, 1] },
+    "Durand": { "Mardi": [2] }
+  },
+  "indisponibilites_salles": {
+    "Salle_1": { "Mardi": [1, 2] }
+  },
+  "preferences_salle_prof": {
+    "Martin": "Salle_1"
+  },
+  "affectation_matiere_salle": {
+    "SVT": "Salle_3",
+    "Physique": "Salle_3",
+    "Techno": "Salle_3",
+    "Maths": "Salle_3",
+    "Français": "Salle_3"
+  },
+  "salles_generales": ["Salle_1", "Salle_2"],
+  "max_heures_par_etendue": [
+    {
+      "niveau": "6e",
+      "matiere": "Français",
+      "max_heures": 1,
+      "etendue": "demi-journee"
+    }
+  ],
+  "cantine": {
+    "capacite": 30,
+    "proportion_demi_pensionnaire": 0.5,
+    "creneaux_dejeuner": ["11h-12h", "12h-13h"],
+    "assignation_niveaux": { "12h-13h": ["6e"] },
+    "priorite_active": true
+  },
+  "poids_matieres": {
+    "Maths": 1,
+    "Français": 1,
+    "SVT": 1,
+    "Physique": 1,
+    "Techno": 1
+  },
+  "poids_cartable_max_somme_par_niveau": {
+    "6e": 5
+  },
+  "jours_sans_apres_midi": ["Lundi"],
+    "memnivmemcours": [
+  { "niveau": "6e", "matiere": "Maths"}]
+}
