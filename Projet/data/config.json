@@ -1,0 +1,328 @@
+{
+  "jours": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
+  "heures": ["8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h"],
+  "matieres": ["Maths", "Français", "Histoire", "SVT", "Anglais", "Physique", "Techno", "EPS", "Arts Plastiques", "Musique", "Espagnol", "Italien", "Latin"],
+  "classes_base": [
+    "6e1", "6e2", "5e1", "5e2", "4e1", "4e2", "3e1", "3e2"
+  ],
+  "sousGroupes_matieres": {
+    "Scientifique": ["Maths", "SVT", "Physique", "Techno"],
+    "Langues": ["Français", "Anglais", "Espagnol", "Italien", "Latin"],
+    "Artistique": ["Arts Plastiques", "Musique"]
+  },
+  "capacites_salles": {
+    "Salle_1": 30,
+    "Salle_2": 30,
+    "Salle_3": 30,
+    "Salle_4": 25,
+    "Salle_5": 21,
+    "Salle_6": 20,
+    "Salle_Arts": 31,
+    "Salle_Musique": 20,
+    "Laboratoire": 25,
+    "Gymnase": 30
+  },
+  "capacites_classes": {
+    "6e1": 28,
+    "6e2": 30,
+    "5e1": 29,
+    "5e2": 27,
+    "4e1": 26,
+    "4e2": 25,
+    "3e1": 28,
+    "3e2": 30,
+    "5e1_G1": 15,
+    "5e2_G1": 15,
+    "4e1_G1": 15,
+    "4e2_G1": 15,
+    "3e1_G1": 15,
+    "3e2_G1": 15,
+    "5e1_G2": 15,
+    "5e2_G2": 15,
+    "4e1_G2": 15,
+    "4e2_G2": 15,
+    "3e1_G2": 15,
+    "3e2_G2": 15,
+    "4e1_test": 15,
+    "4e2_test": 15,
+    "3e1_test": 15,
+    "3e2_test": 15
+  },
+  "professeurs": {
+    "Maths": {
+      "6e": ["M. Dupont", "M. Stéphane"],
+      "5e": ["M. Lemoine"],
+      "4e": ["M. Didier"],
+      "3e": ["M. Didier"]
+    },
+    "Français": "Mme Bernard",
+    "Histoire": "M. Martin",
+    "SVT": "Mme Durand",
+    "Anglais": "M. Thomas",
+    "Physique": "Mme Petit",
+    "Techno": "M. Robert",
+    "EPS": "Mme Richard",
+    "Arts Plastiques": "M. Morel",
+    "Musique": "Mme Lefebvre",
+    "Espagnol": "M. Sanchez",
+    "Italien": "M. Rossi",
+    "Latin": "M. Latin"
+  },
+  "volume_par_professeur": {
+    "M. Didier": 18,
+    "M. Dupont": 18,
+    "M. Latin": 18,
+    "M. Lemoine": 18,
+    "M. Martin": 18,
+    "M. Michel": 18,
+    "M. Morel": 18,
+    "M. Robert": 18,
+    "M. Rossi": 18,
+    "M. Sanchez": 18,
+    "M. Stéphane": 18,
+    "M. Test": 18,
+    "M. Thomas": 18,
+    "Mme Bernard": 18,
+    "Mme Durand": 18,
+    "Mme Lefebvre": 18,
+    "Mme Lopez22": 18,
+    "Mme Petit": 18,
+    "Mme Richard": 18
+  },
+  "volume_horaire": {
+    "6e": {
+      "Maths": 5,
+      "Français": 4,
+      "Histoire": 3,
+      "SVT": 2,
+      "Anglais": 2,
+      "Physique": 3,
+      "Techno": 2,
+      "EPS": 2,
+      "Arts Plastiques": 2,
+      "Musique": 2
+    },
+    "5e": {
+      "Maths": 4.5,
+      "Français": 4,
+      "Histoire": 3,
+      "SVT": 2,
+      "Anglais": 2,
+      "Physique": 3,
+      "Techno": 2,
+      "EPS": 2,
+      "Arts Plastiques": 2,
+      "Musique": 2,
+      "Espagnol": 2,
+      "Italien": 2
+    },
+    "4e": {
+      "Maths": 5,
+      "Français": 4,
+      "Histoire": 3,
+      "SVT": 2,
+      "Anglais": 2,
+      "Physique": 3,
+      "Techno": 2,
+      "EPS": 2,
+      "Arts Plastiques": 2,
+      "Musique": 2,
+      "Espagnol": 2,
+      "Italien": 2
+    },
+    "3e": {
+      "Maths": 5,
+      "Français": 4,
+      "Histoire": 3,
+      "SVT": 2,
+      "Anglais": 2,
+      "Physique": 3,
+      "Techno": 2,
+      "EPS": 2,
+      "Arts Plastiques": 2,
+      "Musique": 2,
+      "Espagnol": 2,
+      "Italien": 2,
+      "Latin": 2
+    }
+  },
+  "indisponibilites_profs": {
+    "Mme Durand": {
+      "Lundi": [0, 1, 2, 3],
+      "Mercredi": [0, 1, 2, 3]
+    },
+    "M. Martin": {
+      "Mercredi": [0, 1, 2, 3]
+    },
+    "Mme Petit": {
+      "Jeudi": [5, 6, 7, 8]
+    }
+  },
+  "indisponibilites_salles": {
+    "Salle_1": {
+      "Mardi": [1, 2, 3]
+    },
+    "Gymnase": {
+      "Vendredi": [5, 6, 7, 8]
+    }
+  },
+  "preferences_profs": {
+    "Mme Durand": {
+      "Vendredi": [5, 6, 7, 8]
+    },
+    "M. Martin": {
+      "Lundi": [0, 1, 2]
+    }
+  },
+  "preferences_salle_professeur": {
+    "M. Martin": "Salle_1",
+    "M. Didier": "Salle_2"
+  },
+  "sous_groupes_config": {
+    "Espagnol": {
+      "niveaux": ["4e", "5e", "3e"],
+      "suffixe": "_G1"
+    },
+    "Italien": {
+      "niveaux": ["4e", "5e", "3e"],
+      "suffixe": "_G2"
+    },
+    "Latin": {
+      "niveaux": ["4e", "3e"],
+      "suffixe": "_test"
+    }
+  },
+  "niveaux": ["6e", "5e", "4e", "3e"],
+  "affectation_matiere_salle": {
+    "Musique": "Salle_Musique",
+    "EPS": "Gymnase",
+    "Arts Plastiques": "Salle_Arts",
+    "Physique": "Laboratoire",
+    "SVT": "Laboratoire"
+  },
+  "salles_generales": ["Salle_1", "Salle_2", "Salle_3", "Salle_4", "Salle_5", "Salle_6"],
+  "max_heures_par_etendue": [
+    {
+      "niveau": "6e",
+      "matiere": "Français",
+      "max_heures": 1,
+      "etendue": "journee"
+    },
+    {
+      "niveau": "3e",
+      "matiere": "Français",
+      "max_heures": 1,
+      "etendue": "demi-journee"
+    }
+  ],
+  "cantine": {
+    "capacite": 250,
+    "proportion_demi_pensionnaire": 1,
+    "creneaux_dejeuner": ["11h-12h", "12h-13h"],
+    "assignation_niveaux": {
+      "11h-12h": ["6e", "5e"],
+      "12h-13h": ["4e", "3e"]
+    },
+    "priorite_active": false
+  },
+  "permanence": {
+    "nom_salle": "Salle_Permanence",
+    "capacite": 40
+  },
+"poids_matieres_par_niveau": {
+  "6e": {
+    "Maths": 0.8,
+    "Français": 2.0,
+    "Histoire": 1.55,
+    "SVT": 1.2,
+    "Anglais": 0.65,
+    "Physique": 1.0,
+    "Techno": 0.33,
+    "EPS": 0.2,
+    "Arts Plastiques": 0.4,
+    "Musique": 1.5,
+    "Espagnol": 0.5,
+    "Italien": 0.5,
+    "Latin": 0.5
+  },
+  "5e": {
+    "Maths": 0.9,
+    "Français": 2.1,
+    "Histoire": 1.6,
+    "SVT": 1.25,
+    "Anglais": 0.7,
+    "Physique": 1.05,
+    "Techno": 0.35,
+    "EPS": 0.25,
+    "Arts Plastiques": 0.45,
+    "Musique": 1.55,
+    "Espagnol": 0.55,
+    "Italien": 0.5,
+    "Latin": 0.5
+  },
+  "4e": {
+    "Maths": 1.0,
+    "Français": 2.0,
+    "Histoire": 1.7,
+    "SVT": 1.3,
+    "Anglais": 0.7,
+    "Physique": 1.1,
+    "Techno": 0.35,
+    "EPS": 0.25,
+    "Arts Plastiques": 0.45,
+    "Musique": 1.6,
+    "Espagnol": 0.6,
+    "Italien": 0.55,
+    "Latin": 0.5
+  },
+  "3e": {
+    "Maths": 1.0,
+    "Français": 2.0,
+    "Histoire": 1.8,
+    "SVT": 1.4,
+    "Anglais": 0.75,
+    "Physique": 1.1,
+    "Techno": 0.35,
+    "EPS": 0.25,
+    "Arts Plastiques": 0.5,
+    "Musique": 1.6,
+    "Espagnol": 0.65,
+    "Italien": 0.6,
+    "Latin": 0.55
+  }
+},
+  "poids_cartable_max_somme_par_niveau": {
+    "6e": 5.0,
+    "5e": 11.0,
+    "4e": 11.5,
+    "3e": 12.0
+  },
+  "jours_sans_apres_midi": ["Mercredi"],
+  "mat_exclu_suite": [
+    {
+      "matiere1": "Maths",
+      "matiere2": "Français",
+      "contrainte": "forte",
+      "classes": "CLASSES_BASE"
+    }
+  ],
+  "mat_inclu_suite": [
+    {
+      "matiere1": "Français",
+      "matiere2": "SVT",
+      "contrainte": "moyenne",
+      "nb_fois": 1,
+      "classes": "6e"
+    }
+  ],
+  "mat_horaire_donne_v2": [
+    {
+      "classes": "6e",
+      "matiere": "Scientifique",
+      "jour": "Jeudi",
+      "horaire_min": "13h",
+      "horaire_max": "17h",
+      "nb_fois": 2
+    }
+  ]
+}

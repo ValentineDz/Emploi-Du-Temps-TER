@@ -1,0 +1,131 @@
+{
+    "0": {
+        "volume_horaire": {
+            "statut": "obligatoire",
+            "total": 184,
+            "respectees": 184,
+            "details": []
+        },
+        "indisponibilites_profs": {
+            "statut": "optionnelle",
+            "total": 768,
+            "respectees": 768,
+            "details": []
+        },
+        "jours_sans_apres_midi": {
+            "statut": "obligatoire",
+            "total": 192,
+            "respectees": 192,
+            "details": []
+        },
+        "volume_par_professeur": {
+            "statut": "obligatoire",
+            "total": 38,
+            "respectees": 30,
+            "details": [
+                "M. Didier a 20 cours (max 18)",
+                "M. Martin a 24 cours (max 18)",
+                "Mme Bernard a 32 cours (max 18)",
+                "Mme Petit a 24 cours (max 18)"
+            ]
+        },
+        "cantine": {
+            "statut": "obligatoire",
+            "total": 16,
+            "respectees": 16,
+            "details": []
+        },
+        "permanence": {
+            "statut": "obligatoire",
+            "total": 0,
+            "respectees": 0,
+            "details": []
+        },
+        "poids_cartable": {
+            "statut": "optionnelle",
+            "total": 80,
+            "respectees": 61,
+            "details": [
+                "6e1 - Semaine A - Lundi : poids 5.53kg > tolérance 5.25kg",
+                "6e1 - Semaine A - Mardi : poids 6.45kg > tolérance 5.25kg",
+                "6e1 - Semaine A - Mercredi : poids 5.65kg > tolérance 5.25kg",
+                "6e1 - Semaine A - Jeudi : poids 5.33kg > tolérance 5.25kg",
+                "6e2 - Semaine A - Lundi : poids 5.95kg > tolérance 5.25kg",
+                "6e2 - Semaine A - Mardi : poids 5.55kg > tolérance 5.25kg",
+                "6e2 - Semaine A - Mercredi : poids 5.65kg > tolérance 5.25kg",
+                "6e2 - Semaine A - Jeudi : poids 5.68kg > tolérance 5.25kg",
+                "6e2 - Semaine A - Vendredi : poids 5.38kg > tolérance 5.25kg",
+                "6e1 - Semaine B - Lundi : poids 5.58kg > tolérance 5.25kg",
+                "6e1 - Semaine B - Mardi : poids 5.50kg > tolérance 5.25kg",
+                "6e1 - Semaine B - Mercredi : poids 6.00kg > tolérance 5.25kg",
+                "6e1 - Semaine B - Jeudi : poids 5.75kg > tolérance 5.25kg",
+                "6e1 - Semaine B - Vendredi : poids 5.38kg > tolérance 5.25kg",
+                "6e2 - Semaine B - Lundi : poids 6.10kg > tolérance 5.25kg",
+                "6e2 - Semaine B - Mardi : poids 5.48kg > tolérance 5.25kg",
+                "6e2 - Semaine B - Mercredi : poids 6.00kg > tolérance 5.25kg",
+                "6e2 - Semaine B - Jeudi : poids 5.38kg > tolérance 5.25kg",
+                "6e2 - Semaine B - Vendredi : poids 5.25kg > tolérance 5.25kg"
+            ]
+        },
+        "indisponibilites_salles": {
+            "statut": "optionnelle",
+            "total": 192,
+            "respectees": 192,
+            "details": []
+        },
+        "double_affectation_salles": {
+            "statut": "obligatoire",
+            "total": 540,
+            "respectees": 540,
+            "details": []
+        },
+        "double_affectation_profs": {
+            "statut": "obligatoire",
+            "total": 508,
+            "respectees": 508,
+            "details": []
+        },
+        "mat_exclu_suite": {
+            "statut": "optionnelle",
+            "total": 640,
+            "respectees": 640,
+            "details": []
+        },
+        "mat_inclu_suite": {
+            "statut": "optionnelle",
+            "total": 160,
+            "respectees": 160,
+            "details": [
+                "6e1 : 1 occurrences de Français → SVT",
+                "6e2 : 1 occurrences de Français → SVT",
+                "6e1 : 1 occurrences de Français → SVT",
+                "6e2 : 1 occurrences de Français → SVT"
+            ]
+        },
+        "mem_niveau_cours": {
+            "statut": "optionnelle",
+            "total": 0,
+            "respectees": 0,
+            "details": []
+        },
+        "max_heures_par_etendue": {
+            "statut": "optionnelle",
+            "total": 60,
+            "respectees": 60,
+            "details": []
+        },
+        "mat_horaire_donne_v2": {
+            "statut": "optionnelle",
+            "total": 4,
+            "respectees": 4,
+            "details": []
+        },
+        "preferences_salle_professeur": {
+            "statut": "optionnelle",
+            "total": 44,
+            "respectees": 44,
+            "details": []
+        }
+    },
+    "pourcentage_global": 99.21
+}

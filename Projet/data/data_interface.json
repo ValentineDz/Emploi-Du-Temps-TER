@@ -1,0 +1,396 @@
+{
+  "1_horaires": {
+    "jours_classiques": [
+      "Lundi",
+      "Mardi",
+      "Mercredi",
+      "Jeudi",
+      "Vendredi"
+    ],
+    "jours_particuliers": [
+      "Mercredi"
+    ],
+    "horaires_classiques": {
+      "Début de cours minimum": "08:25",
+      "Fin maximum des cours du matin": "12:20",
+      "Début minimum des cours de l'après-midi": "13:00",
+      "Fin de cours maximum": "17:50"
+    },
+    "duree_creneau": 55,
+    "recreations": 15,
+    "pause_meridienne": "00:30"
+  },
+  "2_langues_et_options": {
+    "lv1": [],
+    "lv2": [],
+    "lv3_active": false,
+    "lv3": [],
+    "lv4_active": false,
+    "lv4": [],
+    "autres_langues": {
+      "lv1": [],
+      "lv2": [],
+      "lv3": [],
+      "lv4": []
+    },
+    "options": {
+      "predefinies": [],
+      "autres": []
+    },
+    "niveaux_lv3": [
+      0,
+      3
+    ]
+  },
+  "3_ressources": {
+    "classes": [
+      {
+        "Classe": "6e1",
+        "Niveau": "6e",
+        "Effectif": "26",
+        "Dependances": "",
+        "MatiereGroupe": ""
+      },
+      {
+        "Classe": "6e2",
+        "Niveau": "6e",
+        "Effectif": "30",
+        "Dependances": "",
+        "MatiereGroupe": ""
+      },
+      {
+        "Classe": "6ESP1",
+        "Niveau": "6e",
+        "Effectif": "12",
+        "Dependances": "6e1,6e2",
+        "MatiereGroupe": "Espagnol"
+      }
+    ],
+    "salles": [
+      {
+        "Nom": "A1",
+        "Matieres": "",
+        "Capacite": 30
+      },
+      {
+        "Nom": "B1",
+        "Matieres": "Physique-chimie,SVT",
+        "Capacite": 25
+      }
+    ],
+    "professeurs": [
+      {
+        "Civilite": "Mme",
+        "Nom": "Durand",
+        "Prenom": "Marie",
+        "Niveaux": "5e,4e",
+        "Matieres": "Français",
+        "Volume": 18,
+        "Duree": "1.5",
+        "SallePref": ""
+      },
+      {
+        "Civilite": "M.",
+        "Nom": "Dupont",
+        "Prenom": "Paul",
+        "Niveaux": "6e,5e",
+        "Matieres": "Mathématiques",
+        "Volume": 20,
+        "Duree": "2",
+        "SallePref": "A1"
+      }
+    ]
+  },
+  "4_programme_national": {
+    "6e": [
+      {
+        "Discipline": "Français",
+        "VolumeHoraire": 4.5
+      },
+      {
+        "Discipline": "Mathématiques",
+        "VolumeHoraire": 4.5
+      },
+      {
+        "Discipline": "Histoire-Géographie-EMC",
+        "VolumeHoraire": 3
+      },
+      {
+        "Discipline": "Langue vivante",
+        "VolumeHoraire": 4
+      },
+      {
+        "Discipline": "Sciences (SVT et Physique-Chimie)",
+        "VolumeHoraire": 3
+      },
+      {
+        "Discipline": "EPS",
+        "VolumeHoraire": 4
+      },
+      {
+        "Discipline": "Arts plastiques",
+        "VolumeHoraire": 1
+      },
+      {
+        "Discipline": "Musique",
+        "VolumeHoraire": 1
+      }
+    ],
+    "5e": [
+      {
+        "Discipline": "Français",
+        "VolumeHoraire": 4.5
+      },
+      {
+        "Discipline": "Mathématiques",
+        "VolumeHoraire": 3.5
+      },
+      {
+        "Discipline": "Histoire-Géographie-EMC",
+        "VolumeHoraire": 3
+      },
+      {
+        "Discipline": "Langue vivante 1",
+        "VolumeHoraire": 3
+      },
+      {
+        "Discipline": "Langue vivante 2",
+        "VolumeHoraire": 2.5
+      },
+      {
+        "Discipline": "SVT",
+        "VolumeHoraire": 1.5
+      },
+      {
+        "Discipline": "Physique-Chimie",
+        "VolumeHoraire": 1.5
+      },
+      {
+        "Discipline": "Technologie",
+        "VolumeHoraire": 1.5
+      },
+      {
+        "Discipline": "EPS",
+        "VolumeHoraire": 3
+      },
+      {
+        "Discipline": "Arts plastiques",
+        "VolumeHoraire": 1
+      },
+      {
+        "Discipline": "Musique",
+        "VolumeHoraire": 1
+      }
+    ],
+    "4e": [
+      {
+        "Discipline": "Français",
+        "VolumeHoraire": 4.5
+      },
+      {
+        "Discipline": "Mathématiques",
+        "VolumeHoraire": 3.5
+      },
+      {
+        "Discipline": "Histoire-Géographie-EMC",
+        "VolumeHoraire": 3
+      },
+      {
+        "Discipline": "Langue vivante 1",
+        "VolumeHoraire": 3
+      },
+      {
+        "Discipline": "Langue vivante 2",
+        "VolumeHoraire": 2.5
+      },
+      {
+        "Discipline": "SVT",
+        "VolumeHoraire": 1.5
+      },
+      {
+        "Discipline": "Physique-Chimie",
+        "VolumeHoraire": 1.5
+      },
+      {
+        "Discipline": "Technologie",
+        "VolumeHoraire": 1.5
+      },
+      {
+        "Discipline": "EPS",
+        "VolumeHoraire": 3
+      },
+      {
+        "Discipline": "Arts plastiques",
+        "VolumeHoraire": 1
+      },
+      {
+        "Discipline": "Musique",
+        "VolumeHoraire": 1
+      }
+    ],
+    "3e": [
+      {
+        "Discipline": "Français",
+        "VolumeHoraire": 4
+      },
+      {
+        "Discipline": "Mathématiques",
+        "VolumeHoraire": 3.5
+      },
+      {
+        "Discipline": "Histoire-Géographie-EMC",
+        "VolumeHoraire": 3.5
+      },
+      {
+        "Discipline": "Langue vivante 1",
+        "VolumeHoraire": 3
+      },
+      {
+        "Discipline": "Langue vivante 2",
+        "VolumeHoraire": 2.5
+      },
+      {
+        "Discipline": "SVT",
+        "VolumeHoraire": 1.5
+      },
+      {
+        "Discipline": "Physique-Chimie",
+        "VolumeHoraire": 1.5
+      },
+      {
+        "Discipline": "Technologie",
+        "VolumeHoraire": 1.5
+      },
+      {
+        "Discipline": "EPS",
+        "VolumeHoraire": 3
+      },
+      {
+        "Discipline": "Arts plastiques",
+        "VolumeHoraire": 1
+      },
+      {
+        "Discipline": "Musique",
+        "VolumeHoraire": 1
+      }
+    ],
+    "emc": {
+      "6e": {
+        "inclus": "oui",
+        "volume": null
+      },
+      "5e": {
+        "inclus": "oui",
+        "volume": null
+      },
+      "4e": {
+        "inclus": "oui",
+        "volume": null
+      },
+      "3e": {
+        "inclus": "oui",
+        "volume": null
+      }
+    }
+  },
+  "affichage": {
+    "horaires_affichage": [
+      "08:25 - 09:20",
+      "09:20 - 10:15",
+      "10:30 - 11:25",
+      "11:25 - 12:20",
+      "12:20 - 13:00",
+      "13:00 - 13:55",
+      "13:55 - 14:50",
+      "15:05 - 16:00",
+      "16:00 - 16:55",
+      "16:55 - 17:50"
+    ],
+    "professeurs_affichage": [
+      "Mme Durand Marie",
+      "M. Dupont Paul"
+    ],
+    "volume_horaire_affichage": {
+      "6e": {
+        "Français": 4.5,
+        "Mathématiques": 4.5,
+        "Histoire-Géographie-EMC": 3,
+        "Sciences (SVT et Physique-Chimie)": 3,
+        "EPS": 4,
+        "Arts plastiques": 1,
+        "Musique": 1
+      },
+      "5e": {
+        "Français": 4.5,
+        "Mathématiques": 3.5,
+        "Histoire-Géographie-EMC": 3,
+        "SVT": 1.5,
+        "Physique-Chimie": 1.5,
+        "Technologie": 1.5,
+        "EPS": 3,
+        "Arts plastiques": 1,
+        "Musique": 1
+      },
+      "4e": {
+        "Français": 4.5,
+        "Mathématiques": 3.5,
+        "Histoire-Géographie-EMC": 3,
+        "SVT": 1.5,
+        "Physique-Chimie": 1.5,
+        "Technologie": 1.5,
+        "EPS": 3,
+        "Arts plastiques": 1,
+        "Musique": 1
+      },
+      "3e": {
+        "Français": 4,
+        "Mathématiques": 3.5,
+        "Histoire-Géographie-EMC": 3.5,
+        "SVT": 1.5,
+        "Physique-Chimie": 1.5,
+        "Technologie": 1.5,
+        "EPS": 3,
+        "Arts plastiques": 1,
+        "Musique": 1
+      }
+    },
+    "salles_affichage": [
+      "A1",
+      "B1"
+    ]
+  },
+  "contraintes": {
+    "profs": {
+      "indisponibilites_partielles": {},
+      "indisponibilites_totales": {}
+    },
+    "groupes": {
+      "indisponibilites_partielles": {},
+      "indisponibilites_totales": {}
+    },
+    "salles": {
+      "indisponibilites_partielles": {},
+      "indisponibilites_totales": {}
+    },
+    "contraintes_3_4": {
+      "planning": [],
+      "cours_planning": [],
+      "enchainement": []
+    }
+  },
+  "contraintes_additionnelles": {
+    "ordre_contraintes": [],
+    "poids_par_niveau": {},
+    "cantine_permanence": {
+      "capacite_cantine": null,
+      "taux_cantine": null,
+      "capacite_permanence": null,
+      "fin_jeunes_plus_tot": "non"
+    },
+    "fin_jeunes_plus_tot": false
+  },
+  "contraintes_3_4": {
+    "planning": [],
+    "enchainement": []
+  }
+}

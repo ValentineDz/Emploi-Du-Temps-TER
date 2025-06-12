@@ -1,150 +1,108 @@
-# Projet TER : Conception d'un outil d'expérimentation de scénarios et de génération d'emploi du temps
+# Emploi du Temps - TER : Conception d'un outil d'expérimentation de scénarios et de génération d'emploi du temps
 
-## Introduction :
-Dans le cadre de notre première année de Master MIASHS (Mathématiques et Informatique Appliquées aux Sciences Humaines et Sociales), parcours Informatique et Cognition, nous devons mener un projet sur l’année, appelé "TER". Ce projet vise à nous plonger dans une situation concrète impliquant des commanditaires, des attentes et des enjeux spécifiques.
-Nous sommes répartis en deux groupes de trois étudiants, travaillant en collaboration pour ce projet. 
+## Présentation
+Ce projet a été développé dans le cadre d’un TER (Travail d’Étude et de Recherche)  de Master 1 MIASHS parcours Informatique et Cognition de l’Université Grenoble Alpes. Il propose une application de génération automatique d’emplois du temps pour les établissements scolaires de type collège.
 
-## Sujet :
-L'objectif est de créer un outil permettant de tester des scénarios de contraintes afin de pouvoir comparer les différents emplois du temps générés. 
+L’objectif est de fournir une solution, capable de gérer un grand nombre de contraintes pédagogiques, matérielles et organisationnelles, tout en restant modulaire et adaptée aux besoins des utilisateurs. L’application met l’accent sur la lisibilité des résultats, l’ergonomie de l’interface et la transparence dans le traitement des contraintes.
 
-## Organisation du projet :
-Pour répondre à cette demande, nous devons produire un outil capable de trouver des solutions en fonction de contraintes fortes et/ou faibles en sélectionnant un solver capable de réaliser cela. Cet algorithme devra répondre un maximum au besoin du collège. Ensuite, nous devons concevoir les interfaces associées, par exemple pour saisir les contraintes, les caractéristiques des classes, etc.
-Nous avons la possibilité d'échanger avec M. LAffond, principal du collège de Pont-en-Royan, il nous apporte un regard métier et l'accès un cas concrèt.
+## Objectifs du projet
+- Proposer une solution locale, autonome, et simple à utiliser pour la création d’emplois du temps.
+- Intégrer des contraintes telles que : disponibilités, volumes horaires, gestion des salles, sous-groupes, enchaînements de cours, poids du cartable.
+- Permettre à l’utilisateur de visualiser les résultats, de comprendre pourquoi une contrainte n’a pas pu être respectée, et d’exporter les emplois du temps générés.
+- Assurer une séparation claire entre l’interface (saisie, affichage) et le solveur (résolution de contraintes).
+- Permettre une adaptation facile à d’autres établissements ou contextes pédagogiques.
 
-## Organisation du GitHub :
-Vous trouverez sur ce readme, toutes les informations concernant la gestion du projet et les réunions effectuées durant ce TER. 
 
-### Script
-Vous trouverez dans ce dossier `Code` les fichiers `Noyau.py` et `requirements.txt`. Pour lancer le code il faut suivre les étapes :
-```sh
-py -m venv ./.venv
-py -m pip install -r ./requirements.txt
-py Noyau.py
+## Architecture du projet
+Le projet repose sur deux composants principaux :
+
+- **Interface utilisateur** : développée avec le framework [Dash](https://dash.plotly.com/) (Python), elle permet de renseigner, visualiser et exporter les données (saisies, contraintes, résultats).
+- **Solveur de contraintes** : développé avec [Google OR-Tools](https://developers.google.com/optimization), il transforme le problème d’emploi du temps en un problème d’optimisation à contraintes.
+
+Les données sont échangées entre ces deux modules via des fichiers JSON structurés.
+
+
+## Technologies utilisées
+- Langage principal : **Python 3.10+**
+- Interface : **Dash**, **dash-mantine-components**
+- Solveur : **OR-Tools**
+- Formats d’échange : **JSON** pour les données, **PDF** pour l’export
+- Environnement : **local uniquement** (pas de base de données, ni de serveur distant)
+
+
+## Installation
+### 1. Prérequis
+- Système d’exploitation : Windows, macOS, ou Linux
+- Python 3.10 ou supérieur installé (avec `pip`)
+- Navigateur web à jour (Chrome, Firefox, Edge...)
+
+### 2. Cloner le dépôt
+Ouvrir un terminal et exécuter :
+```bash
+git clone https://github.com/ValentineDz/Emploi-Du-Temps-TER.git
+cd Emploi-Du-Temps-TER
+```
+
+### 3. Installer les dépendances
+Dans le dossier du projet, exécuter :
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Lancer l’application
+Dans le dossier du projet, lancer :
+```bash
+python app.py
+```
+Puis ouvrir un navigateur à l’adresse suivante : [http://127.0.0.1:8050](http://127.0.0.1:8050)
+
+
+## Utilisation
+Une fois l’application lancée :
+- L’utilisateur peut **saisir ou importer** les données nécessaires : enseignants, classes, matières, salles, options, langues, calendrier...
+- Il peut ensuite **générer un emploi du temps** à l’aide du bouton prévu à cet effet.
+- Les **résultats** sont consultables directement via l’interface : affichage visuel des emplois du temps par classe, salle ou professeur.
+- Il est possible d’**exporter les emplois du temps** en **PDF**.
+- Toutes les saisies et modifications sont **enregistrées automatiquement** dans les fichiers JSON (données stockées localement).
+
+
+## Procédure de mise à jour
+Pour mettre à jour l’application tout en conservant les données :
+1. **Arrêter l’application** avec `CTRL + C` dans le terminal.
+2. **Sauvegarder** le fichier `data/data_interface.json` si nécessaire.
+3. Mettre à jour le projet :
+    - Si cloné avec Git :
+    ```bash
+    git pull
+    ```
+    - Sinon, télécharger la dernière archive ZIP depuis GitHub.
+4. Réinstaller les dépendances si le fichier `requirements.txt` a été modifié :
+```bash
+pip install -r requirements.txt
+```
+5. Relancer l’application :
+```bash
+python app.py
 ```
 
 
-## Gestion de Projet : 
-Dans cette partie vous trouverez toutes les informations et documents relatives à la gestion de projet du TER : 
-Conception et réalisation de la mise en place d’un emploi du temps.
-
-### Accès aux documents : 
-
-#### Accès au Google Drive : 
-- Vous pouvez accéder à tous les comptes-rendus via [le lien suivant](https://drive.google.com/drive/folders/14-HWxcOXcnJf5WjjvTNWQ2tMvVvIMdCz?usp=sharing). Veillerer vous référer à la branche "Comptes-rendus-de-Réunions" pour plus de détails.
-- Vous pouvez accéder à toute la gestion de projet via [le lien suivant](https://drive.google.com/drive/folders/189bBvaXNsyEjTNG3iaVXO0WQ8KaDxHea?usp=sharing).
-- Vous pouvez accéder à tous les documents mis à disposition via [le lien suiavnt](https://drive.google.com/drive/folders/1A3VCdZdZZUSmMKo5c7HoZu2C7Ld2FmUB?usp=sharing).
-
-#### Accès au Trello (outil de gestion de projet) : 
-Vous pouvez accéder à l'outil de gestion de projet Trello [via l'invitation suivante](https://trello.com/invite/b/6718f9e1feb58c144f2da44b/ATTIe87930ff516125d7c3939c526abd151953855765/m1-miashs-ic-ter-edt). (Attention la demande doit être accépté par l'administrateur du Trello, Tropel Célia, en cas de problème de connexion veuiller nous contacter à l'adresse mail suivante :  celia.tropel@etu.univ-grenoble-alpes.fr).
-
-### Description des documents à disposition sur le drive : 
-
-#### Documents relatifs à la gestion de projet : 
-[Lien.](https://drive.google.com/drive/folders/189bBvaXNsyEjTNG3iaVXO0WQ8KaDxHea?usp=sharing)
-
-| Nom                       | Description    | 
-|---------------------------|----------------|
-| Organisation du Projet    | Présentation des différents acteurs du projet et de l'oragnisation du Google drive.  | 
-| Echéancier                | Diagramme de Gantt, voir date de la version directement sur le document. |
-
-#### Documents relatifs au projet : 
-[Lien.](https://drive.google.com/drive/folders/1A3VCdZdZZUSmMKo5c7HoZu2C7Ld2FmUB?usp=sharing)
-| Nom                                                | Description    | 
-|----------------------------------------------------|----------------|
-| 1- Documents à Destination du Collèges   | Grille d'entretien : contenant toutes les contraintes liées à la création d'un emploi du temps que nous avons pu lister et les questions diverses pour le collège. Présentation Projet & Utilisation des Données : Document permettant d'introduire le projet au collège. Avec un point sur l'utilisation des données (RGPD). Idées & propositions pour l'application + Questions : Document ayant servit de base pour la création de la grille d'entretien. |
-| 2- Analyses réalisées durant le S1 | Analyse des solvers et d'un outil de gestion et de création d'emploi du temps. |
-| 3- Modèles Documents | Modèles des documents à fournir pour permettre à Mme. Landry d'avoir les attentes pour chaque document. |
-| 4- Documents .doc pour Rendus du S1 | Rendus .doc finaux du S1.|
-| 5- Documents .pdf pour Rendus du S1 | Rendus PDF finaux du S1.|
-
----
-
-### Contacts 
-
-- Damien Pellier : damien.pellier@imag.fr 
-
-Commanditaire(s) : 
-- Aurélie Landry : aurelie.landry@univ-grenoble-alpes.fr
-
-Groupe 1 : 
-- Kylian Deschamps : kylian.deschamps@etu.univ-grenoble-alpes.fr 
-- Valentine Duez-Faurie : valentine.duez-faurie@etu.univ-grenoble-alpes.fr 
-- Kadir Eramil : kadir.eramil@etu.univ-grenoble-alpes.fr 
-
-Groupe 2 : 
-- Jean-Baptiste Arbaut : jean-baptiste.arbaut@etu.univ-grenoble-alpes.fr 
-- Aubry Pilloud : aubry.pilloud@etu.univ-grenoble-alpes.fr 
-- Célia Tropel : celia.tropel@etu.univ-grenoble-alpes.fr 
-
----
-
-### Dates importantes 
-- Choix définitif du sujet : 10/10/2024.✅
-- Début du stage une journée par semaine : 14/10/2024.
-- Date de la première soutenance : 20/01/2025 et 27/01/2025.
-- Début des 7 semaines de stages : 05/05/2025.
-- Soutenance finale : 19/06/2025.
+## Licence
+Ce projet a été réalisé à des fins pédagogiques dans le cadre d’un TER à l’Université Grenoble Alpes.
+Il peut être utilisé, modifié ou adapté à des fins non commerciales. 
 
 
-## Réunions de projet : 
-Dans ce document vous trouverez les planning et les comptes-rendus relatifs aux réunions réalisées dans le cadre du projet TER : Conception et réalisation de la mise en place d’un emploi du temps. 
-Vous pouvez accéder à tous les comptes-rendus via [le lien suivant](https://drive.google.com/drive/folders/14-HWxcOXcnJf5WjjvTNWQ2tMvVvIMdCz?usp=sharing).
+## Auteurs
+Projet développé par six étudiants du Master MIASHS – Université Grenoble Alpes : 
+- M. Arbaut Jean-Baptiste
+- M. Deschamps Kylian
+- Mme Duez-Faurie Valentine
+- M. Eramil Kadir
+- M. Pilloud Aubry
+- Mme Tropel Célia
 
-### Plannings des réunions :
-
-#### Planning des réunions avec Mme. Landry : 
-| Date          | Horaire        | Lieux | Commentaires      |
-|---------------|----------------|-------|-------------------|
-| Vendredi 18/10| 13:00 à 14:30  | BMD   |                   |
-| Mardi 5/11    | 13:30 à 14:30  | BMD   | Déplacé le 12/11  |
-| Mardi 19/11   | 10:30 à 11:30  | IMAG  |                   |
-| Vendredi 6/12 | 14:45 à 15:45  | IMAG  | Déplacé le 13/12  |
-| A définir si besoin. |               |       |                   |
-
-#### Planning des réunions avec M. Pellier : 
-| Date          | Horaire        | Lieux | Commentaires      |
-|---------------|----------------|-------|-------------------|
-| Lundi 25/11   | 10:00          | BMD   |                   |
-| Lundi 9/12    | 10:00          | BMD   |                   |
-
-#### Planning des réunions avec M. Laffond (principal du collège de Pont-en-Royan) : 
-| Date          | Horaire        | Lieux        | Commentaires      |
-|---------------|----------------|--------------|-------------------|
-| Lundi 29/11   | 9:00 à 10H30   | A distance   |                   |
-
----
-
-### Comptes-rendus des réunions : 
-Tous nos comptes-rendus et autres documents sont disponibles dans un Google Drive. 
-
-#### Comptes-rendus des réunions avec Mme. Landry : 
-| Date            | Lien vers le compte-rendu      |
-|-----------------|--------------------------------|
-| Vendredi 18/10  | [Disponible.](https://docs.google.com/document/d/19j1hzim2e27nhcKxCi77yMV4aj-cnOw0hsWdzVjNWHc/edit?usp=drive_link)              |
-| Mardi 12/11     | [Disponible.](https://docs.google.com/document/d/1hEV5GoCbWaAZ-oB2LAaD061vDI9b1B-9DN2GvrutGDM/edit?usp=drive_link)              |
-| Mardi 19/11     | [Disponible.](https://docs.google.com/document/d/1vwlQ4idLEg4V13RzEKO263JuRVc5lv81G5z9w9icwqI/edit?usp=sharing)                 |
-| Vendredi 13/12  | [Disponible.](https://docs.google.com/document/d/17V32L7mI2Qzjys-0kH8ytFm0MMDEZbacNlHBP8HYwAw/edit?usp=sharing)                 |
-| Mardi 28/01/25  | [Disponible.](https://docs.google.com/document/d/1f7xcn9sCZqc1YIGdilG3WVGqesGv6qXEGUL2c66meA8/edit?usp=sharing)                 |
-| Mardi 25/02/25  | [Disponible.](https://docs.google.com/document/d/1xNiVHXc0uXaORRZBfr5kUru-20tJtivT2jcjzWe_gsc/edit?usp=sharing)                 |
-| Non défini      | Indisponible.                  |
-
-#### Comptes-rendus des réunions avec M. Pellier : 
-| Date          | Lien vers le compte-rendu      |
-|---------------|--------------------------------|
-| Lundi 25/11   | [Disponible.](https://docs.google.com/document/d/1r5LVkF3i_B06AGJ7l0VcHQb5Z9K7Z5xGD-l5kd96IN8/edit?usp=drive_link)              | 
-| Lundi 9/12    | [Disponible.](https://docs.google.com/document/d/1Bmut9727WWYQLW4OpAmYXQuxHltM_DKmm_mboLxJnJQ/edit?usp=sharing)                 | 
-| Lundi 24/02/25 | [Disponible.](https://docs.google.com/document/d/1hICSjv9KX2fJcgaANBZprWZjzdoCWJdR5NpxaZvARto/edit?usp=sharing)                |
+Maître d’ouvrage : 
+- Mme Landry Aurélie
 
 
-#### Comptes-rendus des réunions avec M. Laffond : 
-| Date          | Lien vers le compte-rendu      |
-|---------------|--------------------------------|
-| Lundi 29/11   | [Disponible.](https://docs.google.com/document/d/1c1PaARlNbUlCOR-6Fg6_qn1dMRsEOxmr5fEl9aVTPu8/edit?usp=drive_link)              | 
-
-
-#### Comptes-rendus des réunions avec Mme. Laundry et M. Pellier
-
-| Date          | Lien vers le compte-rendu      |
-|---------------|--------------------------------|
-| Jeudi 06/02/25   | [Disponible.](https://docs.google.com/document/d/1Sar047fmiqhPx4zmmlY8ZBObPDKikvfgvPFT9qzfjM8/edit?usp=sharing)              | 
----
+## Documentation
+La documentation complète, incluant le manuel d’installation, est disponible dans le dossier docs/.
