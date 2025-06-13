@@ -587,9 +587,9 @@ def global_callback(
         if "all_profs" in export_options:
             for prof in get_entites(edt, "edt_prof"):
                 mat = get_table_matrix_pdf(edt, "edt_prof", prof)
-                title = f"Emploi du temps Prof {prof}"
+                title = f"Emploi du temps Enseignants {prof}"
                 pdf_buffers.append(make_pdf(title, mat))
-                filenames.append(f"Prof_{prof}.pdf")
+                filenames.append(f"Professeurs_{prof}.pdf")
         if "all_salles" in export_options:
             for salle in get_entites(edt, "edt_salle"):
                 mat = get_table_matrix_pdf(edt, "edt_salle", salle)
@@ -683,7 +683,7 @@ def update_sidepanel(mode, move_source, pending_action, edit_source, edt, vue, e
                 options=[
                     {"label": "Emploi du temps affiché", "value": "current"},
                     {"label": "Toutes les classes", "value": "all_classes"},
-                    {"label": "Tous les profs", "value": "all_profs"},
+                    {"label": "Tous les enseigants", "value": "all_profs"},
                     {"label": "Toutes les salles", "value": "all_salles"},
                 ],
                 value=[],

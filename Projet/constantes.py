@@ -22,6 +22,8 @@ from fonctions import initialiser_fichier_si_absent
 
 NIVEAUX = ["6e", "5e", "4e", "3e"]
 
+FICHIER_INTERFACE = "data/data_interface.json"
+
 JOURS_SEMAINE = [
                         {'label': ' Lundi', 'value': 'Lundi'},
                         {'label': ' Mardi', 'value': 'Mardi'},
@@ -74,9 +76,9 @@ CATEGORIES_OPTIONS = {
 OUI_NON = [{"label": " Oui", "value": "oui"}, {"label": " Non", "value": "non"}]
 
 CLASSES_DEFAUT = [
-                {"Classe": "6e1", "Niveau": "6e", "Effectif": "26", "Dependances": "", "MatiereGroupe": ""},
-                {"Classe": "6e2", "Niveau": "6e", "Effectif": "30", "Dependances": "", "MatiereGroupe": ""},
-                {"Classe": "6ESP1", "Niveau": "6e", "Effectif": "12", "Dependances": "6e1,6e2", "MatiereGroupe": "Espagnol"}
+                {"Classe": "5e1", "Niveau": "5e", "Effectif": "26", "Dependances": "", "MatiereGroupe": ""},
+                {"Classe": "5e2", "Niveau": "5e", "Effectif": "30", "Dependances": "", "MatiereGroupe": ""},
+                {"Classe": "5ESP1", "Niveau": "5e", "Effectif": "12", "Dependances": "5e1,5e2", "MatiereGroupe": "Espagnol", "TypeGroupe": "LV2"}
             ]
 
 PROFS_DEFAUT = [

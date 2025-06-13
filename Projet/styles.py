@@ -1071,4 +1071,7 @@ export_checklist_style = {
     "marginBottom": "15px"
 }
 
- 
+style_telecharger_accueil = {
+    "textAlign": "center", 
+    "fontWeight": "bold"
+}

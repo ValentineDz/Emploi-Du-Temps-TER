@@ -105,4 +105,5 @@ Maître d’ouvrage :
 
 
 ## Documentation
-La documentation complète, incluant le manuel d’installation, est disponible dans le dossier docs/.
+La documentation complète, incluant le manuel d’installation, est disponible dans le dossier "Documents".
+L'ensemble des documents du premier et du second semestre sont sur le [Google Drive du projet](https://drive.google.com/drive/folders/1gjVmAVPBoRPbrPL_emGiR3nooUzGTV3G?usp=sharing)

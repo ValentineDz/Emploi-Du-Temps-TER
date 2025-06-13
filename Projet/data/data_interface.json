@@ -17,8 +17,8 @@
       "Fin de cours maximum": "17:50"
     },
     "duree_creneau": 55,
-    "recreations": 15,
-    "pause_meridienne": "00:30"
+    "recreations": null,
+    "pause_meridienne": "00:00"
   },
   "2_langues_et_options": {
     "lv1": [],
@@ -40,42 +40,52 @@
     "niveaux_lv3": [
       0,
       3
+    ],
+    "niveaux_lv4": [
+      0,
+      3
     ]
   },
   "3_ressources": {
     "classes": [
       {
-        "Classe": "6e1",
-        "Niveau": "6e",
+        "Classe": "5e1",
+        "Niveau": "5e",
         "Effectif": "26",
         "Dependances": "",
-        "MatiereGroupe": ""
+        "MatiereGroupe": "",
+        "IDGroupe": "",
+        "TypeGroupe": ""
       },
       {
-        "Classe": "6e2",
-        "Niveau": "6e",
+        "Classe": "5e2",
+        "Niveau": "5e",
         "Effectif": "30",
         "Dependances": "",
-        "MatiereGroupe": ""
+        "MatiereGroupe": "",
+        "IDGroupe": "",
+        "TypeGroupe": ""
       },
       {
-        "Classe": "6ESP1",
-        "Niveau": "6e",
+        "Classe": "5ESP1",
+        "Niveau": "5e",
         "Effectif": "12",
-        "Dependances": "6e1,6e2",
-        "MatiereGroupe": "Espagnol"
+        "Dependances": "5e1,5e2",
+        "MatiereGroupe": "Espagnol",
+        "TypeGroupe": "LV2",
+        "IDGroupe": "LV2_Espagnol"
       }
     ],
     "salles": [
       {
         "Nom": "A1",
         "Matieres": "",
-        "Capacite": 30
+        "Capacite": "30"
       },
       {
         "Nom": "B1",
         "Matieres": "Physique-chimie,SVT",
-        "Capacite": 25
+        "Capacite": "25"
       }
     ],
     "professeurs": [
@@ -112,7 +122,7 @@
         "VolumeHoraire": 4.5
       },
       {
-        "Discipline": "Histoire-Géographie-EMC",
+        "Discipline": "Histoire-Géographie",
         "VolumeHoraire": 3
       },
       {
@@ -120,8 +130,12 @@
         "VolumeHoraire": 4
       },
       {
-        "Discipline": "Sciences (SVT et Physique-Chimie)",
-        "VolumeHoraire": 3
+        "Discipline": "SVT",
+        "VolumeHoraire": 1.5
+      },
+      {
+        "Discipline": "Physique-Chimie",
+        "VolumeHoraire": 1.5
       },
       {
         "Discipline": "EPS",
@@ -146,7 +160,7 @@
         "VolumeHoraire": 3.5
       },
       {
-        "Discipline": "Histoire-Géographie-EMC",
+        "Discipline": "Histoire-Géographie",
         "VolumeHoraire": 3
       },
       {
@@ -192,7 +206,7 @@
         "VolumeHoraire": 3.5
       },
       {
-        "Discipline": "Histoire-Géographie-EMC",
+        "Discipline": "Histoire-Géographie",
         "VolumeHoraire": 3
       },
       {
@@ -238,7 +252,7 @@
         "VolumeHoraire": 3.5
       },
       {
-        "Discipline": "Histoire-Géographie-EMC",
+        "Discipline": "Histoire-Géographie",
         "VolumeHoraire": 3.5
       },
       {
@@ -294,70 +308,10 @@
     }
   },
   "affichage": {
-    "horaires_affichage": [
-      "08:25 - 09:20",
-      "09:20 - 10:15",
-      "10:30 - 11:25",
-      "11:25 - 12:20",
-      "12:20 - 13:00",
-      "13:00 - 13:55",
-      "13:55 - 14:50",
-      "15:05 - 16:00",
-      "16:00 - 16:55",
-      "16:55 - 17:50"
-    ],
-    "professeurs_affichage": [
-      "Mme Durand Marie",
-      "M. Dupont Paul"
-    ],
-    "volume_horaire_affichage": {
-      "6e": {
-        "Français": 4.5,
-        "Mathématiques": 4.5,
-        "Histoire-Géographie-EMC": 3,
-        "Sciences (SVT et Physique-Chimie)": 3,
-        "EPS": 4,
-        "Arts plastiques": 1,
-        "Musique": 1
-      },
-      "5e": {
-        "Français": 4.5,
-        "Mathématiques": 3.5,
-        "Histoire-Géographie-EMC": 3,
-        "SVT": 1.5,
-        "Physique-Chimie": 1.5,
-        "Technologie": 1.5,
-        "EPS": 3,
-        "Arts plastiques": 1,
-        "Musique": 1
-      },
-      "4e": {
-        "Français": 4.5,
-        "Mathématiques": 3.5,
-        "Histoire-Géographie-EMC": 3,
-        "SVT": 1.5,
-        "Physique-Chimie": 1.5,
-        "Technologie": 1.5,
-        "EPS": 3,
-        "Arts plastiques": 1,
-        "Musique": 1
-      },
-      "3e": {
-        "Français": 4,
-        "Mathématiques": 3.5,
-        "Histoire-Géographie-EMC": 3.5,
-        "SVT": 1.5,
-        "Physique-Chimie": 1.5,
-        "Technologie": 1.5,
-        "EPS": 3,
-        "Arts plastiques": 1,
-        "Musique": 1
-      }
-    },
-    "salles_affichage": [
-      "A1",
-      "B1"
-    ]
+    "horaires_affichage": [],
+    "professeurs_affichage": [],
+    "volume_horaire_affichage": {},
+    "salles_affichage": []
   },
   "contraintes": {
     "profs": {
@@ -388,9 +342,5 @@
       "fin_jeunes_plus_tot": "non"
     },
     "fin_jeunes_plus_tot": false
-  },
-  "contraintes_3_4": {
-    "planning": [],
-    "enchainement": []
   }
 }

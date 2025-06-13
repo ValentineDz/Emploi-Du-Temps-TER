@@ -38,6 +38,9 @@ def layout_contraintes():
         html.Div: Composant Dash contenant la structure complète de la page
         avec en-tête, explication, accordéons de contraintes et boutons de navigation.
     """
+    generer_professeurs_affichage()
+    generer_volume_horaire()
+    generer_salles_affichage()
     config = charger_config()
 
     # 1. Jours
@@ -55,10 +58,7 @@ def layout_contraintes():
     groupes = list(config["affichage"]["volume_horaire_affichage"].keys())
 
     # 5. Salles : on récupère le champ "Nom" dans 3_ressources → salles
-    salles = [
-        s["Nom"]
-        for s in config["3_ressources"]["salles"]
-    ]
+    salles = config["affichage"]["salles_affichage"]
     # 6. Volume horaire (pour planning, enchaînements…)
     volume_horaire = config["affichage"]["volume_horaire_affichage"]
 
@@ -671,7 +671,7 @@ def make_disable_options_callback(entite: str):
         elif entite == "groupes":
             liste_complete = list(config["affichage"]["volume_horaire_affichage"].keys())
         elif entite == "salles":
-            liste_complete = [s["Nom"] for s in config["3_ressources"]["salles"]]
+            liste_complete = config["affichage"]["salles_affichage"]
         else:
             liste_complete = []
 

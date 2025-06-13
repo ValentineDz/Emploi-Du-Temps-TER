@@ -33,6 +33,7 @@ from styles import style_liste_choix
 import json
 import math
 import copy
+import shutil
 
 
 from reportlab.lib.styles import ParagraphStyle
@@ -58,7 +59,7 @@ def generer_squelette_json_interface():
             ],
             "jours_particuliers": ["Mercredi"],
             "horaires_classiques": {},
-            "duree_creneau": None,
+            "duree_creneau": 55,
             "recreations": None,
             "pause_meridienne": "00:00"
         },
@@ -82,9 +83,9 @@ def generer_squelette_json_interface():
         },
         "3_ressources": {
             "classes": [
-                {"Classe": "6e1", "Niveau": "6e", "Effectif": "26", "Dependances": "", "MatiereGroupe": ""},
-                {"Classe": "6e2", "Niveau": "6e", "Effectif": "30", "Dependances": "", "MatiereGroupe": ""},
-                {"Classe": "6ESP1", "Niveau": "6e", "Effectif": "12", "Dependances": "6e1,6e2", "MatiereGroupe": "Espagnol"}
+                {"Classe": "5e1", "Niveau": "5e", "Effectif": "26", "Dependances": "", "MatiereGroupe": "", "IDGroupe":""},
+                {"Classe": "5e2", "Niveau": "5e", "Effectif": "30", "Dependances": "", "MatiereGroupe": "", "IDGroupe":""},
+                {"Classe": "5ESP1", "Niveau": "5e", "Effectif": "12", "Dependances": "5e1,5e2", "MatiereGroupe": "Espagnol", "TypeGroupe": "LV2","IDGroupe":"LV2_Espagnol"}
             ],
             "salles": [
                 {"Nom": "A1", "Matieres": "", "Capacite": 30},
@@ -99,9 +100,10 @@ def generer_squelette_json_interface():
             "6e": [
                 {"Discipline": "Français", "VolumeHoraire": 4.5},
                 {"Discipline": "Mathématiques", "VolumeHoraire": 4.5},
-                {"Discipline": "Histoire-Géographie-EMC", "VolumeHoraire": 3},
+                {"Discipline": "Histoire-Géographie", "VolumeHoraire": 3},
                 {"Discipline": "Langue vivante", "VolumeHoraire": 4},
-                {"Discipline": "Sciences (SVT et Physique-Chimie)", "VolumeHoraire": 3},
+                {"Discipline": "SVT", "VolumeHoraire": 1.5},
+                {"Discipline": "Physique-Chimie", "VolumeHoraire": 1.5},
                 {"Discipline": "EPS", "VolumeHoraire": 4},
                 {"Discipline": "Arts plastiques", "VolumeHoraire": 1},
                 {"Discipline": "Musique", "VolumeHoraire": 1},
@@ -109,7 +111,7 @@ def generer_squelette_json_interface():
             "5e": [
                 {"Discipline": "Français", "VolumeHoraire": 4.5},
                 {"Discipline": "Mathématiques", "VolumeHoraire": 3.5},
-                {"Discipline": "Histoire-Géographie-EMC", "VolumeHoraire": 3},
+                {"Discipline": "Histoire-Géographie", "VolumeHoraire": 3},
                 {"Discipline": "Langue vivante 1", "VolumeHoraire": 3},
                 {"Discipline": "Langue vivante 2", "VolumeHoraire": 2.5},
                 {"Discipline": "SVT", "VolumeHoraire": 1.5},
@@ -122,7 +124,7 @@ def generer_squelette_json_interface():
             "4e": [
                 {"Discipline": "Français", "VolumeHoraire": 4.5},
                 {"Discipline": "Mathématiques", "VolumeHoraire": 3.5},
-                {"Discipline": "Histoire-Géographie-EMC", "VolumeHoraire": 3},
+                {"Discipline": "Histoire-Géographie", "VolumeHoraire": 3},
                 {"Discipline": "Langue vivante 1", "VolumeHoraire": 3},
                 {"Discipline": "Langue vivante 2", "VolumeHoraire": 2.5},
                 {"Discipline": "SVT", "VolumeHoraire": 1.5},
@@ -135,7 +137,7 @@ def generer_squelette_json_interface():
             "3e": [
                 {"Discipline": "Français", "VolumeHoraire": 4},
                 {"Discipline": "Mathématiques", "VolumeHoraire": 3.5},
-                {"Discipline": "Histoire-Géographie-EMC", "VolumeHoraire": 3.5},
+                {"Discipline": "Histoire-Géographie", "VolumeHoraire": 3.5},
                 {"Discipline": "Langue vivante 1", "VolumeHoraire": 3},
                 {"Discipline": "Langue vivante 2", "VolumeHoraire": 2.5},
                 {"Discipline": "SVT", "VolumeHoraire": 1.5},
@@ -221,6 +223,7 @@ def initialiser_fichier_si_absent():
         donnees = generer_squelette_json_interface()
         with open(chemin, "w", encoding="utf-8") as f:
             json.dump(donnees, f, ensure_ascii=False, indent=2)
+    # print("[DEBUG] Chemin ciblé :", os.path.abspath(chemin))
 
 
 def charger_donnees_interface():
@@ -241,17 +244,18 @@ def sauvegarder_donnees_interface(data, force=False):
     on empêche l'écrasement sauf si `force=True`.
     """
     if not isinstance(data, dict):
+        # print("[ERREUR] Données non valides (non-dict), sauvegarde annulée.")
         return
 
-    # Liste de clés essentielles attendues dans le fichier final
     cles_essentielles = ["1_horaires", "2_langues_et_options", "3_ressources", "4_programme_national"]
     if not force and not all(k in data for k in cles_essentielles):
+        # print("[AVERTISSEMENT] Données incomplètes. Clés manquantes :",
+        #      [k for k in cles_essentielles if k not in data])
         return
 
     os.makedirs("data", exist_ok=True)
     with open("data/data_interface.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-
 
 def merge_dicts(d1, d2):
     """
@@ -290,7 +294,6 @@ def mettre_a_jour_section_interface(section, nouvelle_valeur):
         d[last_key] = merge_dicts(d[last_key], nouvelle_valeur)
     else:
         d[last_key] = nouvelle_valeur
-
     sauvegarder_donnees_interface(data)
 
 #################################################################################################################################################################
@@ -817,7 +820,8 @@ def charger_config():
 
 def charger_contraintes_interface(entite: str) -> dict:
     """
-    Charge les contraintes horaires (partielles et totales) d'une entité (prof, groupe, salle).
+    Charge les contraintes horaires (partielles et totales) d'une entité (prof, groupe, salle),
+    en ignorant celles qui ne sont plus dans la liste d'affichage.
 
     Args:
         entite (str): Nom de l'entité ciblée ("profs", "groupes", ou "salles").
@@ -832,12 +836,25 @@ def charger_contraintes_interface(entite: str) -> dict:
     with open(fichier, encoding="utf-8") as f:
         data = json.load(f)
 
+    # Filtre les contraintes en fonction de la présence ou non dans la partie affichage du json
+    entites_affichage = []
+    if entite == "profs":
+        entites_affichage = data.get("affichage", {}).get("professeurs_affichage", [])
+    elif entite == "salles":
+        entites_affichage = data.get("affichage", {}).get("salles_affichage", [])
+
+
     entite_data = data.get("contraintes", {}).get(entite, {})
     part = entite_data.get("indisponibilites_partielles", {})
     tot  = entite_data.get("indisponibilites_totales", {})
 
+    # Si pas de filtre d'affichage possible, on prend tout (groupes/classes)
+    noms_valides = set(part) | set(tot)
+    if entites_affichage:
+        noms_valides = set(noms_valides) & set(entites_affichage)
+
     contraintes = {}
-    for nom in set(part) | set(tot):
+    for nom in noms_valides:
         contraintes[nom] = {}
         for jour, lignes in part.get(nom, {}).items():
             for ligne in lignes:
@@ -1277,12 +1294,12 @@ def sauvegarder_edt_global(edt_global):
     Returns:
         None
     """
-    try:
-        with open("data/emploi_du_temps_global.json", "w", encoding="utf-8") as f:
-            json.dump(edt_global, f, ensure_ascii=False, indent=2)
+    # try:
+    with open("data/emploi_du_temps_global.json", "w", encoding="utf-8") as f:
+        json.dump(edt_global, f, ensure_ascii=False, indent=2)
             
-    except Exception as e:
-        print("Erreur lors de la sauvegarde :", e)
+    # except Exception as e:
+        # print("Erreur lors de la sauvegarde :", e)
 
 def get_entites(edt, vue):
     """
@@ -1988,7 +2005,7 @@ def get_table_matrix_pdf(edt, vue, entite):
                 cours_style = ParagraphStyle(
                     "cours",
                     fontName="Helvetica",
-                    fontSize=5.5,
+                    fontSize=5.0,
                     alignment=0,  
                     leading=6,
                     spaceAfter=0,
@@ -2105,3 +2122,68 @@ def build_edit_panel(cell, vue, semaine="A"):
             dbc.Label("Professeur"), dbc.Input(id=f"input-prof-{semaine}-visible", type="text", value=prof_val or "", key=f"prof-{semaine}-{prof_val}"),
         ]
     return html.Div(items)
+
+
+def copier_document_utilisateur():
+    """
+    Copie le manuel d'utilisation depuis un dossier source vers le dossier 'assets' de l'application.
+
+    La fonction recherche dans le dossier `../documents/S2` un fichier PDF dont le nom contient
+    la chaîne "Manuel d'utilisation". Si un tel fichier est trouvé, il est copié dans le dossier `assets`
+    sous le nom normalisé "Manuel_utilisation.pdf".
+
+    Returns:
+        str or None: Le nom du fichier copié ("Manuel_utilisation.pdf") si l'opération réussit,
+                     sinon None si aucun fichier correspondant n'est trouvé.
+    """
+    dossier_source = os.path.abspath("../documents/S2")
+    dossier_cible = os.path.abspath("assets")
+
+    # Cherche un fichier contenant "Manuel d'utilisation"
+    for fichier in os.listdir(dossier_source):
+        if "Manuel d'utilisation" in fichier and fichier.endswith(".pdf"):
+            source = os.path.join(dossier_source, fichier)
+            destination = os.path.join(dossier_cible, "Manuel_utilisation.pdf")
+            shutil.copyfile(source, destination)
+            return "Manuel_utilisation.pdf"
+    return None
+
+def harmoniser_intitule(matiere: str) -> str:
+    """
+    Met en forme l'intitulé d'une matière :
+    - Première lettre en majuscule, reste en minuscule
+    - Sauf si tout est déjà en majuscules (abréviation)
+
+    Args:
+        matiere (str): Intitulé brut
+
+    Returns:
+        str: Intitulé harmonisé
+    """
+    matiere = matiere.strip()
+    if not matiere:
+        return ""
+    if matiere.isupper():
+        return matiere  # EPS, SVT...
+    return matiere[0].upper() + matiere[1:].lower()
+
+def normaliser_matiere_groupe(valeur: str) -> str:
+    """
+    Normalise les intitulés de la colonne 'MatiereGroupe' pour qu'ils soient 
+    uniquement l'une des valeurs autorisées : Option, LV1, LV2, LV3, LV4.
+
+    Args:
+        valeur (str): Saisie brute utilisateur.
+
+    Returns:
+        str: Valeur normalisée (ou vide si invalide).
+    """
+    valeur = valeur.strip().lower().replace(" ", "")
+    mapping = {
+        "option": "Option",
+        "lv1": "LV1",
+        "lv2": "LV2",
+        "lv3": "LV3",
+        "lv4": "LV4"
+    }
+    return mapping.get(valeur, "")

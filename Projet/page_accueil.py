@@ -19,6 +19,7 @@ Cette page constitue le point de départ de l'application et offre un aperçu p�
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 from styles import *
+from fonctions import copier_document_utilisateur
 
 def layout_accueil():
     """
@@ -37,6 +38,8 @@ def layout_accueil():
     Returns:
         html.Div: Le layout Dash contenant la structure complète de la page d'accueil.
     """
+    nom_fichier = copier_document_utilisateur()
+
     return html.Div([
         html.Div([
             html.Br(),
@@ -318,24 +321,100 @@ def layout_accueil():
             ], title="Saisie des contraintes optionnelles de votre établissement"),
 
             dbc.AccordionItem([
-                html.P("Dans cette partie, nous expliquons comment paramétrer la génération des emplois du temps. "
-                        "Vous pourrez choisir le nombre de solutions à générer, comparer les résultats et comprendre les étapes du processus "
-                        "de calcul.", 
-                        style=explication_style)]
-            ,title="Calculs / Génération de l'emplois du temps"),
+                  html.Div([
+                    html.H3("1.Lancer le calcul de l'emploi du temps", className="mt-3"),
+                    html.P(
+                        "Tout est configuré pour générer l'emploi du temps de létablissement."
+                        "Le logiciel peut générer plusieurs emplois du temps pour ensuite les comparer et ressortir celui le plus adapté aux contraintes entrées précédemment."
+                        ,style=explication_style
+                    ),
+                    html.Ul([
+                        html.Li("Étape 1 : Entrer le nombre d’emplois du temps à générer"),
+                        html.Li("Étape 2 : Lancer le calcul."),
+                    ])
+                ]),
+                ],title="Lancer le calcul de l'emploi du temps"),
 
-            dbc.AccordionItem(
-                [html.P("Dans cette section vous pouvez visualiser les emplois du temps générés, les modifer, les exporter en PDF et analyser les statistiques sommaires. "
-                    "Vous y trouverez des indicateurs sur le respect des contraintes, la répartition des cours et d'autres métriques "
-                    "importantes pour évaluer la qualité de l'emploi du temps ou des emplois du temps produits.",
-                    style=explication_style)
-                ], title="Visualisation des résultats"
-            ),
+           dbc.AccordionItem(
+            [
+                # ---- PARTIE 1 : STATISTIQUES ----
+                html.Div([
+                    html.H3("1. Statistiques sur le respect des contraintes", className="mt-3"),
+                    html.P(
+                        "Consultez ici les statistiques de complétion de l’emploi du temps généré : respect du volume horaire, contraintes obligatoires et optionnelles. "
+                        "Un code couleur indique rapidement si les objectifs sont atteints.",
+                        style=explication_style
+                    ),
+                    html.Ul([
+                        html.Li("Volume horaire : en vert si 100 % du volume a été placé, sinon en rouge."),
+                        html.Li("Contraintes obligatoires : en vert si toutes respectées, sinon en rouge."),
+                        html.Li("Contraintes optionnelles : en vert si ≥ 80 % respectées, sinon en rouge."),
+                        html.Li("Tableau détaillé : liste chaque contrainte, son type, le nombre et le taux de respect."),
+                        html.Li("Menu déroulant pour consulter le détail des violations de contraintes."),
+                    ]),
+                ]),
+
+                html.Br(),
+
+                # ---- PARTIE 2 : GESTION DES EMPLOIS DU TEMPS ----
+                html.Div([
+                    html.H3("2.1 Gestion des emplois du temps", className="mt-3"),
+                    html.P(
+                        "Affichez et gérez les emplois du temps. Sélectionnez une ressource à l’aide d’une liste déroulante : salle, professeur ou classe."
+                        " Quatre modes de gestion sont disponibles :",
+                        style=explication_style
+                    ),
+                    html.Ul([
+                        html.Li("**Affichage** : Affiche en grand le tableau de l'emploi du temps sélectionné."),
+                        html.Li("**Édition** : Permet de modifier le contenu d’un créneau."),
+                        html.Li("**Déplacement** : Permet d’échanger ou déplacer des créneaux entre eux."),
+                        html.Li("**Export** : Permet d’exporter l’emploi du temps sélectionné."),
+                    ]),
+
+                    html.Br(),
+
+                    # -- Sous-partie : Edition --
+                    html.H4("2.2 Mode édition"),
+                    html.P("En mode édition, après avoir sélectionné un créneau vous pouvez"),
+                    html.Ul([
+                        html.Li("Sélectionner un créneau à modifier."),
+                        html.Li("Éditer le contenu du créneau pour la semaine A ou la semaine B."),
+                        html.Li("Supprimer le contenu de la semaine A ou de la semaine B."),
+                    ]),
+
+                    html.Br(),
+
+                    # -- Sous-partie : Déplacement --
+                    html.H4("2.3 Mode déplacement"),
+                    html.P("En mode déplacement, après avoir sélectionné deux créneaux vous pouvez :"),
+                    html.Ul([
+                        html.Li("Échanger les deux créneaux."),
+                        html.Li("Écraser le deuxième créneau avec le premier."),
+                        html.Li("Déplacer uniquement le cours de la semaine A."),
+                        html.Li("Déplacer uniquement le cours de la semaine B."),
+                    ]),
+
+                    html.Br(),
+
+                    # -- Sous-partie : Export --
+                    html.H4("2.4 Mode export"),
+                    html.P("Permet d’exporter les emplois du temps au format PDF (dans une archive ZIP). Vous pouvez choisir d’exporter indivuduellement ou de façon groupé :"),
+                    html.Ul([
+                        html.Li("L’emploi du temps actuellement affiché."),
+                        html.Li("Tous les emplois du temps des classes."),
+                        html.Li("Tous les emplois du temps des professeurs."),
+                        html.Li("Tous les emplois du temps des salles."),
+                    ]),
+                ]),
+            ],
+            title="Résultats et gestion de l'emploi du temps"),
+
             html.Br(),
 
+
             html.Div([
-                html.A("Télécharger le Guide d'utilisation complet (PDF)", href="/assets/Guide_utilisateur_complet.pdf", target="_blank")
-            ], style={"textAlign": "center", "fontWeight": "bold"})
+                html.A("Télécharger le Manuel d'utilisation complet (version PDF)", href=f"/assets/{nom_fichier}", target="_blank")
+            ], style=style_telecharger_accueil)
 
         ],
         start_collapsed=True)

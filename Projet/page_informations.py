@@ -84,6 +84,8 @@ def layout_informations():
     Returns:
         html.Div: Composant Dash contenant l'ensemble des éléments de saisie et d'explication.
     """
+    initialiser_fichier_si_absent()
+
     return html.Div([
         dcc.Store(id="initialisation-donnees", data=True),
         dcc.Store(id="freeze-callbacks", data=False),
@@ -265,7 +267,7 @@ def layout_informations():
                                 dcc.Input(
                                     id={"type": "heure-input", "categorie": "classiques", "index": i},
                                     type="number",
-                                    min=0,
+                                    min=6,
                                     max=23,
                                     step=1,
                                     placeholder="HH",
@@ -276,7 +278,7 @@ def layout_informations():
                                     id={"type": "minute-input", "categorie": "classiques", "index": i},
                                     type="number",
                                     min=0,
-                                    max=59,
+                                    max=55,
                                     step=5,
                                     placeholder="MM",
                                     style=style_input_hh_min
@@ -286,6 +288,7 @@ def layout_informations():
                         ], style=style_tbl_horaires)
                         for i, description in enumerate(HORAIRES_LABELS)
                     ], id="bloc-horaires", style=style_alinea),
+                    html.Div(id="message-erreur-horaires"),
 
                     html.Br(),
                     
@@ -293,15 +296,13 @@ def layout_informations():
                     html.H5("2.1.3 Les paramètres supplémentaires d'une journée", className="my-3"),
                     # Saisir la durée d'un créneau horaire classique
                     html.Div([
-                        html.Label("Quelle est la durée d'un créneau horaire classique ?", style=style_marge_droite),
+                        html.Label("La durée d'un créneau horaire classique est de (fixe) : ", style=style_marge_droite),
                         dcc.Input(
                             id="duree-creneau-classique",
                             type="number",
-                            min=5,
-                            max=180,
                             step=5,
-                            placeholder="ex : 55",
-                            style=style_input_hh_min
+                            style=style_input_hh_min,
+                            disabled=True
                         ),
                         html.Span("MIN")
                     ], style=style_input),
@@ -314,8 +315,8 @@ def layout_informations():
                         dcc.Input(
                             id="recre",
                             type="number",
-                            min=0,
-                            max=60,
+                            min=5,
+                            max=20,
                             step=5,
                             placeholder="ex : 15",
                             style=style_input_hh_min
@@ -703,7 +704,8 @@ def layout_informations():
                             html.Li([html.Span("Niveau", style=style_gras), " : 6e, 5e, 4e ou 3e (le \"e\" est automatiquement ajouté si vous écrivez seulement le chiffre)."]),
                             html.Li([html.Span("Nombre d'élèves", style=style_gras), " : Nombre entier uniquement."]),
                             html.Li([html.Span("Classes / Groupes dépendants", style=style_gras), " : Noms des classes / groupes séparés par des virgules qui ont des élèves en commun avec le groupe / la classe de la ligne (ex : 6ESP1, 6ESP2, 6IT1, etc.)."]),
-                            html.Li([html.Span("Matière du groupe", style=style_gras), " : Facultatif. À remplir uniquement si la ligne correspond à un groupe (ex : Espagnol, Latin, etc.)."])
+                            html.Li([html.Span("Matière du groupe", style=style_gras), " : Facultatif. À remplir uniquement si la ligne correspond à un groupe (ex : Espagnol, Latin, etc.)."]),
+                            html.Li([html.Span("Si groupe", style=style_gras), " : Facultatif. À remplir uniquement si la ligne correspond à un groupe. Vous pouvez saisie : Option, LV1, LV2, LV3 ou LV4."])
                         ], style=style_marge_gauche)
                     ], style=style_format_donnes_info),
 
@@ -800,7 +802,8 @@ def layout_informations():
                                 {"name": "Niveau", "id": "Niveau", "type": "text", "editable": True},
                                 {"name": "Nombre d'élèves", "id": "Effectif", "type": "numeric", "editable": True},
                                 {"name": "Classes dépendantes", "id": "Dependances", "type": "text", "editable": True},
-                                {"name": "Matière du groupe", "id": "MatiereGroupe", "type": "text", "editable": True} 
+                                {"name": "Matière du groupe", "id": "MatiereGroupe", "type": "text", "editable": True},
+                                {"name": "Si groupe : Option, LV1, LV2 etc.", "id": "TypeGroupe", "type": "text", "editable": True}
                             ],
                             data=[], 
                             editable=True,
@@ -811,6 +814,7 @@ def layout_informations():
                         ),
 
                         html.Div(id="erreur-classes", style=style_erreur),
+                        html.Div(id="verif-groupes-live"),
 
                         dcc.Store(id="dummy-stockage-classes"),
 
@@ -1258,16 +1262,13 @@ def initialiser_emc_au_chargement(_, niveau):
 @callback(
     Output("table-programme-par-niveau", "data"),
     Input("niveau-programme", "value"),
-    Input("emc-inclus", "value"),
 )
-def afficher_programme_et_corriger_emc(niveau, emc_inclus):
+def afficher_programme(niveau):
     """
-    Met à jour le tableau du programme national pour un niveau donné,
-    en ajustant le nom de la discipline "Histoire-Géographie" selon l'inclusion ou non de l'EMC.
+    Retourne les lignes du programme national pour un niveau donné.
 
     Args:
         niveau (str): Niveau sélectionné (ex : "4e").
-        emc_inclus (str): "oui" ou "non", selon que l'EMC est incluse dans l'horaire.
 
     Returns:
         list[dict]: Liste de disciplines avec noms et volumes à afficher dans le tableau.
@@ -1279,24 +1280,7 @@ def afficher_programme_et_corriger_emc(niveau, emc_inclus):
     prog = data.get("4_programme_national", {})
     lignes = prog.get(niveau, [])
 
-    # Nom attendu selon emc_inclus
-    nom_avec_emc = "Histoire-Géographie-EMC"
-    nom_sans_emc = "Histoire-Géographie"
-
-    nouvelles_lignes = []
-    for ligne in lignes:
-        nom = ligne.get("Discipline", "")
-        vol = ligne.get("VolumeHoraire", None)
-
-        if "histoire-géographie" in nom.lower():
-            if emc_inclus == "oui":
-                nouvelles_lignes.append({"Discipline": nom_avec_emc, "VolumeHoraire": vol})
-            else:
-                nouvelles_lignes.append({"Discipline": nom_sans_emc, "VolumeHoraire": vol})
-        else:
-            nouvelles_lignes.append(ligne)
-
-    return nouvelles_lignes
+    return lignes
 
 @app.callback(
     Output("message-validation-programme", "children"),
@@ -1505,9 +1489,10 @@ def sauvegarder_ancien_programme(niveau_actuel, niveau_precedent, table_data, em
 @callback(
     Output("jours", "value"),
     Output("jours-particuliers", "value"),
-    Input("layout-informations", "id")
+    Input("layout-informations", "id"),
+    Input("reset-message", "children")
     )
-def prefill_jours_horaires(_):
+def prefill_jours_horaires(_, reset_msg):
     """
     Préremplit les jours classiques et les jours particuliers affichés dans la configuration des horaires.
 
@@ -1531,9 +1516,10 @@ def prefill_jours_horaires(_):
     Output({"type": "heure-input", "categorie": MATCH, "index": MATCH}, "value"),
     Output({"type": "minute-input", "categorie": MATCH, "index": MATCH}, "value"),
     Input("layout-informations", "id"),
+    Input("reset-message", "children"),
     State({"type": "heure-input", "categorie": MATCH, "index": MATCH}, "id")
 )
-def prefill_horaires(_, ident):
+def prefill_horaires(_, reset_msg, ident):
     """
     Préremplit chaque champ horaire individuel (heure + minute) à partir des données JSON,
     pour un créneau donné (classique ou particulier), selon son index et sa catégorie.
@@ -1572,9 +1558,10 @@ def prefill_horaires(_, ident):
     Output("recre", "value"),
     Output("pause-meridienne-heures", "value"),
     Output("pause-meridienne-minutes", "value"),
-    Input("layout-informations", "id")
+    Input("layout-informations", "id"),
+    Input("reset-message", "children")
 )
-def prefill_infos_journee(_):
+def prefill_infos_journee(_, reset_msg):
     """
     Prérenseigne les informations globales de la journée scolaire :
     - Durée des créneaux ;
@@ -1842,46 +1829,96 @@ def save_jours_particuliers(data, freeze):
     mettre_a_jour_section_interface("1_horaires.jours_particuliers", data)
     return dash.no_update
 
+from dash import callback, Output, Input, html
+from dash.dependencies import ALL
+
 @callback(
     Output("store-horaires-sauvegarde", "data", allow_duplicate=True),
+    Output("message-erreur-horaires", "children", allow_duplicate=True),
     Input({"type": "heure-input", "categorie": ALL, "index": ALL}, "value"),
     Input({"type": "minute-input", "categorie": ALL, "index": ALL}, "value"),
     State({"type": "heure-input", "categorie": ALL, "index": ALL}, "id"),
     State("freeze-callbacks", "data"),
-    prevent_initial_call=True)
-def save_horaires(heures, minutes, ids, freeze):
+    prevent_initial_call=True
+)
+def save_horaires_et_verifier(heures, minutes, ids, freeze):
     """
-    Enregistre dans le fichier JSON les horaires configurés manuellement pour chaque créneau.
+    Valide et enregistre les horaires saisis dans le tableau des créneaux horaires.
 
-    Les horaires sont construits à partir de l'heure et des minutes saisies,
-    puis enregistrés dans les sections "horaires_classique" ou "horaires_particulier"
-    selon la catégorie.
+    Cette fonction effectue plusieurs vérifications :
+    - Aucun champ ne doit être vide ou invalide ;
+    - Aucun doublon exact d'horaire ne doit exister (ex: deux fois 08h00) ;
+    - Chaque créneau doit être strictement postérieur au précédent dans l'ordre logique ;
+    - Si toutes les vérifications sont passées, les horaires sont enregistrés dans le JSON.
 
     Args:
-        heures (list[int|None]): Heures sélectionnées pour chaque créneau.
-        minutes (list[int|None]): Minutes sélectionnées pour chaque créneau.
-        ids (list[dict]): Identifiants de chaque champ horaire (catégorie + index).
-        freeze (bool): Si True, empêche toute sauvegarde.
+        heures (list[int|None]): Liste des heures (HH) pour chaque créneau saisi.
+        minutes (list[int|None]): Liste des minutes (MM) pour chaque créneau saisi.
+        ids (list[dict]): Liste des identifiants des inputs, chacun contenant une clé "index" et "categorie".
+        freeze (bool): Indicateur pour bloquer l'enregistrement (ex : rechargement en cours).
 
     Returns:
-        dash.no_update
+        tuple:
+            - dict or dash.no_update: Dictionnaire structuré des horaires classés par catégorie si tout est valide, sinon `dash.no_update`.
+            - str or html.Div: Message d'erreur s'il y a une erreur, sinon chaîne vide.
     """
     if freeze:
         raise PreventUpdate
+
+    erreurs = []
     horaires = {}
+    horaires_totaux = []
+    doublons_detectes = set()
+
     for h, m, ident in zip(heures, minutes, ids):
         index = ident["index"]
         categorie = ident["categorie"]
         label = HORAIRES_LABELS[index]
-        h_val = int(h) if h is not None else None
-        m_val = int(m) if m is not None else 0  # Si minutes absentes, considérer 00
-        horaire = f"{h_val:02d}:{m_val:02d}" if h_val is not None else ""
+
+        if h is None or m is None:
+            erreurs.append(f"Le créneau « {label} » est incomplet.")
+            continue
+
+        try:
+            h_val = int(h)
+            m_val = int(m)
+        except:
+            erreurs.append(f"Le créneau « {label} » contient des valeurs invalides.")
+            continue
+
+        total = h_val * 60 + m_val
+
+        # Doublon exact
+        if total in doublons_detectes:
+            erreurs.append(f"Doublon détecté : {h_val:02d}h{m_val:02d} est déjà utilisé.")
+        doublons_detectes.add(total)
+
         if categorie not in horaires:
             horaires[categorie] = {}
-        horaires[categorie][label] = horaire
+
+        horaires[categorie][HORAIRES_LABELS[index]] = f"{h_val:02d}:{m_val:02d}"
+        horaires_totaux.append((index, total, HORAIRES_LABELS[index]))
+
+    # Vérification d'ordre croissant avec minimum 55 min d'écart
+    horaires_totaux_sorted = sorted(horaires_totaux, key=lambda x: x[0])
+    for (idx1, t1, label1), (idx2, t2, label2) in zip(horaires_totaux_sorted, horaires_totaux_sorted[1:]):
+        if t2 <= t1 :
+            erreurs.append(
+                f"Le créneau « {label2} » doit commencer après « {label1} »."
+            )
+
+    if erreurs:
+        return dash.no_update, html.Div([
+            html.I(className="bi bi-exclamation-triangle me-2"),
+            "Erreur(s) détectée(s) :", html.Ul([html.Li(e) for e in erreurs])
+        ], style={"color": "red", "marginTop": "1em"})
+
+    # Sauvegarde si tout est valide
     for cat, valeurs in horaires.items():
         mettre_a_jour_section_interface(f"1_horaires.horaires_{cat}", valeurs)
-    return dash.no_update
+
+    return horaires, ""
+
 
 @callback(
     Output("store-horaires-sauvegarde", "data", allow_duplicate=True), 
@@ -2045,9 +2082,10 @@ def save_pause_meridienne(h, m, freeze):
     Output("langues-lv4", "value"),
     Output("lv3-exists", "value"),
     Output("lv4-exists", "value"),
-    Input("layout-informations", "id")
+    Input("layout-informations", "id"),
+    Input("reset-message", "children")
 )
-def prefill_langues(_):
+def prefill_langues(_, reset_msg):
     """
     Prérenseigne les sélections de langues (LV1 à LV4) depuis le JSON.
 
@@ -2066,9 +2104,10 @@ def prefill_langues(_):
     Output("autres-langues-lv2", "data"),
     Output("autres-langues-lv3", "data"),
     Output("autres-langues-lv4", "data"),
-    Input("layout-informations", "id")
+    Input("layout-informations", "id"),
+    Input("reset-message", "children")
 )
-def prefill_autres_langues(_):
+def prefill_autres_langues(_, reset_msg):
     """
     Prérenseigne les langues saisies manuellement pour LV1 à LV4 (à partir du JSON).
 
@@ -2089,9 +2128,10 @@ def prefill_autres_langues(_):
 @callback(
     Output({"type": "option-checklist", "categorie": ALL}, "value"),
     Output("autres-options-saisies", "data"),
-    Input("layout-informations", "id")
+    Input("layout-informations", "id"),
+    Input("reset-message", "children")
 )
-def prefill_options_depuis_json(_):
+def prefill_options_depuis_json(_, reset_msg):
     """
     Prérenseigne les options d'établissement depuis le fichier JSON.
 
@@ -2343,9 +2383,10 @@ def gerer_langues_autres_lv2(n_clicks_add, valeurs_inputs, clicks_suppression, c
 #################################################################################################################################################################
 @callback(
     Output("niveaux-lv3", "value"),
-    Input("layout-informations", "id")
+    Input("layout-informations", "id"),
+    Input("reset-message", "children")
 )
-def prefill_niveaux_lv3(_):
+def prefill_niveaux_lv3(_, reset_msg):
     """
     Prérenseigne les niveaux associés à LV3 au chargement de la page.
 
@@ -3178,9 +3219,10 @@ def save_niveaux_par_option(valeurs, ids, freeze):
     Output("table-classes", "data"),
     Output("table-professeurs", "data"),
     Output("table-salles", "data"),
-    Input("layout-informations", "id")
+    Input("layout-informations", "id"),
+    Input("reset-message", "children")
 )
-def prefill_ressources(_):
+def prefill_ressources(_, reset_msg):
     """
     Préremplit les tableaux de classes, professeurs et salles à partir du fichier JSON.
 
@@ -3230,7 +3272,8 @@ def traiter_import(contents, filenames, tableau_data):
         filenames = [filenames]
 
     fichiers = [{"contents": c, "filename": f} for c, f in zip(contents, filenames)]
-    colonnes_attendues = {"Classe", "Niveau", "Effectif", "Dependances", "MatiereGroupe"}
+    colonnes_minimales = {"Classe", "Niveau", "Effectif", "Dependances", "MatiereGroupe"}
+    colonne_optionnelle = "TypeGroupe"
     donnees_importees = []
 
     for fichier in fichiers:
@@ -3246,8 +3289,12 @@ def traiter_import(contents, filenames, tableau_data):
             else:
                 return dash.no_update, False, dash.no_update, f"Format non pris en charge : {fichier['filename']}", style_erreur_import
 
-            if not colonnes_attendues.issubset(df.columns):
+            if not colonnes_minimales.issubset(df.columns):
                 return dash.no_update, False, dash.no_update, f"Colonnes attendues manquantes dans : {fichier['filename']}", style_erreur_import
+
+            # Ajoute la colonne LVGroupe si elle est absente
+            if colonne_optionnelle not in df.columns:
+                df[colonne_optionnelle] = ""
 
             donnees_importees.extend(df.to_dict("records"))
 
@@ -3293,7 +3340,8 @@ def appliquer_import_classes(n_fusion, n_remplacement, stockage, data_actuelle):
         raise PreventUpdate
 
     fichiers = stockage if isinstance(stockage, list) else [stockage]
-    colonnes_attendues = {"Classe", "Niveau", "Effectif", "Dependances", "MatiereGroupe"}
+    colonnes_minimales = {"Classe", "Niveau", "Effectif", "Dependances", "MatiereGroupe"}
+    colonne_optionnelle = "TypeGroupe"
     nouvelles_donnees = []
 
     for fichier in fichiers:
@@ -3309,8 +3357,22 @@ def appliquer_import_classes(n_fusion, n_remplacement, stockage, data_actuelle):
             else:
                 return dash.no_update, f"Extension non prise en charge : {fichier['filename']}", False, style_erreur_import
 
-            if not colonnes_attendues.issubset(df.columns):
+            if not colonnes_minimales.issubset(df.columns):
                 return dash.no_update, f"Colonnes manquantes dans : {fichier['filename']}", False, style_erreur_import
+
+            # Ajoute colonne LVGroupe vide si absente
+            if colonne_optionnelle not in df.columns:
+                df[colonne_optionnelle] = ""
+                df["IDGroupe"] = ""
+            else:
+                df["TypeGroupe"] = df["TypeGroupe"].fillna("").apply(normaliser_matiere_groupe)
+                df["MatiereGroupe"] = df["MatiereGroupe"].fillna("").apply(harmoniser_intitule)
+
+                df["IDGroupe"] = df.apply(
+                    lambda row: f"{row['TypeGroupe'].strip()}_{row['MatiereGroupe'].strip()}"
+                    if row["TypeGroupe"].strip() and row["MatiereGroupe"].strip() else "",
+                    axis=1
+                )
 
             nouvelles_donnees.extend(df.to_dict("records"))
 
@@ -3374,7 +3436,15 @@ def maj_table_classes(n_ajout, n_effacer, current_data):
 
     if triggered == "ajouter-ligne-classe":
         current_data = current_data or []
-        current_data.append({"Classe": "", "Niveau": "", "Effectif": "", "Dependances": "", "MatiereGroupe": ""})
+        current_data.append({
+            "Classe": "",
+            "Niveau": "",
+            "Effectif": "",
+            "Dependances": "",
+            "MatiereGroupe": "",
+            "TypeGroupe": "",
+            "IDGroupe": ""  
+        })
         return current_data, no_update, no_update
 
     elif triggered == "btn-effacer-classes":
@@ -3382,12 +3452,11 @@ def maj_table_classes(n_ajout, n_effacer, current_data):
 
     elif triggered == "table-classes":
         if not current_data:
-            # Ajout automatique de deux lignes d'exemple si le tableau est vide
             return CLASSES_DEFAUT, no_update, no_update
 
-        # Normalisation des niveaux (6 → 6e)
         niveaux_valides = {"6e", "5e", "4e", "3e"}
         for row in current_data:
+            # Normalisation du niveau
             niveau = str(row.get("Niveau", "")).strip().lower()
             if niveau in {"6", "5", "4", "3"}:
                 row["Niveau"] = f"{niveau}e"
@@ -3395,6 +3464,16 @@ def maj_table_classes(n_ajout, n_effacer, current_data):
                 row["Niveau"] = niveau
             else:
                 row["Niveau"] = ""
+
+            # Harmonisation du TypeGroupe et MatiereGroupe
+            row["TypeGroupe"] = normaliser_matiere_groupe(row.get("TypeGroupe", ""))
+            row["MatiereGroupe"] = harmoniser_intitule(row.get("MatiereGroupe", ""))
+
+            # Génération de l'IDGroupe
+            if row["TypeGroupe"] and row["MatiereGroupe"]:
+                row["IDGroupe"] = f"{row['TypeGroupe']}_{row['MatiereGroupe']}"
+            else:
+                row["IDGroupe"] = ""
 
         return current_data, no_update, no_update
 
@@ -3455,22 +3534,29 @@ def generer_classes(_, n_clicks, data, nb_classes, niveau, effectif, freeze):
     Returns:
         list[dict]: Liste des classes générées.
     """
-    if freeze:
-        raise PreventUpdate
-    if not nb_classes or not niveau or not effectif:
+    if freeze or not nb_classes or not niveau or not effectif:
         raise PreventUpdate
 
     data = data or []
     prefix = niveau
     debut = len(data) + 1
+
     for i in range(nb_classes):
+        nom = f"{prefix}{i + debut}"
+        matiere = ""
+        type_groupe = ""
+        matiere_harmonisee = harmoniser_intitule(matiere)
+
         data.append({
-            "Classe": f"{prefix}{i + debut}",
+            "Classe": nom,
             "Niveau": niveau,
             "Effectif": str(effectif),
             "Dependances": "",
-            "MatiereGroupe": ""
+            "MatiereGroupe": matiere_harmonisee,
+            "TypeGroupe": type_groupe,
+            "IDGroupe": f"{type_groupe}_{matiere_harmonisee}" if type_groupe and matiere_harmonisee else ""
         })
+
     mettre_a_jour_section_interface("3_ressources.classes", data)
     return data
 
@@ -3536,6 +3622,8 @@ def sauvegarder_classes(data, freeze):
                         html.I(className="bi bi-exclamation-octagon me-2"),
                         f"La dépendance « {dep} » dans la classe « {nom_classe} » n'existe pas parmi les classes déclarées."
                     ])
+        TypeGroupe = normaliser_matiere_groupe(c.get("TypeGroupe", ""))
+        c["TypeGroupe"] = TypeGroupe
 
     mettre_a_jour_section_interface("3_ressources.classes", data)
     return dash.no_update, ""
@@ -3830,10 +3918,11 @@ def generer_profs(n_clicks, data, nb_profs, volume, duree, niveaux, freeze):
     Output("table-professeurs", "data", allow_duplicate=True),
     Output("erreur-professeurs", "children", allow_duplicate=True),
     Input("table-professeurs", "data"),
+    Input("table-salles", "data"), 
     State("freeze-callbacks", "data"),
     prevent_initial_call=True
 )
-def sauvegarder_professeurs(data, freeze):
+def sauvegarder_professeurs(data, data_salles, freeze):
     """
     Valide et sauvegarde les données du tableau des professeurs.
 
@@ -3863,9 +3952,8 @@ def sauvegarder_professeurs(data, freeze):
     niveaux_valides = {"6e", "5e", "4e", "3e"}
     salles_existantes = [
         s.get("Nom", "").strip()
-        for s in charger_donnees_interface().get("3_ressources", {}).get("salles", [])
+        for s in (data_salles or [])
     ]
-
     identifiants = []
     for i, p in enumerate(data):
         civilite = p.get("Civilite", "").strip()
@@ -4011,31 +4099,31 @@ def ajouter_ligne_salle(n, data):
     return data
 
 #######################################
-@app.callback(
-    Output("table-salles", "data", allow_duplicate=True),
-    Input("table-salles", "data"),
-    prevent_initial_call=True
-)
-def initialiser_si_vide(data):
-    """
-    Initialise le tableau des salles avec une ligne d'exemple si celui-ci est vide.
+# @app.callback(
+#     Output("table-salles", "data", allow_duplicate=True),
+#     Input("table-salles", "data"),
+#     prevent_initial_call=True
+# )
+# def initialiser_si_vide(data):
+#     """
+#     Initialise le tableau des salles avec une ligne d'exemple si celui-ci est vide.
 
-    Cette fonction est appelée automatiquement si aucune donnée n'est présente
-    dans le tableau. Elle injecte des exemples prédéfinis pour aider l'utilisateur
-    à comprendre le format attendu.
+#     Cette fonction est appelée automatiquement si aucune donnée n'est présente
+#     dans le tableau. Elle injecte des exemples prédéfinis pour aider l'utilisateur
+#     à comprendre le format attendu.
 
-    Args:
-        data (list[dict] or None): Données actuellement présentes dans le tableau.
+#     Args:
+#         data (list[dict] or None): Données actuellement présentes dans le tableau.
 
-    Returns:
-        list[dict]: Liste contenant des lignes d'exemple si le tableau est vide.
+#     Returns:
+#         list[dict]: Liste contenant des lignes d'exemple si le tableau est vide.
 
-    Raises:
-        PreventUpdate: Si le tableau contient déjà des données, aucun changement n'est effectué.
-    """
-    if not data:
-        return SALLES_DEFAUT
-    raise PreventUpdate
+#     Raises:
+#         PreventUpdate: Si le tableau contient déjà des données, aucun changement n'est effectué.
+#     """
+#     if not data:
+#         return 
+#     raise PreventUpdate
 
 #######################################
 # Fournit un exemple de fichier de salles (CSV ou Excel)
@@ -4316,30 +4404,72 @@ def sauvegarder_salles(data, freeze):
     """
     if freeze:
         raise PreventUpdate
-    noms = [s.get("Nom", "").strip() for s in data if s.get("Nom")]
-    if len(noms) != len(set(noms)):
-        return dash.no_update, html.Span([
-            html.I(className="bi bi-exclamation-octagon me-2"),
-            "Les noms de salles doivent être uniques."
-        ])
 
-    # Vérifie que les capacités sont dans [0, 100]
+    data = data or []  # Au cas où ce serait None
+
+    # Ne garder que les lignes avec un nom non vide
+    lignes_valides = []
+    noms = set()
     for i, s in enumerate(data):
+        nom = s.get("Nom", "").strip()
+        if not nom:
+            continue  # ligne vide supprimée visuellement, on ignore
+
+        if nom in noms:
+            return dash.no_update, html.Span([
+                html.I(className="bi bi-exclamation-octagon me-2"),
+                f"Le nom « {nom} » est en double."
+            ])
+        noms.add(nom)
+
         try:
             cap = int(s.get("Capacite", -1))
             if not (0 <= cap <= 500):
                 return dash.no_update, html.Span([
                     html.I(className="bi bi-exclamation-octagon me-2"),
-                    f"La capacité de la salle « {s.get('Nom', f'Salle {i+1}')} » doit être entre 0 et 500."
+                    f"La capacité de la salle « {nom} » doit être entre 0 et 500."
                 ])
         except ValueError:
             return dash.no_update, html.Span([
                 html.I(className="bi bi-exclamation-octagon me-2"),
-                f"La capacité de la salle « {s.get('Nom', f'Salle {i+1}')} »  doit être un nombre entier."
+                f"La capacité de la salle « {nom} » doit être un nombre entier."
             ])
 
-    mettre_a_jour_section_interface("3_ressources.salles", data)
-    return dash.no_update, ""
+        lignes_valides.append({
+            "Nom": nom,
+            "Matieres": s.get("Matieres", []),
+            "Capacite": str(cap)
+        })
+    # Récupère la config actuelle
+    data_interface = charger_donnees_interface()
+    profs = data_interface.get("3_ressources", {}).get("professeurs", [])
+    salles_maintenues = {salle["Nom"] for salle in lignes_valides}
+
+    modifications = []
+
+    # Supprime les salles non valides des préférences des profs
+    for prof in profs:
+        salle_pref = prof.get("SallePref", "").strip()
+        if salle_pref and salle_pref not in salles_maintenues:
+            prof["SallePref"] = ""
+            identite = f"{prof.get('Prenom', '')} {prof.get('Nom', '')}".strip()
+            modifications.append(identite)
+
+    # Met à jour uniquement la section professeurs dans le JSON
+    mettre_a_jour_section_interface("3_ressources.professeurs", profs)
+
+    # Met à jour la section salles (comme déjà prévu)
+    mettre_a_jour_section_interface("3_ressources.salles", lignes_valides)
+
+    # Affiche un message si des profs ont été affectés
+    if modifications:
+        return lignes_valides, html.Span([
+            html.I(className="bi bi-info-circle me-2"),
+            "Salle supprimée dans les préférences de : ",
+            html.Strong(", ".join(modifications))
+        ])
+
+    return lignes_valides, ""
 
 ###############################################################################
 # SECTION 4 - Export / Calcul automatique (bouton suivant)
@@ -4400,4 +4530,5 @@ def desactiver_freeze(_):
         bool: False, pour indiquer que les callbacks ne sont plus figés.
     """
     return False
+
 
