@@ -19,7 +19,6 @@ Cette page constitue le point de départ de l'application et offre un aperçu p�
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 from styles import *
-from fonctions import copier_document_utilisateur
 
 def layout_accueil():
     """
@@ -38,7 +37,6 @@ def layout_accueil():
     Returns:
         html.Div: Le layout Dash contenant la structure complète de la page d'accueil.
     """
-    nom_fichier = copier_document_utilisateur()
 
     return html.Div([
         html.Div([
@@ -187,7 +185,7 @@ def layout_accueil():
                             "Un générateur est également disponible pour créer des salles en série.",
                             style=explication_style),
                     html.Ul([
-                        html.Li("Étape 14 : Importer ou saisir les salles de l’établissement."),
+                        html.Li("Étape 14 : Importer ou saisir les salles de l'établissement."),
                         html.Li("Étape 15 : Utiliser le générateur pour créer plusieurs salles similaires."),
                     ]),
                     html.Br(),
@@ -214,10 +212,10 @@ def layout_accueil():
                 ),
                 html.Ul([
                     html.Li("Étape 1 : Sélectionner les professeurs auxquels il faut ajouter des contraintes."),
-                    html.Li("Étape 2 : Entrer les nouvelles contraintes à l’aide des boutons ou grâce aux listes déroulantes à droite."),
+                    html.Li("Étape 2 : Entrer les nouvelles contraintes à l'aide des boutons ou grâce aux listes déroulantes à droite."),
                     html.Li("Étape 3 : Vérifier sur le tableau récapitulatif les contraintes entrées."),
                     html.Li("Étape 4 : Sélectionner les classes et groupes auxquels il faut ajouter des contraintes."),
-                    html.Li("Étape 5 : Entrer les nouvelles contraintes à l’aide des boutons ou grâce aux listes déroulantes à droite."),
+                    html.Li("Étape 5 : Entrer les nouvelles contraintes à l'aide des boutons ou grâce aux listes déroulantes à droite."),
                     html.Li("Étape 6 : Vérifier sur le tableau récapitulatif les contraintes entrées."),
                 ]),
                 html.Br(),
@@ -229,7 +227,7 @@ def layout_accueil():
                 ),
                 html.Ul([
                     html.Li("Étape 7 : Sélectionner les salles auxquelles il faut ajouter des contraintes."),
-                    html.Li("Étape 8 : Entrer les nouvelles contraintes à l’aide des boutons ou grâce aux listes déroulantes à droite."),
+                    html.Li("Étape 8 : Entrer les nouvelles contraintes à l'aide des boutons ou grâce aux listes déroulantes à droite."),
                 ]),
                 html.Br(),
 
@@ -329,7 +327,7 @@ def layout_accueil():
                         ,style=explication_style
                     ),
                     html.Ul([
-                        html.Li("Étape 1 : Entrer le nombre d’emplois du temps à générer"),
+                        html.Li("Étape 1 : Entrer le nombre d'emplois du temps à générer"),
                         html.Li("Étape 2 : Lancer le calcul."),
                     ])
                 ]),
@@ -341,7 +339,7 @@ def layout_accueil():
                 html.Div([
                     html.H3("1. Statistiques sur le respect des contraintes", className="mt-3"),
                     html.P(
-                        "Consultez ici les statistiques de complétion de l’emploi du temps généré : respect du volume horaire, contraintes obligatoires et optionnelles. "
+                        "Consultez ici les statistiques de complétion de l'emploi du temps généré : respect du volume horaire, contraintes obligatoires et optionnelles. "
                         "Un code couleur indique rapidement si les objectifs sont atteints.",
                         style=explication_style
                     ),
@@ -360,15 +358,15 @@ def layout_accueil():
                 html.Div([
                     html.H3("2.1 Gestion des emplois du temps", className="mt-3"),
                     html.P(
-                        "Affichez et gérez les emplois du temps. Sélectionnez une ressource à l’aide d’une liste déroulante : salle, professeur ou classe."
+                        "Affichez et gérez les emplois du temps. Sélectionnez une ressource à l'aide d'une liste déroulante : salle, professeur ou classe."
                         " Quatre modes de gestion sont disponibles :",
                         style=explication_style
                     ),
                     html.Ul([
                         html.Li("**Affichage** : Affiche en grand le tableau de l'emploi du temps sélectionné."),
-                        html.Li("**Édition** : Permet de modifier le contenu d’un créneau."),
-                        html.Li("**Déplacement** : Permet d’échanger ou déplacer des créneaux entre eux."),
-                        html.Li("**Export** : Permet d’exporter l’emploi du temps sélectionné."),
+                        html.Li("**Édition** : Permet de modifier le contenu d'un créneau."),
+                        html.Li("**Déplacement** : Permet d'échanger ou déplacer des créneaux entre eux."),
+                        html.Li("**Export** : Permet d'exporter l'emploi du temps sélectionné."),
                     ]),
 
                     html.Br(),
@@ -398,9 +396,9 @@ def layout_accueil():
 
                     # -- Sous-partie : Export --
                     html.H4("2.4 Mode export"),
-                    html.P("Permet d’exporter les emplois du temps au format PDF (dans une archive ZIP). Vous pouvez choisir d’exporter indivuduellement ou de façon groupé :"),
+                    html.P("Permet d'exporter les emplois du temps au format PDF (dans une archive ZIP). Vous pouvez choisir d'exporter indivuduellement ou de façon groupé :"),
                     html.Ul([
-                        html.Li("L’emploi du temps actuellement affiché."),
+                        html.Li("L'emploi du temps actuellement affiché."),
                         html.Li("Tous les emplois du temps des classes."),
                         html.Li("Tous les emplois du temps des professeurs."),
                         html.Li("Tous les emplois du temps des salles."),
@@ -413,7 +411,7 @@ def layout_accueil():
 
 
             html.Div([
-                html.A("Télécharger le Manuel d'utilisation complet (version PDF)", href=f"/assets/{nom_fichier}", target="_blank")
+                html.A("Télécharger le Manuel d'utilisation complet (version PDF)", href=f"/assets/Manuel_utilisation.pdf", target="_blank")
             ], style=style_telecharger_accueil)
 
         ],

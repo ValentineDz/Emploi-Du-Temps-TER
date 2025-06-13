@@ -10,12 +10,7 @@
     "jours_particuliers": [
       "Mercredi"
     ],
-    "horaires_classiques": {
-      "Début de cours minimum": "08:25",
-      "Fin maximum des cours du matin": "12:20",
-      "Début minimum des cours de l'après-midi": "13:00",
-      "Fin de cours maximum": "17:50"
-    },
+    "horaires_classiques": {},
     "duree_creneau": 55,
     "recreations": null,
     "pause_meridienne": "00:00"
@@ -35,7 +30,8 @@
     },
     "options": {
       "predefinies": [],
-      "autres": []
+      "autres": [],
+      "niveaux_par_option": {}
     },
     "niveaux_lv3": [
       0,

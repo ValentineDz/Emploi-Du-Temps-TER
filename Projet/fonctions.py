@@ -2124,30 +2124,6 @@ def build_edit_panel(cell, vue, semaine="A"):
     return html.Div(items)
 
 
-def copier_document_utilisateur():
-    """
-    Copie le manuel d'utilisation depuis un dossier source vers le dossier 'assets' de l'application.
-
-    La fonction recherche dans le dossier `../documents/S2` un fichier PDF dont le nom contient
-    la chaîne "Manuel d'utilisation". Si un tel fichier est trouvé, il est copié dans le dossier `assets`
-    sous le nom normalisé "Manuel_utilisation.pdf".
-
-    Returns:
-        str or None: Le nom du fichier copié ("Manuel_utilisation.pdf") si l'opération réussit,
-                     sinon None si aucun fichier correspondant n'est trouvé.
-    """
-    dossier_source = os.path.abspath("../documents/S2")
-    dossier_cible = os.path.abspath("assets")
-
-    # Cherche un fichier contenant "Manuel d'utilisation"
-    for fichier in os.listdir(dossier_source):
-        if "Manuel d'utilisation" in fichier and fichier.endswith(".pdf"):
-            source = os.path.join(dossier_source, fichier)
-            destination = os.path.join(dossier_cible, "Manuel_utilisation.pdf")
-            shutil.copyfile(source, destination)
-            return "Manuel_utilisation.pdf"
-    return None
-
 def harmoniser_intitule(matiere: str) -> str:
     """
     Met en forme l'intitulé d'une matière :
