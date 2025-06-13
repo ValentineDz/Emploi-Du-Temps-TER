@@ -40,7 +40,7 @@ Les données sont échangées entre ces deux modules via des fichiers JSON struc
 Ouvrir un terminal et exécuter :
 ```bash
 git clone https://github.com/ValentineDz/Emploi-Du-Temps-TER.git
-cd Emploi-Du-Temps-TER
+cd Emploi-Du-Temps-TER/Projet
 ```
 
 ### 3. Installer les dépendances
