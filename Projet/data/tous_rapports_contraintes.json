@@ -2,31 +2,31 @@
     "0": {
         "volume_horaire": {
             "statut": "obligatoire",
-            "total": 184,
-            "respectees": 184,
+            "total": 176,
+            "respectees": 176,
             "details": []
         },
         "indisponibilites_profs": {
             "statut": "optionnelle",
-            "total": 768,
-            "respectees": 768,
+            "total": 304,
+            "respectees": 304,
             "details": []
         },
         "jours_sans_apres_midi": {
             "statut": "obligatoire",
-            "total": 192,
-            "respectees": 192,
+            "total": 176,
+            "respectees": 176,
             "details": []
         },
         "volume_par_professeur": {
-            "statut": "obligatoire",
-            "total": 38,
-            "respectees": 30,
+            "statut": "optionnelle",
+            "total": 48,
+            "respectees": 44,
             "details": [
-                "M. Didier a 20 cours (max 18)",
-                "M. Martin a 24 cours (max 18)",
-                "Mme Bernard a 32 cours (max 18)",
-                "Mme Petit a 24 cours (max 18)"
+                "Mme Grand a 28 cours (max 18)",
+                "Mme Richard a 24 cours (max 18)",
+                "Mme Grand a 28 cours (max 18)",
+                "Mme Richard a 24 cours (max 18)"
             ]
         },
         "cantine": {
@@ -37,58 +37,45 @@
         },
         "permanence": {
             "statut": "obligatoire",
-            "total": 0,
-            "respectees": 0,
-            "details": []
+            "total": 14,
+            "respectees": 8,
+            "details": [
+                "Lundi 10h-11h : 90 élèves en perm (max 40) — 5e1(30p), 5e2(30p), 4e1(30p)",
+                "Lundi 11h-12h : 60 élèves en perm (max 40) — 6e2(30p), 5e2(30p)",
+                "Mardi 13h-14h : 60 élèves en perm (max 40) — 5e1(30p), 4e1(30p)",
+                "Mercredi 9h-10h : 60 élèves en perm (max 40) — 4e1(30p), 4e2(30p)",
+                "Jeudi 9h-10h : 60 élèves en perm (max 40) — 6e1(30p), 6e2(30p)",
+                "Vendredi 10h-11h : 60 élèves en perm (max 40) — 6e2(30p), 5e2(30p)"
+            ]
         },
         "poids_cartable": {
             "statut": "optionnelle",
             "total": 80,
-            "respectees": 61,
-            "details": [
-                "6e1 - Semaine A - Lundi : poids 5.53kg > tolérance 5.25kg",
-                "6e1 - Semaine A - Mardi : poids 6.45kg > tolérance 5.25kg",
-                "6e1 - Semaine A - Mercredi : poids 5.65kg > tolérance 5.25kg",
-                "6e1 - Semaine A - Jeudi : poids 5.33kg > tolérance 5.25kg",
-                "6e2 - Semaine A - Lundi : poids 5.95kg > tolérance 5.25kg",
-                "6e2 - Semaine A - Mardi : poids 5.55kg > tolérance 5.25kg",
-                "6e2 - Semaine A - Mercredi : poids 5.65kg > tolérance 5.25kg",
-                "6e2 - Semaine A - Jeudi : poids 5.68kg > tolérance 5.25kg",
-                "6e2 - Semaine A - Vendredi : poids 5.38kg > tolérance 5.25kg",
-                "6e1 - Semaine B - Lundi : poids 5.58kg > tolérance 5.25kg",
-                "6e1 - Semaine B - Mardi : poids 5.50kg > tolérance 5.25kg",
-                "6e1 - Semaine B - Mercredi : poids 6.00kg > tolérance 5.25kg",
-                "6e1 - Semaine B - Jeudi : poids 5.75kg > tolérance 5.25kg",
-                "6e1 - Semaine B - Vendredi : poids 5.38kg > tolérance 5.25kg",
-                "6e2 - Semaine B - Lundi : poids 6.10kg > tolérance 5.25kg",
-                "6e2 - Semaine B - Mardi : poids 5.48kg > tolérance 5.25kg",
-                "6e2 - Semaine B - Mercredi : poids 6.00kg > tolérance 5.25kg",
-                "6e2 - Semaine B - Jeudi : poids 5.38kg > tolérance 5.25kg",
-                "6e2 - Semaine B - Vendredi : poids 5.25kg > tolérance 5.25kg"
-            ]
+            "respectees": 80,
+            "details": []
         },
         "indisponibilites_salles": {
             "statut": "optionnelle",
-            "total": 192,
-            "respectees": 192,
+            "total": 176,
+            "respectees": 176,
             "details": []
         },
         "double_affectation_salles": {
             "statut": "obligatoire",
-            "total": 540,
-            "respectees": 540,
+            "total": 1800,
+            "respectees": 1800,
             "details": []
         },
         "double_affectation_profs": {
             "statut": "obligatoire",
-            "total": 508,
-            "respectees": 508,
+            "total": 378,
+            "respectees": 378,
             "details": []
         },
         "mat_exclu_suite": {
             "statut": "optionnelle",
-            "total": 640,
-            "respectees": 640,
+            "total": 160,
+            "respectees": 160,
             "details": []
         },
         "mat_inclu_suite": {
@@ -104,8 +91,8 @@
         },
         "mem_niveau_cours": {
             "statut": "optionnelle",
-            "total": 0,
-            "respectees": 0,
+            "total": 8,
+            "respectees": 8,
             "details": []
         },
         "max_heures_par_etendue": {
@@ -122,10 +109,240 @@
         },
         "preferences_salle_professeur": {
             "statut": "optionnelle",
-            "total": 44,
-            "respectees": 44,
+            "total": 24,
+            "respectees": 24,
             "details": []
         }
     },
-    "pourcentage_global": 99.21
+    "1": {
+        "volume_horaire": {
+            "statut": "obligatoire",
+            "total": 176,
+            "respectees": 176,
+            "details": []
+        },
+        "indisponibilites_profs": {
+            "statut": "optionnelle",
+            "total": 304,
+            "respectees": 304,
+            "details": []
+        },
+        "jours_sans_apres_midi": {
+            "statut": "obligatoire",
+            "total": 176,
+            "respectees": 176,
+            "details": []
+        },
+        "volume_par_professeur": {
+            "statut": "optionnelle",
+            "total": 48,
+            "respectees": 44,
+            "details": [
+                "Mme Grand a 28 cours (max 18)",
+                "Mme Richard a 24 cours (max 18)",
+                "Mme Grand a 28 cours (max 18)",
+                "Mme Richard a 24 cours (max 18)"
+            ]
+        },
+        "cantine": {
+            "statut": "obligatoire",
+            "total": 16,
+            "respectees": 16,
+            "details": []
+        },
+        "permanence": {
+            "statut": "obligatoire",
+            "total": 14,
+            "respectees": 8,
+            "details": [
+                "Lundi 10h-11h : 90 élèves en perm (max 40) — 5e1(30p), 5e2(30p), 4e1(30p)",
+                "Lundi 11h-12h : 60 élèves en perm (max 40) — 6e2(30p), 5e2(30p)",
+                "Mardi 13h-14h : 60 élèves en perm (max 40) — 5e1(30p), 4e1(30p)",
+                "Mercredi 9h-10h : 60 élèves en perm (max 40) — 4e1(30p), 4e2(30p)",
+                "Jeudi 9h-10h : 60 élèves en perm (max 40) — 6e1(30p), 6e2(30p)",
+                "Vendredi 10h-11h : 60 élèves en perm (max 40) — 6e2(30p), 5e2(30p)"
+            ]
+        },
+        "poids_cartable": {
+            "statut": "optionnelle",
+            "total": 80,
+            "respectees": 80,
+            "details": []
+        },
+        "indisponibilites_salles": {
+            "statut": "optionnelle",
+            "total": 176,
+            "respectees": 176,
+            "details": []
+        },
+        "double_affectation_salles": {
+            "statut": "obligatoire",
+            "total": 1800,
+            "respectees": 1800,
+            "details": []
+        },
+        "double_affectation_profs": {
+            "statut": "obligatoire",
+            "total": 378,
+            "respectees": 378,
+            "details": []
+        },
+        "mat_exclu_suite": {
+            "statut": "optionnelle",
+            "total": 160,
+            "respectees": 160,
+            "details": []
+        },
+        "mat_inclu_suite": {
+            "statut": "optionnelle",
+            "total": 160,
+            "respectees": 160,
+            "details": [
+                "6e1 : 1 occurrences de Français → SVT",
+                "6e2 : 1 occurrences de Français → SVT",
+                "6e1 : 1 occurrences de Français → SVT",
+                "6e2 : 1 occurrences de Français → SVT"
+            ]
+        },
+        "mem_niveau_cours": {
+            "statut": "optionnelle",
+            "total": 8,
+            "respectees": 8,
+            "details": []
+        },
+        "max_heures_par_etendue": {
+            "statut": "optionnelle",
+            "total": 60,
+            "respectees": 60,
+            "details": []
+        },
+        "mat_horaire_donne_v2": {
+            "statut": "optionnelle",
+            "total": 4,
+            "respectees": 4,
+            "details": []
+        },
+        "preferences_salle_professeur": {
+            "statut": "optionnelle",
+            "total": 24,
+            "respectees": 24,
+            "details": []
+        }
+    },
+    "2": {
+        "volume_horaire": {
+            "statut": "obligatoire",
+            "total": 176,
+            "respectees": 176,
+            "details": []
+        },
+        "indisponibilites_profs": {
+            "statut": "optionnelle",
+            "total": 304,
+            "respectees": 304,
+            "details": []
+        },
+        "jours_sans_apres_midi": {
+            "statut": "obligatoire",
+            "total": 176,
+            "respectees": 176,
+            "details": []
+        },
+        "volume_par_professeur": {
+            "statut": "optionnelle",
+            "total": 48,
+            "respectees": 44,
+            "details": [
+                "Mme Grand a 28 cours (max 18)",
+                "Mme Richard a 24 cours (max 18)",
+                "Mme Grand a 28 cours (max 18)",
+                "Mme Richard a 24 cours (max 18)"
+            ]
+        },
+        "cantine": {
+            "statut": "obligatoire",
+            "total": 16,
+            "respectees": 16,
+            "details": []
+        },
+        "permanence": {
+            "statut": "obligatoire",
+            "total": 14,
+            "respectees": 8,
+            "details": [
+                "Lundi 10h-11h : 90 élèves en perm (max 40) — 5e1(30p), 5e2(30p), 4e1(30p)",
+                "Lundi 11h-12h : 60 élèves en perm (max 40) — 6e2(30p), 5e2(30p)",
+                "Mardi 13h-14h : 60 élèves en perm (max 40) — 5e1(30p), 4e1(30p)",
+                "Mercredi 9h-10h : 60 élèves en perm (max 40) — 4e1(30p), 4e2(30p)",
+                "Jeudi 9h-10h : 60 élèves en perm (max 40) — 6e1(30p), 6e2(30p)",
+                "Vendredi 10h-11h : 60 élèves en perm (max 40) — 6e2(30p), 5e2(30p)"
+            ]
+        },
+        "poids_cartable": {
+            "statut": "optionnelle",
+            "total": 80,
+            "respectees": 80,
+            "details": []
+        },
+        "indisponibilites_salles": {
+            "statut": "optionnelle",
+            "total": 176,
+            "respectees": 176,
+            "details": []
+        },
+        "double_affectation_salles": {
+            "statut": "obligatoire",
+            "total": 1800,
+            "respectees": 1800,
+            "details": []
+        },
+        "double_affectation_profs": {
+            "statut": "obligatoire",
+            "total": 378,
+            "respectees": 378,
+            "details": []
+        },
+        "mat_exclu_suite": {
+            "statut": "optionnelle",
+            "total": 160,
+            "respectees": 160,
+            "details": []
+        },
+        "mat_inclu_suite": {
+            "statut": "optionnelle",
+            "total": 160,
+            "respectees": 160,
+            "details": [
+                "6e1 : 1 occurrences de Français → SVT",
+                "6e2 : 1 occurrences de Français → SVT",
+                "6e1 : 1 occurrences de Français → SVT",
+                "6e2 : 1 occurrences de Français → SVT"
+            ]
+        },
+        "mem_niveau_cours": {
+            "statut": "optionnelle",
+            "total": 8,
+            "respectees": 8,
+            "details": []
+        },
+        "max_heures_par_etendue": {
+            "statut": "optionnelle",
+            "total": 60,
+            "respectees": 60,
+            "details": []
+        },
+        "mat_horaire_donne_v2": {
+            "statut": "optionnelle",
+            "total": 4,
+            "respectees": 4,
+            "details": []
+        },
+        "preferences_salle_professeur": {
+            "statut": "optionnelle",
+            "total": 24,
+            "respectees": 24,
+            "details": []
+        }
+    },
+    "pourcentage_global": 99.72
 }

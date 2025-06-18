@@ -33,7 +33,6 @@ from styles import style_liste_choix
 import json
 import math
 import copy
-import shutil
 
 
 from reportlab.lib.styles import ParagraphStyle
@@ -59,7 +58,7 @@ def generer_squelette_json_interface():
             ],
             "jours_particuliers": ["Mercredi"],
             "horaires_classiques": {},
-            "duree_creneau": 55,
+            "duree_creneau": None,
             "recreations": None,
             "pause_meridienne": "00:00"
         },
@@ -83,9 +82,9 @@ def generer_squelette_json_interface():
         },
         "3_ressources": {
             "classes": [
-                {"Classe": "5e1", "Niveau": "5e", "Effectif": "26", "Dependances": "", "MatiereGroupe": "", "IDGroupe":""},
-                {"Classe": "5e2", "Niveau": "5e", "Effectif": "30", "Dependances": "", "MatiereGroupe": "", "IDGroupe":""},
-                {"Classe": "5ESP1", "Niveau": "5e", "Effectif": "12", "Dependances": "5e1,5e2", "MatiereGroupe": "Espagnol", "TypeGroupe": "LV2","IDGroupe":"LV2_Espagnol"}
+                {"Classe": "6e1", "Niveau": "6e", "Effectif": "26", "Dependances": "", "MatiereGroupe": ""},
+                {"Classe": "6e2", "Niveau": "6e", "Effectif": "30", "Dependances": "", "MatiereGroupe": ""},
+                {"Classe": "6ESP1", "Niveau": "6e", "Effectif": "12", "Dependances": "6e1,6e2", "MatiereGroupe": "Espagnol"}
             ],
             "salles": [
                 {"Nom": "A1", "Matieres": "", "Capacite": 30},
@@ -100,10 +99,9 @@ def generer_squelette_json_interface():
             "6e": [
                 {"Discipline": "Français", "VolumeHoraire": 4.5},
                 {"Discipline": "Mathématiques", "VolumeHoraire": 4.5},
-                {"Discipline": "Histoire-Géographie", "VolumeHoraire": 3},
+                {"Discipline": "Histoire-Géographie-EMC", "VolumeHoraire": 3},
                 {"Discipline": "Langue vivante", "VolumeHoraire": 4},
-                {"Discipline": "SVT", "VolumeHoraire": 1.5},
-                {"Discipline": "Physique-Chimie", "VolumeHoraire": 1.5},
+                {"Discipline": "Sciences (SVT et Physique-Chimie)", "VolumeHoraire": 3},
                 {"Discipline": "EPS", "VolumeHoraire": 4},
                 {"Discipline": "Arts plastiques", "VolumeHoraire": 1},
                 {"Discipline": "Musique", "VolumeHoraire": 1},
@@ -111,7 +109,7 @@ def generer_squelette_json_interface():
             "5e": [
                 {"Discipline": "Français", "VolumeHoraire": 4.5},
                 {"Discipline": "Mathématiques", "VolumeHoraire": 3.5},
-                {"Discipline": "Histoire-Géographie", "VolumeHoraire": 3},
+                {"Discipline": "Histoire-Géographie-EMC", "VolumeHoraire": 3},
                 {"Discipline": "Langue vivante 1", "VolumeHoraire": 3},
                 {"Discipline": "Langue vivante 2", "VolumeHoraire": 2.5},
                 {"Discipline": "SVT", "VolumeHoraire": 1.5},
@@ -124,7 +122,7 @@ def generer_squelette_json_interface():
             "4e": [
                 {"Discipline": "Français", "VolumeHoraire": 4.5},
                 {"Discipline": "Mathématiques", "VolumeHoraire": 3.5},
-                {"Discipline": "Histoire-Géographie", "VolumeHoraire": 3},
+                {"Discipline": "Histoire-Géographie-EMC", "VolumeHoraire": 3},
                 {"Discipline": "Langue vivante 1", "VolumeHoraire": 3},
                 {"Discipline": "Langue vivante 2", "VolumeHoraire": 2.5},
                 {"Discipline": "SVT", "VolumeHoraire": 1.5},
@@ -137,7 +135,7 @@ def generer_squelette_json_interface():
             "3e": [
                 {"Discipline": "Français", "VolumeHoraire": 4},
                 {"Discipline": "Mathématiques", "VolumeHoraire": 3.5},
-                {"Discipline": "Histoire-Géographie", "VolumeHoraire": 3.5},
+                {"Discipline": "Histoire-Géographie-EMC", "VolumeHoraire": 3.5},
                 {"Discipline": "Langue vivante 1", "VolumeHoraire": 3},
                 {"Discipline": "Langue vivante 2", "VolumeHoraire": 2.5},
                 {"Discipline": "SVT", "VolumeHoraire": 1.5},
@@ -223,7 +221,6 @@ def initialiser_fichier_si_absent():
         donnees = generer_squelette_json_interface()
         with open(chemin, "w", encoding="utf-8") as f:
             json.dump(donnees, f, ensure_ascii=False, indent=2)
-    # print("[DEBUG] Chemin ciblé :", os.path.abspath(chemin))
 
 
 def charger_donnees_interface():
@@ -244,18 +241,17 @@ def sauvegarder_donnees_interface(data, force=False):
     on empêche l'écrasement sauf si `force=True`.
     """
     if not isinstance(data, dict):
-        # print("[ERREUR] Données non valides (non-dict), sauvegarde annulée.")
         return
 
+    # Liste de clés essentielles attendues dans le fichier final
     cles_essentielles = ["1_horaires", "2_langues_et_options", "3_ressources", "4_programme_national"]
     if not force and not all(k in data for k in cles_essentielles):
-        # print("[AVERTISSEMENT] Données incomplètes. Clés manquantes :",
-        #      [k for k in cles_essentielles if k not in data])
         return
 
     os.makedirs("data", exist_ok=True)
     with open("data/data_interface.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
 
 def merge_dicts(d1, d2):
     """
@@ -294,6 +290,7 @@ def mettre_a_jour_section_interface(section, nouvelle_valeur):
         d[last_key] = merge_dicts(d[last_key], nouvelle_valeur)
     else:
         d[last_key] = nouvelle_valeur
+
     sauvegarder_donnees_interface(data)
 
 #################################################################################################################################################################
@@ -820,8 +817,7 @@ def charger_config():
 
 def charger_contraintes_interface(entite: str) -> dict:
     """
-    Charge les contraintes horaires (partielles et totales) d'une entité (prof, groupe, salle),
-    en ignorant celles qui ne sont plus dans la liste d'affichage.
+    Charge les contraintes horaires (partielles et totales) d'une entité (prof, groupe, salle).
 
     Args:
         entite (str): Nom de l'entité ciblée ("profs", "groupes", ou "salles").
@@ -836,25 +832,12 @@ def charger_contraintes_interface(entite: str) -> dict:
     with open(fichier, encoding="utf-8") as f:
         data = json.load(f)
 
-    # Filtre les contraintes en fonction de la présence ou non dans la partie affichage du json
-    entites_affichage = []
-    if entite == "profs":
-        entites_affichage = data.get("affichage", {}).get("professeurs_affichage", [])
-    elif entite == "salles":
-        entites_affichage = data.get("affichage", {}).get("salles_affichage", [])
-
-
     entite_data = data.get("contraintes", {}).get(entite, {})
     part = entite_data.get("indisponibilites_partielles", {})
     tot  = entite_data.get("indisponibilites_totales", {})
 
-    # Si pas de filtre d'affichage possible, on prend tout (groupes/classes)
-    noms_valides = set(part) | set(tot)
-    if entites_affichage:
-        noms_valides = set(noms_valides) & set(entites_affichage)
-
     contraintes = {}
-    for nom in noms_valides:
+    for nom in set(part) | set(tot):
         contraintes[nom] = {}
         for jour, lignes in part.get(nom, {}).items():
             for ligne in lignes:
@@ -1294,12 +1277,12 @@ def sauvegarder_edt_global(edt_global):
     Returns:
         None
     """
-    # try:
-    with open("data/emploi_du_temps_global.json", "w", encoding="utf-8") as f:
-        json.dump(edt_global, f, ensure_ascii=False, indent=2)
+    try:
+        with open("data/emploi_du_temps_global.json", "w", encoding="utf-8") as f:
+            json.dump(edt_global, f, ensure_ascii=False, indent=2)
             
-    # except Exception as e:
-        # print("Erreur lors de la sauvegarde :", e)
+    except Exception as e:
+        print("Erreur lors de la sauvegarde :", e)
 
 def get_entites(edt, vue):
     """
@@ -2124,42 +2107,213 @@ def build_edit_panel(cell, vue, semaine="A"):
     return html.Div(items)
 
 
-def harmoniser_intitule(matiere: str) -> str:
+
+def transformer_interface_vers_config(path_interface="data/data_interface.json", path_config="data/config.json"):
     """
-    Met en forme l'intitulé d'une matière :
-    - Première lettre en majuscule, reste en minuscule
-    - Sauf si tout est déjà en majuscules (abréviation)
-
-    Args:
-        matiere (str): Intitulé brut
-
-    Returns:
-        str: Intitulé harmonisé
+    Transforme le fichier de configuration brut de l'interface utilisateur (data_interface.json)
+    en un fichier de configuration allégé et structuré (config.json) pour le solveur.
+    Retourne également le dictionnaire résultant.
     """
-    matiere = matiere.strip()
-    if not matiere:
-        return ""
-    if matiere.isupper():
-        return matiere  # EPS, SVT...
-    return matiere[0].upper() + matiere[1:].lower()
+    with open(path_interface, encoding="utf-8") as f:
+        interface = json.load(f)
 
-def normaliser_matiere_groupe(valeur: str) -> str:
+    config = {}
+
+    config["jours"] = interface["1_horaires"]["jours_classiques"]
+    config["heures"] = interface["affichage"]["horaires_affichage"]
+
+    config["matieres"] = sorted({m for niveau in interface["affichage"]["volume_horaire_affichage"].values() for m in niveau})
+    config["niveaux"] = list(interface["affichage"]["volume_horaire_affichage"].keys())
+    config["volume_horaire"] = interface["affichage"]["volume_horaire_affichage"]
+
+    # Classes base
+    classes = interface["3_ressources"]["classes"]
+    config["classes_base"] = [c["Classe"] for c in classes if not c["Dependances"]]
+    config["capacites_classes"] = {c["Classe"]: int(c["Effectif"]) for c in classes}
+
+    # Professeurs
+    profs = interface["3_ressources"]["professeurs"]
+    config["professeurs"] = {}  
+    config["volume_par_professeur"] = {f"{p['Civilite']} {p['Nom']} {p['Prenom']}": int(p["Volume"]) for p in profs}
+
+    # Salles
+    salles = interface["3_ressources"]["salles"]
+    config["capacites_salles"] = {s["Nom"]: int(s["Capacite"]) for s in salles}
+
+    # Indisponibilités
+    config["indisponibilites_profs"] = interface.get("contraintes", {}).get("profs", {}).get("indisponibilites_totales", {})
+    config["indisponibilites_salles"] = interface.get("contraintes", {}).get("salles", {}).get("indisponibilites_totales", {})
+
+    # Sous-groupes
+    config["sous_groupes_config"] = {}
+    for groupe in interface["3_ressources"]["classes"]:
+        if groupe["Dependances"]:
+            matiere = groupe["MatiereGroupe"]
+            niveau = groupe["Niveau"]
+            suffixe = "_" + groupe["Classe"].split("_")[-1] if "_" in groupe["Classe"] else "_" + matiere[:2]
+            if matiere not in config["sous_groupes_config"]:
+                config["sous_groupes_config"][matiere] = {"niveaux": [], "suffixe": suffixe}
+            if niveau not in config["sous_groupes_config"][matiere]["niveaux"]:
+                config["sous_groupes_config"][matiere]["niveaux"].append(niveau)
+
+    # Affectations spécifiques
+    config["affectation_matiere_salle"] = interface.get("affectation_matiere_salle", {})
+
+    # Poids et contraintes supplémentaires 
+    config["poids_matieres"] = interface.get("poids_matieres", {})
+    config["poids_cartable_max_somme_par_niveau"] = interface.get("poids_cartable_max_somme_par_niveau", {})
+
+    # Enregistre le résultat
+    with open(path_config, "w", encoding="utf-8") as f:
+        json.dump(config, f, indent=2, ensure_ascii=False)
+
+    return config
+
+def charger_data_interface_et_modeles():
     """
-    Normalise les intitulés de la colonne 'MatiereGroupe' pour qu'ils soient 
-    uniquement l'une des valeurs autorisées : Option, LV1, LV2, LV3, LV4.
-
-    Args:
-        valeur (str): Saisie brute utilisateur.
-
-    Returns:
-        str: Valeur normalisée (ou vide si invalide).
+    Transforme data_interface.json en config utilisable,
+    puis retourne tous les objets nécessaires au solveur executer_runs.
     """
-    valeur = valeur.strip().lower().replace(" ", "")
-    mapping = {
-        "option": "Option",
-        "lv1": "LV1",
-        "lv2": "LV2",
-        "lv3": "LV3",
-        "lv4": "LV4"
+    config = transformer_interface_vers_config()
+
+    # Placeholder pour les objets non encore calculés
+    model = {}
+    emploi_du_temps = {}
+    emploi_du_temps_salles = {}
+    emploi_du_temps_profs = {}
+
+    # Élémentaires
+    JOURS = config["jours"]
+    HEURES = config["heures"]
+    MATIERES = config["matieres"]
+    CLASSES_BASE = config["classes_base"]
+    CLASSES = list(config["capacites_classes"].keys())
+    CAPACITES_CLASSES = config["capacites_classes"]
+    INDISPONIBILITES_PROFS = config.get("indisponibilites_profs", {})
+    INDISPONIBILITES_SALLES = config.get("indisponibilites_salles", {})
+
+    # Professeurs (liste)
+    PROFESSEURS = list(config.get("volume_par_professeur", {}).keys())
+
+    # Sous-groupes
+    sous_groupes_config = config.get("sous_groupes_config", {})
+    SOUS_GROUPES_SUFFIXES = {matiere: val["suffixe"] for matiere, val in sous_groupes_config.items()}
+
+    # Autres éléments
+    AFFECTATION_MATIERE_SALLE = config.get("affectation_matiere_salle", {})
+    fusionner_groupes_vers_classes = None  
+    solve_et_verifie = None 
+
+    return (
+        model,
+        emploi_du_temps,
+        emploi_du_temps_salles,
+        emploi_du_temps_profs,
+        JOURS,
+        HEURES,
+        MATIERES,
+        PROFESSEURS,
+        SOUS_GROUPES_SUFFIXES,
+        CLASSES,
+        CLASSES_BASE,
+        CAPACITES_CLASSES,
+        INDISPONIBILITES_PROFS,
+        INDISPONIBILITES_SALLES,
+        config,
+        AFFECTATION_MATIERE_SALLE,
+        fusionner_groupes_vers_classes,
+        solve_et_verifie
+    )
+
+def charger_statistiques_contraintes(path="data/tous_rapports_contraintes.json"):
+    """
+    Charge les statistiques depuis le JSON et retourne :
+    - pourcentage global
+    - table_data pour Dash
+    - violations (set)
+    - détails groupés par contrainte
+    - stats : volume_horaire %, obligatoires %, optionnelles %
+    """
+
+    CORRECTIONS_ACCENTS = {
+        "Volume horaire": "Volume horaire",
+        "Volume par professeur": "Volume par professeur",
+        "Indisponibilites profs": "Indisponibilités profs",
+        "Indisponibilites salles": "Indisponibilités salles",
+        "Double affectation profs": "Double affectation profs",
+        "Double affectation salles": "Double affectation salles",
+        "Jours sans apres midi": "Jours sans après-midi",
+        "Mat exclu suite": "Matière exclue en suite",
+        "Mat inclu suite": "Matière incluse en suite",
+        "Mat horaire donne v2": "Horaire imposé pour groupe de matières",
+        "Max heures par etendue": "Maximum heures par étendue",
+        "Mem niveau cours": "Cours synchronisés par niveau",
+        "Cantine": "Réfectoire",
+        "Permanence": "Permanence",
+        "Poids cartable": "Poids du cartable",
+        "Preferences salle professeur": "Préférences de salle (professeurs)"
     }
-    return mapping.get(valeur, "")
+
+    with open(path, encoding="utf-8") as f:
+        data_stats = json.load(f)
+
+    stats = data_stats["0"]
+    pourcentage_global = data_stats.get("pourcentage_global", 0)
+
+    table_data = []
+    violations = set()
+    details_violations_grouped = {}
+
+    # Compteurs pour statistiques
+    total_obl, respectees_obl = 0, 0
+    total_opt, respectees_opt = 0, 0
+    volume_horaire_pct = None
+
+    for key, val in stats.items():
+        total = val["total"]
+        respectees = val["respectees"]
+        statut = val.get("statut", "optionnelle")
+        details = val.get("details", [])
+        nom_brut = key.replace("_", " ").capitalize()
+        nom_affiche = CORRECTIONS_ACCENTS.get(nom_brut, nom_brut)
+
+        if total == 0:
+            taux = "-"
+        else:
+            taux = f"{round(respectees / total * 100, 1)}%"
+            if respectees < total:
+                violations.add(key)
+                if details:
+                    details_violations_grouped[nom_affiche] = list(set(details))
+
+        # Ajouter à table
+        table_data.append({
+            "contrainte": nom_affiche,
+            "statut": statut.capitalize(),
+            "respectees": respectees,
+            "total": total,
+            "taux": taux
+        })
+
+        # Compter pour stats
+        if statut == "obligatoire":
+            total_obl += total
+            respectees_obl += respectees
+        else:
+            total_opt += total
+            respectees_opt += respectees
+
+        if key == "volume_horaire":
+            volume_horaire_pct = f"{round((respectees / total) * 100, 1)}%" if total > 0 else "-"
+
+    # Pourcentages synthétiques
+    taux_obligatoire = f"{round((respectees_obl / total_obl) * 100, 1)}%" if total_obl else "-"
+    taux_optionnel = f"{round((respectees_opt / total_opt) * 100, 1)}%" if total_opt else "-"
+
+    stats_globales = {
+        "volume_horaire": volume_horaire_pct,
+        "contraintes_obligatoires": taux_obligatoire,
+        "contraintes_optionnelles": taux_optionnel
+    }
+
+    return pourcentage_global, table_data, violations, details_violations_grouped, stats_globales

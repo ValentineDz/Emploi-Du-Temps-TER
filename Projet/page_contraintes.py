@@ -9,10 +9,9 @@ from fonctions import *
 from math import ceil
 from textes import page_contraintes
 from constantes import *
-
 from styles import *
 
-
+from typing import Callable
 def layout_contraintes():
     """
     Construit le layout principal de la page "Contraintes" de l'application Dash.
@@ -38,9 +37,6 @@ def layout_contraintes():
         html.Div: Composant Dash contenant la structure complète de la page
         avec en-tête, explication, accordéons de contraintes et boutons de navigation.
     """
-    generer_professeurs_affichage()
-    generer_volume_horaire()
-    generer_salles_affichage()
     config = charger_config()
 
     # 1. Jours
@@ -57,8 +53,9 @@ def layout_contraintes():
     # 4. Groupes / classes : on prend les clés de 4_programme_national
     groupes = list(config["affichage"]["volume_horaire_affichage"].keys())
 
-    # 5. Salles : on récupère le champ "Nom" dans 3_ressources → salles
+    # 5. Salles 
     salles = config["affichage"]["salles_affichage"]
+    
     # 6. Volume horaire (pour planning, enchaînements…)
     volume_horaire = config["affichage"]["volume_horaire_affichage"]
 
@@ -364,7 +361,7 @@ def layout_contraintes():
         dcc.Location(id="redirect-page-contrainte-add", refresh=True)
     ], style=global_page_style)
 # Callbacks
-from dash.exceptions import PreventUpdate
+
 def make_callback_contraintes(entite: str, jours: list, heures: list):
     @app.callback(
         [
@@ -956,7 +953,6 @@ def disable_incompatibles( matiere, qui_sel, jour, heure, store, volume): #type_
     return qui_opts, mat_opts, jour_opts, heure_opts
 
 
-from typing import Callable
 
 # Fonction générique pour gérer les contraintes de la section 3.4
 def make_callback_contrainte_3_4(

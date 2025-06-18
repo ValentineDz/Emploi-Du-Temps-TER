@@ -10,16 +10,29 @@
     "jours_particuliers": [
       "Mercredi"
     ],
-    "horaires_classiques": {},
+    "horaires_classiques": {
+      "Début de cours minimum": "08:00",
+      "Fin maximum des cours du matin": "12:50",
+      "Début minimum des cours de l'après-midi": "13:30",
+      "Fin de cours maximum": "17:25"
+    },
     "duree_creneau": 55,
-    "recreations": null,
-    "pause_meridienne": "00:00"
+    "recreations": 15,
+    "pause_meridienne": "00:55"
   },
   "2_langues_et_options": {
-    "lv1": [],
-    "lv2": [],
-    "lv3_active": false,
-    "lv3": [],
+    "lv1": [
+      "Anglais"
+    ],
+    "lv2": [
+      "Italien",
+      "Espagnol"
+    ],
+    "lv3_active": true,
+    "lv3": [
+      "Espagnol",
+      "Italien"
+    ],
     "lv4_active": false,
     "lv4": [],
     "autres_langues": {
@@ -29,81 +42,691 @@
       "lv4": []
     },
     "options": {
-      "predefinies": [],
+      "predefinies": [
+        "Latin",
+        "Escalade"
+      ],
       "autres": [],
-      "niveaux_par_option": {}
+      "niveaux_par_option": {
+        "Latin": [
+          1,
+          3
+        ],
+        "Escalade": [
+          0,
+          3
+        ],
+        "B": [
+          0,
+          3
+        ],
+        "Ba": [
+          0,
+          3
+        ],
+        "Bas": [
+          0,
+          3
+        ],
+        "Bask": [
+          0,
+          3
+        ],
+        "Baske": [
+          0,
+          3
+        ],
+        "Basket": [
+          0,
+          3
+        ],
+        "Basketb": [
+          0,
+          3
+        ],
+        "Basketba": [
+          0,
+          3
+        ],
+        "Basketbal": [
+          0,
+          3
+        ],
+        "Basketbal`": [
+          0,
+          3
+        ],
+        "Basketball": [
+          0,
+          3
+        ],
+        "Athletisme": [
+          0,
+          3
+        ],
+        "Basque": [
+          0,
+          3
+        ],
+        "Breton": [
+          0,
+          3
+        ],
+        "Corse": [
+          0,
+          3
+        ],
+        "Football": [
+          0,
+          3
+        ],
+        "Natation": [
+          0,
+          3
+        ],
+        "Robotique": [
+          0,
+          3
+        ]
+      }
     },
     "niveaux_lv3": [
-      0,
+      2,
       3
     ],
     "niveaux_lv4": [
-      0,
+      3,
       3
-    ]
+    ],
+    "volume_lv3": 1,
+    "volume_lv4": 2
   },
   "3_ressources": {
     "classes": [
       {
-        "Classe": "5e1",
+        "Classe": "6eA",
+        "Niveau": "6e",
+        "Effectif": 21,
+        "Dependances": "",
+        "MatiereGroupe": "",
+        "TypeGroupe": "",
+        "IDGroupe": ""
+      },
+      {
+        "Classe": "6eB",
+        "Niveau": "6e",
+        "Effectif": 21,
+        "Dependances": "",
+        "MatiereGroupe": "",
+        "TypeGroupe": "",
+        "IDGroupe": ""
+      },
+      {
+        "Classe": "6eC",
+        "Niveau": "6e",
+        "Effectif": 22,
+        "Dependances": "",
+        "MatiereGroupe": "",
+        "TypeGroupe": "",
+        "IDGroupe": ""
+      },
+      {
+        "Classe": "5eA",
         "Niveau": "5e",
-        "Effectif": "26",
+        "Effectif": 25,
         "Dependances": "",
         "MatiereGroupe": "",
         "IDGroupe": "",
         "TypeGroupe": ""
       },
       {
-        "Classe": "5e2",
+        "Classe": "5eB",
         "Niveau": "5e",
-        "Effectif": "30",
+        "Effectif": 26,
         "Dependances": "",
         "MatiereGroupe": "",
         "IDGroupe": "",
         "TypeGroupe": ""
       },
       {
-        "Classe": "5ESP1",
+        "Classe": "5eC",
         "Niveau": "5e",
-        "Effectif": "12",
-        "Dependances": "5e1,5e2",
+        "Effectif": 27,
+        "Dependances": "",
+        "MatiereGroupe": "",
+        "TypeGroupe": "",
+        "IDGroupe": ""
+      },
+      {
+        "Classe": "5ESP1rAC",
+        "Niveau": "5e",
+        "Effectif": 24,
+        "Dependances": "5eA,5eC",
+        "MatiereGroupe": "Espagnol",
+        "TypeGroupe": "LV2",
+        "IDGroupe": "LV2_Espanol"
+      },
+      {
+        "Classe": "5ITAGrAC",
+        "Niveau": "5e",
+        "Effectif": 27,
+        "Dependances": "5eA,5eC",
+        "MatiereGroupe": "Italien",
+        "TypeGroupe": "LV2",
+        "IDGroupe": "LV2_Italien"
+      },
+      {
+        "Classe": "5ESP2GrB",
+        "Niveau": "5e",
+        "Effectif": 26,
+        "Dependances": "5eB",
         "MatiereGroupe": "Espagnol",
         "TypeGroupe": "LV2",
         "IDGroupe": "LV2_Espagnol"
+      },
+      {
+        "Classe": "Latin5e",
+        "Niveau": "5e",
+        "Effectif": 8,
+        "Dependances": "5eA,5eB,5eC",
+        "MatiereGroupe": "Latin",
+        "TypeGroupe": "options",
+        "IDGroupe": "Option_Latin"
+      },
+      {
+        "Classe": "4eA",
+        "Niveau": "4e",
+        "Effectif": 21,
+        "Dependances": "",
+        "MatiereGroupe": "",
+        "TypeGroupe": "",
+        "IDGroupe": ""
+      },
+      {
+        "Classe": "4eB",
+        "Niveau": "4e",
+        "Effectif": 20,
+        "Dependances": "",
+        "MatiereGroupe": "",
+        "TypeGroupe": "",
+        "IDGroupe": ""
+      },
+      {
+        "Classe": "4eC",
+        "Niveau": "4e",
+        "Effectif": 19,
+        "Dependances": "",
+        "MatiereGroupe": "",
+        "TypeGroupe": "",
+        "IDGroupe": ""
+      },
+      {
+        "Classe": "4ESP1GrAB",
+        "Niveau": "4e",
+        "Effectif": 21,
+        "Dependances": "4eA,4eB",
+        "MatiereGroupe": "Espagnol",
+        "TypeGroupe": "LV2",
+        "IDGroupe": "LV2_Espagnol"
+      },
+      {
+        "Classe": "4ITAGrAB",
+        "Niveau": "4e",
+        "Effectif": 19,
+        "Dependances": "4eA,4eB",
+        "MatiereGroupe": "Italien",
+        "TypeGroupe": "LV2",
+        "IDGroupe": "LV2_Italien"
+      },
+      {
+        "Classe": "4ESP2GrB",
+        "Niveau": "4e",
+        "Effectif": 20,
+        "Dependances": "4eB",
+        "MatiereGroupe": "Italien",
+        "TypeGroupe": "LV2",
+        "IDGroupe": "LV2_Espagnol"
+      },
+      {
+        "Classe": "4ESPLV3",
+        "Niveau": "4e",
+        "Effectif": 11,
+        "Dependances": "4eA,4eB,4eC",
+        "MatiereGroupe": "Espagnol",
+        "TypeGroupe": "LV3",
+        "IDGroupe": "LV3_Espagnol"
+      },
+      {
+        "Classe": "4ITALV3",
+        "Niveau": "4e",
+        "Effectif": 12,
+        "Dependances": "4eA,4eB,4eC",
+        "MatiereGroupe": "Italien",
+        "TypeGroupe": "LV3",
+        "IDGroupe": "LV3_Italien"
+      },
+      {
+        "Classe": "Latin4e",
+        "Niveau": "4e",
+        "Effectif": 9,
+        "Dependances": "4eA,4eB,4eC",
+        "MatiereGroupe": "Latin",
+        "TypeGroupe": "options",
+        "IDGroupe": "Option_Latin"
+      },
+      {
+        "Classe": "3eA",
+        "Niveau": "3e",
+        "Effectif": 24,
+        "Dependances": "",
+        "MatiereGroupe": "",
+        "TypeGroupe": "",
+        "IDGroupe": ""
+      },
+      {
+        "Classe": "3eB",
+        "Niveau": "3e",
+        "Effectif": 24,
+        "Dependances": "",
+        "MatiereGroupe": "",
+        "TypeGroupe": "",
+        "IDGroupe": ""
+      },
+      {
+        "Classe": "3eC",
+        "Niveau": "3e",
+        "Effectif": 24,
+        "Dependances": "",
+        "MatiereGroupe": "",
+        "TypeGroupe": "",
+        "IDGroupe": ""
+      },
+      {
+        "Classe": "3ESP1GrAB",
+        "Niveau": "3e",
+        "Effectif": 20,
+        "Dependances": "3eA,3eB",
+        "MatiereGroupe": "Espagnol",
+        "TypeGroupe": "LV2",
+        "IDGroupe": "LV2_Espagnol"
+      },
+      {
+        "Classe": "3ITAGrAB",
+        "Niveau": "3e",
+        "Effectif": 28,
+        "Dependances": "3eA,3eB",
+        "MatiereGroupe": "Italien",
+        "TypeGroupe": "LV2",
+        "IDGroupe": "LV2_Italien"
+      },
+      {
+        "Classe": "3ESP2GrC",
+        "Niveau": "3e",
+        "Effectif": 24,
+        "Dependances": "3eC",
+        "MatiereGroupe": "Italien",
+        "TypeGroupe": "LV2",
+        "IDGroupe": "LV2_Espagnol"
+      },
+      {
+        "Classe": "3ESPLV3",
+        "Niveau": "3e",
+        "Effectif": 11,
+        "Dependances": "3eA,3eB,3eC",
+        "MatiereGroupe": "Espagnol",
+        "TypeGroupe": "LV3",
+        "IDGroupe": "LV3_Espagnol"
+      },
+      {
+        "Classe": "3ITALV3",
+        "Niveau": "3e",
+        "Effectif": 12,
+        "Dependances": "3eA,3eB,3eC",
+        "MatiereGroupe": "Italien",
+        "TypeGroupe": "LV3",
+        "IDGroupe": "LV3_Italien"
+      },
+      {
+        "Classe": "Latin3e",
+        "Niveau": "3e",
+        "Effectif": "9",
+        "Dependances": "3eA,3eB,3eC",
+        "MatiereGroupe": "Latin",
+        "TypeGroupe": "options",
+        "IDGroupe": "Option_Latin"
+      },
+      {
+        "Classe": "Escalade",
+        "Niveau": "",
+        "Effectif": "22",
+        "Dependances": "6eA,5eA,4eA,3eA",
+        "MatiereGroupe": "Escalade",
+        "TypeGroupe": "options",
+        "IDGroupe": "Option_Escalade"
       }
     ],
     "salles": [
       {
         "Nom": "A1",
-        "Matieres": "",
+        "Matieres": "Physique-chimie,SVT",
+        "Capacite": "30"
+      },
+      {
+        "Nom": "A2",
+        "Matieres": "Physique-chimie,SVT",
+        "Capacite": "25"
+      },
+      {
+        "Nom": "A3",
+        "Matieres": "Physique-chimie,SVT",
+        "Capacite": "30"
+      },
+      {
+        "Nom": "A4",
+        "Matieres": "Technologie",
+        "Capacite": "30"
+      },
+      {
+        "Nom": "A5",
+        "Matieres": "Technologie",
         "Capacite": "30"
       },
       {
         "Nom": "B1",
-        "Matieres": "Physique-chimie,SVT",
-        "Capacite": "25"
+        "Matieres": "Musique",
+        "Capacite": "30"
+      },
+      {
+        "Nom": "B2",
+        "Matieres": "Arts Plastiques",
+        "Capacite": "30"
+      },
+      {
+        "Nom": "Gymnase1",
+        "Matieres": "EPS",
+        "Capacite": "30"
+      },
+      {
+        "Nom": "Gymnase2",
+        "Matieres": "EPS",
+        "Capacite": "30"
+      },
+      {
+        "Nom": "C1",
+        "Matieres": null,
+        "Capacite": "30"
+      },
+      {
+        "Nom": "C2",
+        "Matieres": null,
+        "Capacite": "30"
+      },
+      {
+        "Nom": "C3",
+        "Matieres": null,
+        "Capacite": "30"
+      },
+      {
+        "Nom": "C4",
+        "Matieres": null,
+        "Capacite": "30"
+      },
+      {
+        "Nom": "C5",
+        "Matieres": null,
+        "Capacite": "30"
+      },
+      {
+        "Nom": "C6",
+        "Matieres": null,
+        "Capacite": "30"
+      },
+      {
+        "Nom": "C7",
+        "Matieres": null,
+        "Capacite": "30"
+      },
+      {
+        "Nom": "C8",
+        "Matieres": null,
+        "Capacite": "30"
+      },
+      {
+        "Nom": "C9",
+        "Matieres": null,
+        "Capacite": "30"
       }
     ],
     "professeurs": [
       {
-        "Civilite": "Mme",
-        "Nom": "Durand",
-        "Prenom": "Marie",
-        "Niveaux": "5e,4e",
+        "Civilite": "M",
+        "Nom": "Fennec",
+        "Prenom": "Gabriel",
+        "Niveaux": "6e,5e,4e,3e",
         "Matieres": "Français",
-        "Volume": 18,
-        "Duree": "1.5",
+        "Volume": 20,
+        "Duree": "1",
+        "SallePref": "C1"
+      },
+      {
+        "Civilite": "Mme",
+        "Nom": "Harpie",
+        "Prenom": "Isabelle",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Français",
+        "Volume": 20,
+        "Duree": "1",
+        "SallePref": "C2"
+      },
+      {
+        "Civilite": "M.",
+        "Nom": "Jaguar",
+        "Prenom": "Kylian",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Français",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "C1"
+      },
+      {
+        "Civilite": "M.",
+        "Nom": "Morse",
+        "Prenom": "Nathan",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Français",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "C2"
+      },
+      {
+        "Civilite": "Mme",
+        "Nom": "Narval",
+        "Prenom": "Ophélie",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Français",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": ""
+      },
+      {
+        "Civilite": "Mme",
+        "Nom": "Elephant",
+        "Prenom": "Françoise",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Mathématiques",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "C3"
+      },
+      {
+        "Civilite": "M.",
+        "Nom": "Python",
+        "Prenom": "Quentin",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Mathématiques",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": ""
+      },
+      {
+        "Civilite": "Mme",
+        "Nom": "Vautour",
+        "Prenom": "Wendy",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Mathématiques",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "C3"
+      },
+      {
+        "Civilite": "Mme",
+        "Nom": "Dromadaire",
+        "Prenom": "Elise",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Histoire-Géographie",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "C4"
+      },
+      {
+        "Civilite": "Mme",
+        "Nom": "Rainette",
+        "Prenom": "Sylvie",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Histoire-Géographie",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "C4"
+      },
+      {
+        "Civilite": "M.",
+        "Nom": "Okapi",
+        "Prenom": "Philippe",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "SVT",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "A1"
+      },
+      {
+        "Civilite": "M.",
+        "Nom": "Quokka",
+        "Prenom": "Raphael",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Physique-Chimie",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "A2"
+      },
+      {
+        "Civilite": "Mme",
+        "Nom": "Girafe",
+        "Prenom": "Hortense",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Technologie",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "A5"
+      },
+      {
+        "Civilite": "M.",
+        "Nom": "Salamandre",
+        "Prenom": "Titouan",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Musique",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "B1"
+      },
+      {
+        "Civilite": "M.",
+        "Nom": "Chamois",
+        "Prenom": "Didier",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Arts plastiques",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "B2"
+      },
+      {
+        "Civilite": "Mme",
+        "Nom": "Uburu",
+        "Prenom": "Valérie",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "EPS",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "Gymnase1"
+      },
+      {
+        "Civilite": "M.",
+        "Nom": "Lama",
+        "Prenom": "Mathieu",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "EPS",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "Gymnase2"
+      },
+      {
+        "Civilite": "M.",
+        "Nom": "Bison",
+        "Prenom": "Cedric",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "EPS",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": "Gymnase1 "
+      },
+      {
+        "Civilite": "M.",
+        "Nom": "Alligator",
+        "Prenom": "Baptiste",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Anglais",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": ""
+      },
+      {
+        "Civilite": "Mme",
+        "Nom": "Koala",
+        "Prenom": "Léonie",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Anglais",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": ""
+      },
+      {
+        "Civilite": "Mme",
+        "Nom": "Iaguane",
+        "Prenom": "Joséphine",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Espagnol",
+        "Volume": "20",
+        "Duree": "1",
         "SallePref": ""
       },
       {
         "Civilite": "M.",
-        "Nom": "Dupont",
-        "Prenom": "Paul",
-        "Niveaux": "6e,5e",
-        "Matieres": "Mathématiques",
-        "Volume": 20,
-        "Duree": "2",
-        "SallePref": "A1"
+        "Nom": "Tortue",
+        "Prenom": "Ulysse",
+        "Niveaux": "6e,5e,4e,3e",
+        "Matieres": "Italien",
+        "Volume": "20",
+        "Duree": "1",
+        "SallePref": ""
+      },
+      {
+        "Civilite": "M.",
+        "Nom": "Chat",
+        "Prenom": "Kadir",
+        "Niveaux": "4e,3e",
+        "Matieres": "Espagnol",
+        "Volume": 15,
+        "Duree": "1",
+        "SallePref": "A4"
       }
     ]
   },
@@ -118,7 +741,7 @@
         "VolumeHoraire": 4.5
       },
       {
-        "Discipline": "Histoire-Géographie",
+        "Discipline": "Histoire-Géographie-EMC",
         "VolumeHoraire": 3
       },
       {
@@ -156,7 +779,7 @@
         "VolumeHoraire": 3.5
       },
       {
-        "Discipline": "Histoire-Géographie",
+        "Discipline": "Histoire-Géographie-EMC",
         "VolumeHoraire": 3
       },
       {
@@ -248,7 +871,7 @@
         "VolumeHoraire": 3.5
       },
       {
-        "Discipline": "Histoire-Géographie",
+        "Discipline": "Histoire-Géographie-EMC",
         "VolumeHoraire": 3.5
       },
       {
@@ -304,19 +927,734 @@
     }
   },
   "affichage": {
-    "horaires_affichage": [],
-    "professeurs_affichage": [],
-    "volume_horaire_affichage": {},
-    "salles_affichage": []
+    "horaires_affichage": [
+      "08:00 - 08:55",
+      "08:55 - 09:50",
+      "10:05 - 11:00",
+      "11:00 - 11:55",
+      "11:55 - 12:50",
+      "12:50 - 13:30",
+      "13:30 - 14:25",
+      "14:25 - 15:20",
+      "15:35 - 16:30",
+      "16:30 - 17:25"
+    ],
+    "professeurs_affichage": [
+      "M Fennec Gabriel",
+      "Mme Harpie Isabelle",
+      "M. Jaguar Kylian",
+      "M. Morse Nathan",
+      "Mme Narval Ophélie",
+      "Mme Elephant Françoise",
+      "M. Python Quentin",
+      "Mme Vautour Wendy",
+      "Mme Dromadaire Elise",
+      "Mme Rainette Sylvie",
+      "M. Okapi Philippe",
+      "M. Quokka Raphael",
+      "Mme Girafe Hortense",
+      "M. Salamandre Titouan",
+      "M. Chamois Didier",
+      "Mme Uburu Valérie",
+      "M. Lama Mathieu",
+      "M. Bison Cedric",
+      "M. Alligator Baptiste",
+      "Mme Koala Léonie",
+      "Mme Iaguane Joséphine",
+      "M. Tortue Ulysse",
+      "M. Chat Kadir"
+    ],
+    "volume_horaire_affichage": {
+      "6e": {
+        "Français": 4.5,
+        "Mathématiques": 4.5,
+        "Histoire-Géographie": 3,
+        "SVT": 1.5,
+        "Physique-Chimie": 1.5,
+        "EPS": 4,
+        "Arts plastiques": 1,
+        "Musique": 1,
+        "LV1_Anglais": 4,
+        "Option_Escalade": 1,
+        "Histoire-Géographie-EMC": 3
+      },
+      "5e": {
+        "Français": 4.5,
+        "Mathématiques": 3.5,
+        "Histoire-Géographie": 3,
+        "SVT": 1.5,
+        "Physique-Chimie": 1.5,
+        "Technologie": 1.5,
+        "EPS": 3,
+        "Arts plastiques": 1,
+        "Musique": 1,
+        "LV1_Anglais": 3,
+        "LV2_Espagnol": 2.5,
+        "LV2_Italien": 2.5,
+        "Option_Escalade": 3,
+        "Option_Latin": 1,
+        "Histoire-Géographie-EMC": 3
+      },
+      "4e": {
+        "Français": 4.5,
+        "Mathématiques": 3.5,
+        "Histoire-Géographie": 3,
+        "SVT": 1.5,
+        "Physique-Chimie": 1.5,
+        "Technologie": 1.5,
+        "EPS": 3,
+        "Arts plastiques": 1,
+        "Musique": 1,
+        "LV1_Anglais": 3,
+        "LV2_Espagnol": 2.5,
+        "LV2_Italien": 2.5,
+        "Option_Escalade": 3,
+        "Option_Latin": 1,
+        "LV3_Espagnol": 2,
+        "LV3_Italien": 2
+      },
+      "3e": {
+        "Français": 4,
+        "Mathématiques": 3.5,
+        "Histoire-Géographie": 3.5,
+        "SVT": 1.5,
+        "Physique-Chimie": 1.5,
+        "Technologie": 1.5,
+        "EPS": 3,
+        "Arts plastiques": 1,
+        "Musique": 1,
+        "LV1_Anglais": 3,
+        "LV2_Espagnol": 2.5,
+        "LV2_Italien": 2.5,
+        "Option_Escalade": 1,
+        "Option_Latin": 1,
+        "Histoire-Géographie-EMC": 3.5,
+        "LV3_Espagnol": 2,
+        "LV3_Italien": 2
+      }
+    },
+    "salles_affichage": [
+      "A1",
+      "A2",
+      "A3",
+      "A4",
+      "A5",
+      "B1",
+      "B2",
+      "Gymnase1",
+      "Gymnase2",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C6",
+      "C7",
+      "C8",
+      "C9"
+    ]
   },
   "contraintes": {
     "profs": {
-      "indisponibilites_partielles": {},
-      "indisponibilites_totales": {}
+      "indisponibilites_partielles": {
+        "Mme Elephant Françoise": {
+          "Lundi": [
+            0,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "Mardi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "Jeudi": [
+            7
+          ],
+          "Vendredi": [
+            8
+          ]
+        },
+        "Mme Narval Ophélie": {
+          "Lundi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "M. Jaguar Kylian": {
+          "Jeudi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "Mme Vautour Wendy": {
+          "Lundi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "Mardi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "Jeudi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "Vendredi": [
+            0
+          ]
+        },
+        "Mme Dromadaire Elise": {
+          "Vendredi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "Mme Harpie Isabelle": {
+          "Jeudi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "Vendredi": [
+            5,
+            6,
+            7
+          ]
+        }
+      },
+      "indisponibilites_totales": {
+        "Mme Elephant Françoise": {
+          "Mercredi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "Jeudi": [
+            4
+          ]
+        },
+        "M. Okapi Philippe": {
+          "Lundi": [
+            8
+          ],
+          "Mardi": [
+            8
+          ],
+          "Jeudi": [
+            8
+          ],
+          "Vendredi": [
+            8
+          ]
+        },
+        "M. Morse Nathan": {
+          "Lundi": [
+            8
+          ],
+          "Mardi": [
+            8
+          ],
+          "Mercredi": [
+            8
+          ],
+          "Jeudi": [
+            8
+          ],
+          "Vendredi": [
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        "Mme Narval Ophélie": {
+          "Lundi": [
+            8
+          ],
+          "Mardi": [
+            8
+          ],
+          "Mercredi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            8
+          ],
+          "Jeudi": [
+            8
+          ],
+          "Vendredi": [
+            8
+          ]
+        },
+        "M. Jaguar Kylian": {
+          "Lundi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "Mme Girafe Hortense": {
+          "Lundi": [
+            8
+          ],
+          "Mardi": [
+            7,
+            8
+          ],
+          "Mercredi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "Jeudi": [
+            8
+          ],
+          "Vendredi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        "Mme Rainette Sylvie": {
+          "Mardi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "Mercredi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "Jeudi": [
+            8
+          ],
+          "Vendredi": [
+            8
+          ]
+        },
+        "M. Alligator Baptiste": {
+          "Lundi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "Mardi": [
+            7,
+            8
+          ],
+          "Jeudi": [
+            7,
+            8
+          ],
+          "Vendredi": [
+            7,
+            8
+          ]
+        },
+        "M. Salamandre Titouan": {
+          "Mercredi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "Jeudi": [
+            5,
+            6,
+            7,
+            8
+          ],
+          "Vendredi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        "Mme Iguane Joséphine": {
+          "Lundi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            8
+          ],
+          "Mardi": [
+            8
+          ],
+          "Mercredi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "Jeudi": [
+            8
+          ],
+          "Vendredi": [
+            8
+          ]
+        },
+        "M. Chamois Didier": {
+          "Lundi": [
+            8
+          ],
+          "Mardi": [
+            8
+          ],
+          "Mercredi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "Jeudi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "Vendredi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        "M. Bison Cedric": {
+          "Lundi": [
+            8
+          ],
+          "Mardi": [
+            8
+          ],
+          "Jeudi": [
+            8
+          ],
+          "Vendredi": [
+            8
+          ]
+        },
+        "Mme Koala Léonie": {
+          "Lundi": [
+            7,
+            8
+          ],
+          "Mardi": [
+            7,
+            8
+          ],
+          "Mercredi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "Jeudi": [
+            7,
+            8
+          ],
+          "Vendredi": [
+            7,
+            8
+          ]
+        },
+        "M. Fennec Gabriel": {
+          "Lundi": [
+            0,
+            8
+          ],
+          "Mardi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            8
+          ],
+          "Mercredi": [
+            8
+          ],
+          "Jeudi": [
+            8
+          ],
+          "Vendredi": [
+            8
+          ]
+        },
+        "M. Tortue Ulyse": {
+          "Lundi": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "Mardi": [
+            8
+          ],
+          "Mercredi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "Jeudi": [
+            8
+          ],
+          "Vendredi": [
+            8
+          ]
+        },
+        "Mme Vautour Wendy": {
+          "Lundi": [
+            8
+          ],
+          "Mardi": [
+            8
+          ],
+          "Jeudi": [
+            8
+          ],
+          "Mercredi": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "Vendredi": [
+            8
+          ]
+        },
+        "Mme Dromadaire Elise": {
+          "Lundi": [
+            8
+          ],
+          "Mardi": [
+            8
+          ],
+          "Mercredi": [
+            8
+          ],
+          "Jeudi": [
+            8
+          ],
+          "Vendredi": [
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        "Mme Harpie Isabelle": {
+          "Vendredi": [
+            8
+          ],
+          "Lundi": [
+            8
+          ],
+          "Mardi": [
+            8
+          ],
+          "Mercredi": [
+            8
+          ],
+          "Jeudi": [
+            8
+          ]
+        },
+        "M. Quokka Raphael": {
+          "Lundi": [
+            8
+          ],
+          "Mardi": [
+            8
+          ],
+          "Jeudi": [
+            8
+          ],
+          "Vendredi": [
+            8
+          ]
+        }
+      }
     },
     "groupes": {
       "indisponibilites_partielles": {},
-      "indisponibilites_totales": {}
+      "indisponibilites_totales": {
+        "6e": {
+          "Lundi": [
+            4
+          ],
+          "Mardi": [
+            4
+          ],
+          "Mercredi": [
+            4
+          ],
+          "Jeudi": [
+            4
+          ],
+          "Vendredi": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        "5e": {
+          "Lundi": [
+            4
+          ],
+          "Mardi": [
+            4
+          ],
+          "Mercredi": [
+            4
+          ],
+          "Jeudi": [
+            4
+          ],
+          "Vendredi": [
+            4
+          ]
+        },
+        "3e": {
+          "Lundi": [
+            4
+          ],
+          "Mardi": [
+            4
+          ],
+          "Mercredi": [
+            4
+          ],
+          "Jeudi": [
+            4
+          ],
+          "Vendredi": [
+            4
+          ]
+        },
+        "4e": {
+          "Lundi": [
+            4
+          ],
+          "Mardi": [
+            4
+          ],
+          "Mercredi": [
+            4
+          ],
+          "Jeudi": [
+            4
+          ],
+          "Vendredi": [
+            4
+          ]
+        }
+      }
     },
     "salles": {
       "indisponibilites_partielles": {},
@@ -329,14 +1667,119 @@
     }
   },
   "contraintes_additionnelles": {
-    "ordre_contraintes": [],
-    "poids_par_niveau": {},
+    "ordre_contraintes": [
+      "Professeurs",
+      "Réfectoire et permanence",
+      "Poids du matériel"
+    ],
+    "poids_par_niveau": {
+      "6e": {
+        "Arts plastiques": 0.3,
+        "EPS": 0.5,
+        "Français": 1.0,
+        "Histoire-Géographie": 0.8,
+        "Option_Escalade": 2.0,
+        "Mathématiques": 1.5,
+        "poids_max": 8.0
+      }
+    },
     "cantine_permanence": {
-      "capacite_cantine": null,
-      "taux_cantine": null,
-      "capacite_permanence": null,
+      "capacite_cantine": 200,
+      "taux_cantine": 80,
+      "capacite_permanence": 40,
       "fin_jeunes_plus_tot": "non"
     },
     "fin_jeunes_plus_tot": false
+  },
+  "options_par_niveau": {
+    "5e": [
+      {
+        "Option": "Escalade",
+        "Volume": 3
+      },
+      {
+        "Option": "Latin",
+        "Volume": 1
+      }
+    ],
+    "4e": [
+      {
+        "Option": "Escalade",
+        "Volume": 3
+      },
+      {
+        "Option": "Latin",
+        "Volume": 1
+      }
+    ],
+    "6e": [
+      {
+        "Option": "Escalade",
+        "Volume": 1
+      }
+    ],
+    "3e": [
+      {
+        "Option": "Escalade",
+        "Volume": 1
+      },
+      {
+        "Option": "Latin",
+        "Volume": 1
+      }
+    ]
+  },
+  "contraintes_3_4": {
+    "planning": [
+      {
+        "Qui": "6eA",
+        "Matiere": "Français",
+        "Nb_heures": 3,
+        "Etendue": "jour"
+      },
+      {
+        "Qui": "5eB",
+        "Matiere": "Français",
+        "Nb_heures": 3,
+        "Etendue": "jour"
+      },
+      {
+        "Qui": "5eC",
+        "Matiere": "Histoire-Géographie",
+        "Nb_heures": 2,
+        "Etendue": "jour"
+      },
+      {
+        "Qui": "6eB",
+        "Matiere": "Histoire-Géographie",
+        "Nb_heures": 2,
+        "Etendue": "jour"
+      }
+    ],
+    "enchainement": [
+      {
+        "Type": "Interdiction",
+        "CoursA": "Français",
+        "CoursB": "Histoire-Géographie",
+        "Qui": "6eC",
+        "Minimum": 2
+      }
+    ],
+    "cours_planning": [
+      {
+        "Type": "Obligation",
+        "Matiere": "Histoire-Géographie",
+        "Qui": "6eB",
+        "Jour": "Lundi",
+        "Heure": "08:25 - 09:20"
+      },
+      {
+        "Type": "Obligation",
+        "Matiere": "Histoire-Géographie",
+        "Qui": "6eB",
+        "Jour": "Lundi",
+        "Heure": "09:20 - 10:15"
+      }
+    ]
   }
 }

@@ -10,7 +10,6 @@ Les données statistiques sont extraites d'un fichier JSON via `charger_statisti
 
 import dash
 import pandas as pd
-from main_dash import app
 from styles import *
 import json
 import copy

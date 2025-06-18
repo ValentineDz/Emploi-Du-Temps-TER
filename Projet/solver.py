@@ -6,10 +6,344 @@ from tabulate import tabulate
 import time
 import copy
 from collections import defaultdict
+import os
 
 # Afficher le chargement
 avancement = 0
 current_seed = None
+fusion_choisie = None
+resultats_choisis = None
+
+# def transformer_interface_vers_config(path_interface="data/data_interface.json", path_config="data/config.json"):
+#     """
+#     Transforme le fichier de configuration brut de l'interface utilisateur (data_interface.json)
+#     en un fichier de configuration allégé et structuré (config.json) pour le solveur.
+#     Retourne également le dictionnaire résultant.
+#     """
+#     with open(path_interface, encoding="utf-8") as f:
+#         interface = json.load(f)
+
+#     config = {}
+
+#     config["jours"] = interface["1_horaires"]["jours_classiques"]
+#     config["jours_sans_apres_midi"] = interface["1_horaires"]["jours_particuliers"]
+#     original_slots = interface["affichage"]["horaires_affichage"]
+#     config["heures"] = []
+#     for slot in original_slots:
+#         start, end = slot.split(" - ")
+#         h1, m1 = start.split(":")
+#         h2, m2 = end.split(":")
+#         # int(h1) retire tout zéro inutile en tête
+#         config["heures"].append(f"{int(h1)}h{m1}-{int(h2)}h{m2}")
+
+#         # 1) Matières « principales » (hors LV et options)
+#     base_matieres = {
+#         m
+#         for matieres_niv in interface["affichage"]["volume_horaire_affichage"].values()
+#         for m in matieres_niv
+#     }
+
+#     # 2) Matières des sous-groupes (langues vivantes et options)
+#     sub_matieres = {
+#         grp["MatiereGroupe"]
+#         for grp in interface["3_ressources"]["classes"]
+#         if grp["Dependances"]
+#     }
+
+#     # 3) Fusion et tri
+#     config["matieres"] = sorted(base_matieres | sub_matieres)
+
+#     config["sousGroupes_matieres"] = {
+#         "Scientifique": ["Mathématiques", "SVT", "Physique-Chimie", "Technologie"],
+#         "Langues": ["Français", "Anglais", "Espagnol", "Italien"],
+#         "Artistique": ["Arts Plastiques", "Musique"]
+#     }
+#     config["niveaux"] = list(interface["affichage"]["volume_horaire_affichage"].keys())
+#     config["volume_horaire"] = interface["affichage"]["volume_horaire_affichage"]
+
+#     # Classes base
+#     classes = interface["3_ressources"]["classes"]
+#     config["classes_base"] = [c["Classe"] for c in classes if not c["Dependances"]]
+#     # Capacités classes, avec suffixes pour les groupes (LV/options)
+#     config["capacites_classes"] = {}
+#     for c in classes:
+#         eff = int(c["Effectif"])
+#         if c["Dependances"]:
+#             # c'est un sous-groupe : on génère le suffixe comme ailleurs
+#             clean_mat = c["MatiereGroupe"]                     # ex. "Espagnol"
+#             suffix = f"{c['Niveau'][0]}_{clean_mat[:3].lower()}"
+#             # Écrase ou ajoute la capacité sous la clé suffixée
+#             config["capacites_classes"][suffix] = eff
+#         else:
+#             # classe “pure” sans dépendances : clé = nom direct
+#             config["capacites_classes"][c["Classe"]] = eff
+
+
+#     # ——— Mapping brut → clé config des matières LV1/LV2 ———
+#     matiere_to_config_key = {}
+#     for grp in interface["3_ressources"]["classes"]:
+#         raw = grp["MatiereGroupe"]  # ex. "Anglais", "Espagnol", "Latin", "Musique"…
+#         # si un IDGroupe (p. ex. "LV1_Anglais" ou "LV2_Espagnol") est défini,
+#         # on l’utilise ; sinon on fait TypeGroupe + "_" + MatiereGroupe
+#         cible = grp.get("IDGroupe") or f"{grp.get('TypeGroupe')}_{raw}"
+#         matiere_to_config_key[raw] = cible
+
+#     # ——— Mapping brut → clé config des options ———
+#     for niveau, opts in interface["options_par_niveau"].items():
+#         for opt in opts:
+#             raw = opt["Option"]             # ex. "Latin", "Escalade"
+#             cible = f"Option_{raw}"         # ex. "Option_Latin"
+#             matiere_to_config_key[raw] = cible
+
+#     # ——— Mapping brut → clé config des LV1 explicite ———
+#     # (au cas où certaines LV1 n’ont pas d’IDGroupe dans "classes")
+#     for mat in config["matieres"]:
+#         if mat.startswith("LV1_"):
+#             # on récupère le raw : tout ce qui suit "LV1_"
+#             raw = mat.split("_", 1)[1]
+#             matiere_to_config_key[raw] = mat
+
+#     # Professeurs
+#     profs = interface["3_ressources"]["professeurs"]
+#     config["professeurs"] = {}
+#     for p in profs:
+#         pNom = f"{p['Nom']} {p['Prenom']}"
+#         raw_mat    = p.get("Matieres")  
+#         varMatiere = matiere_to_config_key.get(raw_mat, raw_mat)
+#         varNiveaux = p.get("Niveaux").split(",")
+#         if varMatiere not in config["professeurs"]:
+#             config["professeurs"][varMatiere] = {}
+#         for pNiv in varNiveaux:
+#             if pNiv not in config["professeurs"][varMatiere]:
+#                 config["professeurs"][varMatiere][pNiv] = []
+#             config["professeurs"][varMatiere][pNiv].append(pNom)
+#     config["volume_par_professeur"] = {f"{p['Civilite']} {p['Nom']} {p['Prenom']}": int(p["Volume"]) for p in profs}
+
+#     # Salles
+#     salles = interface["3_ressources"]["salles"]
+#     config["salles_generales"] = [s["Nom"] for s in salles]
+#     config["capacites_salles"] = {s["Nom"]: int(s["Capacite"]) for s in salles}
+
+#     config["preferences_profs"] = interface.get("contraintes", {}).get("profs", {}).get("indisponibilites_partielles", {})
+
+#     config["preferences_salle_professeur"] = {
+#         f"{p['Civilite']} {p['Nom']} {p['Prenom']}": p["SallePref"]
+#         for p in profs
+#         if p["SallePref"] != ""
+#     }
+
+#     # Indisponibilités
+#     config["indisponibilites_profs"] = interface.get("contraintes", {}).get("profs", {}).get("indisponibilites_totales", {})
+#     config["indisponibilites_salles"] = interface.get("contraintes", {}).get("salles", {}).get("indisponibilites_totales", {})
+
+#     # === sous_groupes_config ===
+#     config["sous_groupes_config"] = {}
+#     for grp in interface["3_ressources"]["classes"]:
+#         deps = grp.get("Dependances", "")
+#         if not deps:
+#             continue
+
+#         # on récupère l'identifiant complet du groupe (ex. "LV2_Espagnol")
+#         key = grp.get("IDGroupe") or grp.get("MatiereGroupe")
+
+#         # nom de la matière sans préfixe, pour construire le suffixe
+#         clean_mat = grp["MatiereGroupe"]  
+
+#         # type : "LV" si TypeGroupe commence par "LV", "option" si "Option", sinon vide
+#         type_grp = grp.get("TypeGroupe", "")
+#         typ = "LV" if type_grp.startswith("LV") else "option" if type_grp.startswith("Option") else ""
+
+#         entry = config["sous_groupes_config"].setdefault(
+#             key,
+#             {
+#                 "niveaux": [],
+#                 "suffixe": f"_{clean_mat[:3].lower()}",
+#                 "groupes_dependants": [],
+#                 "type": typ
+#             }
+#         )
+
+#         # on ajoute le niveau (sans doublon)
+#         niv = grp["Niveau"]
+#         if niv not in entry["niveaux"]:
+#             entry["niveaux"].append(niv)
+
+#         # on ajoute chacun des groupes dépendants (sans doublon)
+#         for g in deps.split(","):
+#             if g and g not in entry["groupes_dependants"]:
+#                 entry["groupes_dependants"].append(g)
+
+#     # ——— Ajout des options dans sous_groupes_config ———
+#     for niveau, opts in interface["options_par_niveau"].items():
+#         for opt in opts:
+#             clean_opt = opt["Option"]                        # ex. "Latin", "Escalade"
+#             # ← clé identique à vos autres raw_mat, e.g. "Option_Latin"
+#             key_opt = f"Option_{clean_opt}"
+
+#             entry = config["sous_groupes_config"].setdefault(
+#                 key_opt,
+#                 {
+#                     "niveaux": [],
+#                     "suffixe": f"_{clean_opt[:3].lower()}",
+#                     "groupes_dependants": [],
+#                     "type": "option"
+#                 }
+#             )
+
+#             # 1) niveaux
+#             if niveau not in entry["niveaux"]:
+#                 entry["niveaux"].append(niveau)
+
+#             # 2) collecte des groupes dépendants déclarés
+#             for grp in interface["3_ressources"]["classes"]:
+#                 if (grp.get("MatiereGroupe") == key_opt  # on matche sur "Option_Latin"
+#                         and grp.get("Dependances")):
+#                     for g in grp["Dependances"].split(","):
+#                         if g and g not in entry["groupes_dependants"]:
+#                             entry["groupes_dependants"].append(g)
+
+#             # 3) fallback : classes de base si pas de dépendances déclarées
+#             if not entry["groupes_dependants"]:
+#                 for grp in interface["3_ressources"]["classes"]:
+#                     if not grp.get("Dependances") and grp["Niveau"] == niveau:
+#                         cls = grp["Classe"]
+#                         if cls not in entry["groupes_dependants"]:
+#                             entry["groupes_dependants"].append(cls)
+
+#     # (optionnel) trier pour cohérence
+#     for v in config["sous_groupes_config"].values():
+#         v["niveaux"].sort()
+#         v["groupes_dependants"].sort()
+
+
+
+#     # Affectations spécifiques
+#     config["affectation_matiere_salle"] = {}
+#     for salle in salles:
+#         matiere = salle.get("Matieres")
+#         if matiere not in ("", None):
+#             if matiere not in config["affectation_matiere_salle"]:
+#                 config["affectation_matiere_salle"][matiere] = salle["Nom"]
+#             else:
+#                 varSecur = config["affectation_matiere_salle"][matiere]
+#                 if isinstance(varSecur, str):
+#                     config["affectation_matiere_salle"][matiere] = [varSecur, salle["Nom"]]
+#                 else:
+#                     config["affectation_matiere_salle"][matiere].append(salle["Nom"])
+            
+#     config["permanence"] = {
+#         "nom_salle": "Salle_Permanence",
+#         "capacite": interface["contraintes_additionnelles"]["cantine_permanence"]["capacite_permanence"]
+#     }
+
+#     varCantine = config["heures"]
+#     config["cantine"] = {
+#         "capacite": interface["contraintes_additionnelles"]["cantine_permanence"]["capacite_cantine"],
+#         "creneaux_dejeuner": [varCantine[3], varCantine[4]],
+#         "assignation_niveaux": {
+#             varCantine[3]: ["6e", "5e"],
+#             varCantine[4]: ["4e", "3e"]
+#         },
+#         "proportion_demi_pensionnaire": interface["contraintes_additionnelles"]["cantine_permanence"]["taux_cantine"],
+#         "priorite_active": (
+#             interface["contraintes_additionnelles"]["cantine_permanence"]["fin_jeunes_plus_tot"].lower() == "oui"
+#         )
+#     }
+
+#     # Poids et contraintes supplémentaires 
+#     poidsNiveaux = interface["contraintes_additionnelles"]["poids_par_niveau"]
+
+#     config["poids_matieres_par_niveau"] = {}
+#     for niveau, matieres in poidsNiveaux.items():
+#         if niveau not in config["poids_matieres_par_niveau"]:
+#             config["poids_matieres_par_niveau"][niveau] = {}
+#         for matiere, poids in matieres.items():
+#             if matiere == "poids_max":
+#                 continue
+#             else:
+#                 config["poids_matieres_par_niveau"][niveau].update({matiere: poids})
+
+#     config["poids_cartable_max_somme_par_niveau"] = {
+#         niveau: infos.get("poids_max", None)
+#         for niveau, infos in poidsNiveaux.items()
+#     }
+
+#     varEnchainement = interface["contraintes_3_4"]["enchainement"]
+#     config["mat_exclu_suite"] = []
+#     for contrainte in varEnchainement:
+#         if contrainte.get("Type") == "Interdiction":
+#             entry = {
+#                 "classes": contrainte.get("Qui"),
+#                 "matiere1": contrainte.get("CoursA"),
+#                 "matiere2": contrainte.get("CoursB"),
+#                 "contrainte": "forte"
+#             }
+            
+#             config["mat_exclu_suite"].append(entry)
+
+#     config["mat_inclu_suite"] = []
+#     for contrainte in varEnchainement:
+#         if contrainte.get("Type") == "Obligation":
+#             entry = {
+#                 "classes": contrainte.get("Qui"),
+#                 "matiere1": contrainte.get("CoursA"),
+#                 "matiere2": contrainte.get("CoursB"),
+#                 "nb_fois": 2,
+#                 "contrainte": "moyenne"
+#             }
+#             config["mat_inclu_suite"].append(entry)
+
+#     varPlanning = interface["contraintes_3_4"]["planning"]
+#     # config["max_heures_par_etendue"] = interface["contraintes_3_4"]["planning"]
+#     config["max_heures_par_etendue"] = []
+#     for iPlan in varPlanning:
+#         varEtendu = iPlan.get("Etendue")
+#         if(varEtendu.find("1/2") != -1):
+#             varEtendu = "demi-journee"
+#         elif(varEtendu.find("jour") != -1):
+#             varEtendu = "journee"
+#         entry = {
+#             "niveau": iPlan.get("Qui"),
+#             "matiere": iPlan.get("Matiere"),
+#             "max_heures": iPlan.get("Nb_heures"),
+#             "etendue" : varEtendu
+#         }            
+#         config["max_heures_par_etendue"].append(entry)
+
+#     varCoursPlanning = interface["contraintes_3_4"]["cours_planning"]
+#     config["mat_horaire_donne_v2"] = []
+#     for iCoursPlan in varCoursPlanning:
+#         if iCoursPlan.get("Type") == "Obligation":
+#             # on récupère la chaîne "HH:MM - HH:MM"
+#             heure_str = iCoursPlan.get("Heure")  
+#             # on splitte pour avoir ["HH:MM", "-", "HH:MM"]
+#             start, _, end = heure_str.split()
+#             # on découpe heures et minutes
+#             h1, m1 = start.split(":")
+#             h2, m2 = end.split(":")
+#             # on forme "HhMM"
+#             p_h_min = f"{int(h1)}h{m1}"
+#             p_h_max = f"{int(h2)}h{m2}"
+#             entry = {
+#                 "classes":   iCoursPlan.get("Qui"),
+#                 "matiere":   iCoursPlan.get("Matiere"),
+#                 "jour":     iCoursPlan.get("Jour"),
+#                 "horaire_min": p_h_min,
+#                 "horaire_max": p_h_max,
+#                 "nb_fois":    1
+#             }
+#             config["mat_horaire_donne_v2"].append(entry)
+#     # Enregistre le résultat
+#     with open(path_config, "w", encoding="utf-8") as f:
+#         json.dump(config, f, indent=2, ensure_ascii=False)
+
+#     return config
+
+
+# transformer_interface_vers_config(
+#     path_interface=os.path.join("data", "data_interface.json"),
+#     path_config   =os.path.join("data", "config.json")
+# )
 
 # Fonction pour initialiser les données à partir du fichier de configuration JSON
 def init_donnees(chemin_config="data/config.json"):
@@ -338,7 +672,7 @@ def creer_modele():
     model = cp_model.CpModel()
 
     # Nombre fixe de salles : on numérote de 1 à N
-    NOMBRE_DE_SALLES = 12  
+    NOMBRE_DE_SALLES = 24
 
     # Dictionnaires pour stocker les variables du modèle
     emploi_du_temps = {semaine: {} for semaine in SEMAINES} # Dictionnaire pour les matières
@@ -1425,10 +1759,9 @@ def creer_modele():
 
     #matHorairDonneV2("6e", MATIERES_SCIENTIFIQUE, "Jeudi", "13h", "17h", 2)
     for entry in config.get("mat_horaire_donne_v2", []):
-        pClasses    = entry["classes"]                            # ex. "6e"
-        key_groupe  = entry["matiere"]                             # ex. "Scientifique"
+        pClasses    = entry["classes"]                            # ex. "6e"                   
         # On récupère la liste réelle de matières via le sous-groupe
-        pMatiere    = config["sousGroupes_matieres"][key_groupe]   # ex. ["Maths","SVT","Physique","Techno"]
+        pMatiere    = entry["matiere"]     # ex. ["Maths","SVT","Physique","Techno"]
         pJour       = entry["jour"]                                # ex. "Jeudi"
         pHorairMin  = entry["horaire_min"]                         # ex. "13h"
         pHorairMax  = entry.get("horaire_max")                     # ex. "17h"
@@ -1690,61 +2023,59 @@ def creer_modele():
                         model.AddBoolOr([bools[k].Not(), bools[i]])
 
 
-    # Récupération des créneaux de cantine depuis la configuration
     # Lecture des paramètres cantine et mise en place des créneaux interdits
-    cantine_config = config.get("cantine", {})
-    cap_cantine = cantine_config.get("capacite", 200)
-    ratio_demi = cantine_config.get("proportion_demi_pensionnaire", 0.8)
-    creneaux_dej = cantine_config.get("creneaux_dejeuner", ["12h-13h"])
-    assignation_niveaux = cantine_config.get("assignation_niveaux", {})
-    priorite_active = cantine_config.get("priorite_active", True)  # ✅ nouveau champ
+    cantine_config     = config.get("cantine", {})
+    cap_cantine        = cantine_config.get("capacite", 200)
+    ratio_demi         = cantine_config.get("proportion_demi_pensionnaire", 0.8)
+    creneaux_dej       = cantine_config.get("creneaux_dejeuner", [])
+    assignation_niveaux= cantine_config.get("assignation_niveaux", {})
+    priorite_active    = cantine_config.get("priorite_active", True)
 
     # Vérification que tous les créneaux dejeuner figurent bien dans HEURES 
-    h_dej_list = []
     for c in creneaux_dej:
         if c not in HEURES:
             raise ValueError(f"Créneau cantine '{c}' non reconnu dans HEURES.")
-        h_dej_list.append(HEURES.index(c))
-    
-    # Créneau principal 12h-13h bloqué par défaut
-    h_dej = HEURES.index("12h-13h")
+
+    # On recherche dynamiquement le créneau principal commençant par "12h"
+    lunch_slot = next((slot for slot in HEURES if slot.startswith("12h")), None)
+    if lunch_slot is None:
+        raise ValueError("Aucun créneau HEURES ne commence par '12h'")
+    h_dej = HEURES.index(lunch_slot)
+
+    # Bloquer systématiquement ce créneau pour toutes les classes
     for semaine in SEMAINES:
-        for classe in CLASSES:   # CLASSES = CLASSES_BASE + SOUS_GROUPES
+        for classe in CLASSES:
             for j in range(len(JOURS)):
-                # force « pas de cours » sur ce créneau
                 model.Add(emploi_du_temps[semaine][(classe, j, h_dej)] == 0)
 
     # Allocation des créneaux déjeuner selon la capacité de la cantine
-    if "12h-13h" in creneaux_dej:
-        h_12_13 = HEURES.index("12h-13h")
-        total_eleves = sum(int(CAPACITES_CLASSES.get(classe, 0) * ratio_demi) for classe in CLASSES_BASE)
+    if lunch_slot in creneaux_dej:
+        total_eleves = sum(int(CAPACITES_CLASSES.get(cl, 0) * ratio_demi) for cl in CLASSES_BASE)
         if total_eleves <= cap_cantine:
-            # ✅ Capacité suffisante à 12h-13h
-            classe_creneau_dej = {classe: h_12_13 for classe in CLASSES_BASE}
-            print("✅ Tous les élèves peuvent déjeuner à 12h-13h (capacité suffisante)")
+            # Capacité suffisante
+            classe_creneau_dej = {cl: h_dej for cl in CLASSES_BASE}
+            print(f"✅ Tous les élèves peuvent déjeuner à {lunch_slot} (capacité suffisante)")
         else:
             if not priorite_active:
                 # Répartition automatique sans priorité
-                print("🔁 Capacité insuffisante : répartition automatique sans priorité")
                 from itertools import cycle
-                h_iter = cycle(h_dej_list)
-                classe_creneau_dej = {classe: next(h_iter) for classe in CLASSES_BASE}
+                print("🔁 Capacité insuffisante : répartition automatique sans priorité")
+                iter_slots = cycle([HEURES.index(c) for c in creneaux_dej])
+                classe_creneau_dej = {cl: next(iter_slots) for cl in CLASSES_BASE}
             else:
                 # Répartition par priorité de niveaux
-                print("❌ Capacité insuffisante à 12h-13h : assignation par niveau requise")
+                print(f"❌ Capacité insuffisante à {lunch_slot} : assignation par niveau")
                 classe_creneau_dej = {}
-                for classe in CLASSES_BASE:
-                    niveau = classe[:2]
-                    affecte = False
-                    for creneau, niveaux in assignation_niveaux.items():
-                        if niveau in niveaux:
-                            classe_creneau_dej[classe] = HEURES.index(creneau)
-                            affecte = True
+                for cl in CLASSES_BASE:
+                    niv = cl[:2]
+                    for slot, niveaux in assignation_niveaux.items():
+                        if niv in niveaux:
+                            classe_creneau_dej[cl] = HEURES.index(slot)
                             break
-                    if not affecte:
-                        raise ValueError(f"Aucun créneau cantine défini pour le niveau '{niveau}' (classe {classe}).")
+                    else:
+                        raise ValueError(f"Aucun créneau cantine défini pour le niveau '{niv}' (classe {cl}).")
     else:
-        raise ValueError("Le créneau 12h-13h doit être inclus dans les créneaux possibles.")
+        raise ValueError(f"Le créneau principal '{lunch_slot}' doit être inclus dans les créneaux possibles.")
 
     # Interdire tout cours pendant le créneau déjeuner assigné
     for semaine in SEMAINES:
@@ -2063,7 +2394,7 @@ def verifier_permanence(solver, emploi_un_semaine, capacite_perm):
             if total_libres <= capacite_perm:
                 res["respectees"] += 1
                 avancement += 1
-                print(f"[Run {current_seed}] Progression (verifier_permanence) : {avancement}")
+                #print(f"[Run {current_seed}] Progression (verifier_permanence) : {avancement}")
             else:
                 clist = ", ".join(f"{cl}({cap}p)" for cl, cap in libres)
                 res["details"].append(
@@ -2103,7 +2434,7 @@ def verifier_volume_horaire(emploi_du_temps, solver):
                     res["respectees"] += 1
                     avancement += 1
                     # Affichage de l'avancement pour le suivi
-                    print(f"[Run {current_seed}] Progression (verifier_volume_horaire) : {avancement}")
+                    #print(f"[Run {current_seed}] Progression (verifier_volume_horaire) : {avancement}")
                 else:
                     # Si le volume ne correspond pas, on enregistre l'erreur dans les détails pour un rapport ultérieur
                     res["details"].append(f"{classe} - {matiere} : {nb_heures}h au lieu de {attendu}h")
@@ -2137,7 +2468,7 @@ def verifier_jours_sans_apres_midi(emploi_du_temps, solver, jours_sans_apres_mid
                     # Pas de cours → contrainte respectée
                     res["respectees"] += 1
                     avancement += 1
-                    print(f"[Run {current_seed}] Progression (verifier_jour_sans_apres_midi) : {avancement}")
+                    #print(f"[Run {current_seed}] Progression (verifier_jour_sans_apres_midi) : {avancement}")
                 else:
                     # Violation détectée : on note la matière interdite
                     mat = MATIERES[mat_index-1]
@@ -2196,7 +2527,7 @@ def verifier_indisponibilites_profs(emploi_un_semaine, solver, indispos_profs):
                             # Aucune matière planifiée → contrainte respectée
                             res["respectees"] += 1
                             avancement += 1
-                            print(f"[Run {current_seed}] Progression (verifier_indisponibilite_prof) : {avancement}")
+                            #print(f"[Run {current_seed}] Progression (verifier_indisponibilite_prof) : {avancement}")
                         else:
                             # Violation : le cours du prof est planifié alors qu'il est indisponible
                             res["details"].append(
@@ -2255,7 +2586,7 @@ def verifier_volume_par_professeur(emploi_du_temps, solver, volume_par_prof):
         if nb_cours <= volume_par_prof.get(prof, float('inf')):
             res["respectees"] += 1
             avancement += 1
-            print(f"[Run {current_seed}] Progression (verifier_volume_par_professeur) : {avancement}")
+            #print(f"[Run {current_seed}] Progression (verifier_volume_par_professeur) : {avancement}")
         else:
             # Violation : le prof a plus de cours que le volume autorisé
             res["details"].append(f"{prof} a {nb_cours} cours (max {volume_par_prof.get(prof)})")
@@ -2298,7 +2629,7 @@ def verifier_cantine(classe_creneau_dej, cap_cantine, ratio_demi, capacites_clas
             # Capacité respectée → incrément du compteur
             res["respectees"] += 1
             avancement += 1
-            print(f"[Run {current_seed}] Progression (verifier_cantine) : {avancement}")
+            #print(f"[Run {current_seed}] Progression (verifier_cantine) : {avancement}")
 
     # Si aucun dépassement, toutes les vérifications sont considérées respectées
     if not surcharge_detectee:
@@ -2363,7 +2694,7 @@ def verifier_poids_cartable(
             if poids_total_jour <= seuil_tolerance:
                 res["respectees"] += 1
                 avancement += 1
-                print(f"[Run {current_seed}] Progression (verifier_poids_cartable {pSemaine}) : {avancement}")
+                #print(f"[Run {current_seed}] Progression (verifier_poids_cartable {pSemaine}) : {avancement}")
             else:
                 # Surcharge détectée → ajout du détail avec valeurs précises
                 res["details"].append(
@@ -2418,7 +2749,7 @@ def verifier_indisponibilites_salles(emploi_du_temps, solver, indispos_salles, a
                             # Contrainte respectée pour ce créneau
                             res["respectees"] += 1
                             avancement += 1
-                            print(f"[Run {current_seed}] Progression (verifier_indisponibilites_salles) : {avancement}")
+                            #print(f"[Run {current_seed}] Progression (verifier_indisponibilites_salles) : {avancement}")
 
 # Vérification de l'exclusion de séquence de matières
 def verifier_matExcluSuite(emploi_du_temps, solver, pMatiere1, pMatiere2, pClasses=CLASSES_BASE):
@@ -2470,7 +2801,7 @@ def verifier_matExcluSuite(emploi_du_temps, solver, pMatiere1, pMatiere2, pClass
         # Si aucune violation, on compte toutes les opportunités comme respectées
         res["respectees"] += total_possibles
         avancement += 1
-        print(f"[Run {current_seed}] Progression (verifier_matExcluSuite) : {avancement}")
+        #print(f"[Run {current_seed}] Progression (verifier_matExcluSuite) : {avancement}")
     return violations == 0
 
 # Vérification de l'inclusion de séquence de matières
@@ -2535,7 +2866,7 @@ def verifier_matIncluSuite(emploi_du_temps, solver, pMatiere1, pMatiere2, pContr
         # Si la contrainte est respectée, on compte tous les cas possibles
         res["respectees"] += total_possibles
         avancement += 1
-        print(f"[Run {current_seed}] Progression (verifier_matIncluSuite) : {avancement}")
+        #print(f"[Run {current_seed}] Progression (verifier_matIncluSuite) : {avancement}")
     else:
         # Violation de la contrainte
         res["details"].append(
@@ -2592,7 +2923,7 @@ def verifier_memNivMemCours(emploi_du_temps, solver, pNiveau, pMatiere):
         # Pas de violation → contrainte respectée
         res["respectees"] += 1
         avancement += 1
-        print(f"[Run {current_seed}] Progression (verifier_memNIvMemCours) : {avancement}")
+        #print(f"[Run {current_seed}] Progression (verifier_memNIvMemCours) : {avancement}")
         return True
     else:
         # Enregistrement des détails des violations
@@ -2640,7 +2971,7 @@ def verifier_max_heures_par_etendue(emploi_du_temps, solver, max_heures_par_eten
                         # Limite journalière respectée
                         res["respectees"] += 1
                         avancement += 1
-                        print(f"[Run {current_seed}] Progression (verifier_max_heures_par_etendue) : {avancement}")
+                        #print(f"[Run {current_seed}] Progression (verifier_max_heures_par_etendue) : {avancement}")
                     else:
                         # Dépassement de la limite journalière
                         res["details"].append(
@@ -2661,7 +2992,7 @@ def verifier_max_heures_par_etendue(emploi_du_temps, solver, max_heures_par_eten
                             # Limite demi-journée respectée
                             res["respectees"] += 1
                             avancement += 1
-                            print(f"[Run {current_seed}] Progression (verifier_max_heures_par_etendue) : {avancement}")
+                            #print(f"[Run {current_seed}] Progression (verifier_max_heures_par_etendue) : {avancement}")
                         else:
                             # Dépassement de la limite demi-journée
                             res["details"].append(
@@ -2766,7 +3097,7 @@ def verifier_matHorairDonneV2(
             # Contrainte respectée pour cette classe et ce jour
             res["respectees"] += 1
             avancement += 1
-            print(f"[Run {current_seed}] Progression (verifier_matHoraireDonneV2) : {avancement}")
+            #print(f"[Run {current_seed}] Progression (verifier_matHoraireDonneV2) : {avancement}")
         else:
             # Violation : nombre d'occurrences différent de l'attendu
             res["details"].append(
@@ -2851,7 +3182,7 @@ def verifier_preferences_salle_professeur(solver,emploi_du_temps, emploi_du_temp
                 if actual_salle == salle_preferee:
                     res["respectees"] += 1
                     avancement += 1
-                    print(f"[Run {current_seed}] Progression (verifier_preferences_salle_professeur) : {avancement}")
+                    #print(f"[Run {current_seed}] Progression (verifier_preferences_salle_professeur) : {avancement}")
                 else:
                     # Si la clé n'existe pas dans AFFECTATION_MATIERE_SALLE, actual_salle sera None
                     res["details"].append(
@@ -2893,7 +3224,7 @@ def verifier_double_affectation_salles(emploi_du_temps, emploi_du_temps_salles, 
                 if len(liste_classes) <= 1:
                     res["respectees"] += 1
                     avancement += 1
-                    print(f"[Run {current_seed}] Progression (verifier_double_affectation_salles) : {avancement}")
+                    #print(f"[Run {current_seed}] Progression (verifier_double_affectation_salles) : {avancement}")
                 else:
                     # Violation : plusieurs classes dans la même salle
                     clist = ", ".join(liste_classes)
@@ -3013,7 +3344,7 @@ def verifier_double_affectation_profs(
                     # Contrainte respectée pour ce prof
                     res["respectees"] += 1
                     avancement += 1
-                    print(f"[Run {current_seed}] Progression (verifier_double_affectation_profs) : {avancement}")
+                    #print(f"[Run {current_seed}] Progression (verifier_double_affectation_profs) : {avancement}")
                 else:
                     # Violation détectée : le prof est assigné à plusieurs classes simultanément
                     clist = ", ".join(classes)
@@ -3406,58 +3737,58 @@ def configurer_cantine(
     Retourne :
         dict[str,int] : mapping classe → indice du créneau déjeuner.
     """
-    # 1) Récupérer la config cantine
-    cant_cfg        = config.get("cantine", {})
-    cap_cantine     = cant_cfg.get("capacite", 200)
-    ratio_demi      = cant_cfg.get("proportion_demi_pensionnaire", 0.8)
-    creneaux_dej    = cant_cfg.get("creneaux_dejeuner", ["12h-13h"])
-    assign_niveaux  = cant_cfg.get("assignation_niveaux", {})
-    priorite_active = cant_cfg.get("priorite_active", True)
+    cantine_config     = config.get("cantine", {})
+    cap_cantine        = cantine_config.get("capacite", 200)
+    ratio_demi         = cantine_config.get("proportion_demi_pensionnaire", 0.8)
+    creneaux_dej       = cantine_config.get("creneaux_dejeuner", [])
+    assignation_niveaux= cantine_config.get("assignation_niveaux", {})
+    priorite_active    = cantine_config.get("priorite_active", True)
 
-    # 2) Valider et convertir en indices
-    h_dej_list = []
+    # Vérification que tous les créneaux dejeuner figurent bien dans HEURES 
     for c in creneaux_dej:
         if c not in HEURES:
             raise ValueError(f"Créneau cantine '{c}' non reconnu dans HEURES.")
-        h_dej_list.append(HEURES.index(c))
 
-    # 3) Choix du créneau principal
-    if "12h-13h" not in creneaux_dej:
-        raise ValueError("Le créneau 12h-13h doit être inclus dans les créneaux cantine.")
-    h12_13 = HEURES.index("12h-13h")
+    # On recherche dynamiquement le créneau principal commençant par "12h"
+    lunch_slot = next((slot for slot in HEURES if slot.startswith("12h")), None)
+    if lunch_slot is None:
+        raise ValueError("Aucun créneau HEURES ne commence par '12h'")
+    h_dej = HEURES.index(lunch_slot)
 
-    # 4) Calcul du nombre total d’élèves demi-pensionnaires
-    total_eleves = sum(int(CAPACITES_CLASSES.get(cl, 0) * ratio_demi)
-                       for cl in CLASSES_BASE)
+    # Bloquer systématiquement ce créneau pour toutes les classes
+    for semaine in SEMAINES:
+        for classe in CLASSES:
+            for j in range(len(JOURS)):
+                model.Add(emploi_du_temps[semaine][(classe, j, h_dej)] == 0)
 
-    # 5) Déterminer pour chaque classe son créneau déjeuner
-    if total_eleves <= cap_cantine:
-        # Tous à 12h-13h
-        classe_creneau_dej = {cl: h12_13 for cl in CLASSES_BASE}
-        print("✅ Tous les élèves peuvent déjeuner à 12h-13h (capacité suffisante)")
-    else:
-        if not priorite_active:
-            # Round-robin sur la liste des créneaux
-            from itertools import cycle
-            it = cycle(h_dej_list)
-            classe_creneau_dej = {cl: next(it) for cl in CLASSES_BASE}
-            print("🔁 Capacité insuffisante : répartition automatique sans priorité")
+    # Allocation des créneaux déjeuner selon la capacité de la cantine
+    if lunch_slot in creneaux_dej:
+        total_eleves = sum(int(CAPACITES_CLASSES.get(cl, 0) * ratio_demi) for cl in CLASSES_BASE)
+        if total_eleves <= cap_cantine:
+            # Capacité suffisante
+            classe_creneau_dej = {cl: h_dej for cl in CLASSES_BASE}
+            print(f"✅ Tous les élèves peuvent déjeuner à {lunch_slot} (capacité suffisante)")
         else:
-            # Par priorité de niveau
-            classe_creneau_dej = {}
-            print("❌ Capacité insuffisante à 12h-13h : assignation par niveau requise")
-            for cl in CLASSES_BASE:
-                niv = cl[:2]
-                affecte = False
-                for cr, niveaux in assign_niveaux.items():
-                    if niv in niveaux:
-                        if cr not in HEURES:
-                            raise ValueError(f"Créneau cantine '{cr}' non reconnu.")
-                        classe_creneau_dej[cl] = HEURES.index(cr)
-                        affecte = True
-                        break
-                if not affecte:
-                    raise ValueError(f"Aucun créneau cantine défini pour le niveau '{niv}' (classe {cl}).")
+            if not priorite_active:
+                # Répartition automatique sans priorité
+                from itertools import cycle
+                print("🔁 Capacité insuffisante : répartition automatique sans priorité")
+                iter_slots = cycle([HEURES.index(c) for c in creneaux_dej])
+                classe_creneau_dej = {cl: next(iter_slots) for cl in CLASSES_BASE}
+            else:
+                # Répartition par priorité de niveaux
+                print(f"❌ Capacité insuffisante à {lunch_slot} : assignation par niveau")
+                classe_creneau_dej = {}
+                for cl in CLASSES_BASE:
+                    niv = cl[:2]
+                    for slot, niveaux in assignation_niveaux.items():
+                        if niv in niveaux:
+                            classe_creneau_dej[cl] = HEURES.index(slot)
+                            break
+                    else:
+                        raise ValueError(f"Aucun créneau cantine défini pour le niveau '{niv}' (classe {cl}).")
+    else:
+        raise ValueError(f"Le créneau principal '{lunch_slot}' doit être inclus dans les créneaux possibles.")
 
     # 6) Interdire les cours à ces créneaux
     for sem in SEMAINES:
@@ -3536,22 +3867,11 @@ synchroniser_sous_groupes(
     MATIERES
 )
 
-# Fonction pour initialiser les mappings d'affichage des professeurs et salles
-def preparer_mappings_affichage(
-    PROFESSEURS,
-    AFFECTATION_MATIERE_SALLE
-):
+def preparer_mappings_affichage(PROFESSEURS, AFFECTATION_MATIERE_SALLE):
     """
-    Initialise deux dictionnaires vides :
-      - dictProfs : pour stocker l’EDT de chaque prof
-      - dictSalles : pour stocker l’EDT de chaque salle
-    avec leurs clés de base (matière→prof/salle).
-
-    Arguments :
-        PROFESSEURS (dict)              : mapping matière → prof(s).
-        AFFECTATION_MATIERE_SALLE (dict): mapping matière/prof → salle.
-    Retourne :
-        tuple (dict, dict) : (dictProfs, dictSalles)
+    Initialise deux dictionnaires :
+      - dictProfs  : pour stocker l’EDT de chaque prof (avec clé "emploiTemps" initialisée à une liste vide)
+      - dictSalles : pour stocker l’EDT de chaque salle (avec clé "emploiTemps" initialisée à une liste vide)
     """
     dictProfs = {}
     for mat, nomProf in PROFESSEURS.items():
@@ -3559,17 +3879,22 @@ def preparer_mappings_affichage(
             for niv, val in nomProf.items():
                 if isinstance(val, list):
                     for prof in val:
-                        dictProfs.setdefault(prof, {"matiere": mat})
+                        dictProfs.setdefault(prof, {"matiere": mat, "emploiTemps": []})
                 else:
-                    dictProfs.setdefault(val, {"matiere": mat})
+                    dictProfs.setdefault(val,  {"matiere": mat, "emploiTemps": []})
         else:
-            dictProfs.setdefault(nomProf, {"matiere": mat})
+            dictProfs.setdefault(nomProf, {"matiere": mat, "emploiTemps": []})
 
     dictSalles = {}
-    for salle in AFFECTATION_MATIERE_SALLE.values():
-        dictSalles.setdefault(salle, {})
+    for salle_entry in AFFECTATION_MATIERE_SALLE.values():
+        if isinstance(salle_entry, list):
+            for s in salle_entry:
+                dictSalles.setdefault(s, {"emploiTemps": []})
+        else:
+            dictSalles.setdefault(salle_entry, {"emploiTemps": []})
 
     return dictProfs, dictSalles
+
 
 
 # Préparation des mappings pour l'affichage (avant d'utiliser attributProfsCours etc.)
@@ -3577,6 +3902,18 @@ dictProfs, dictSalles = preparer_mappings_affichage(
     PROFESSEURS,
     AFFECTATION_MATIERE_SALLE
 )
+
+
+for prof in dictProfs:
+    dictProfs[prof]["emploiTemps"] = [
+        [JOURS[i]] + ["---"] * len(HEURES)
+        for i in range(len(JOURS))
+    ]
+for salle in dictSalles:
+    dictSalles[salle]["emploiTemps"] = [
+        [JOURS[i]] + ["---"] * len(HEURES)
+        for i in range(len(JOURS))
+    ]
 
 # Fonction pour attribuer l'emploi du temps des professeurs à partir du tableau d'une classe
 def attributProfsCours(pTable, pClasse):
@@ -3624,7 +3961,7 @@ def affichCoursProfs():
     for prof in dictProfs:
         print("Cours pour " + prof)
         # Utilisation de tabulate pour un rendu en grille
-        print(tabulate(dictProfs[prof]["emploiTemps"], headers, tablefmt="grid"))
+        #print(tabulate(dictProfs[prof]["emploiTemps"], headers, tablefmt="grid"))
 
 # Fonction pour attribuer l'emploi du temps des salles à partir du tableau d'une classe
 def attributEDTSalles(pTable, pClasse):
@@ -3676,7 +4013,7 @@ def affichEDTSalles():
     for salle in dictSalles:
         print("Cours en " + salle)
         # Affichage en grille via tabulate
-        print(tabulate(dictSalles[salle]["emploiTemps"], headers, tablefmt="grid"))
+        #print(tabulate(dictSalles[salle]["emploiTemps"], headers, tablefmt="grid"))
 
 # Fonction pour fusionner les groupes vers les classes (texte pour affichage)
 def fusionner_groupes_vers_classes(emploi_du_temps, emploi_du_temps_salles, emploi_du_temps_profs, solver, semaine):
@@ -3821,267 +4158,6 @@ def fusionner_groupes_vers_classes(emploi_du_temps, emploi_du_temps_salles, empl
     return fusion_data
 
 
-# ────────────────────────────────────────────────────────────────────────────
-# Boucle principale sur plusieurs seeds pour trouver la meilleure solution
-# ────────────────────────────────────────────────────────────────────────────
-
-# Cette fonction exécute plusieurs runs du solveur avec différentes graines,
-# affiche pour chacun le pourcentage de contraintes respectées et estime le temps restant.
-def executer_runs(
-    NOMBRE_DE_RUNS,
-    model,
-    emploi_du_temps,
-    emploi_du_temps_salles,
-    emploi_du_temps_profs,
-    JOURS,
-    HEURES,
-    MATIERES,
-    PROFESSEURS,
-    SOUS_GROUPES_SUFFIXES,
-    CLASSES,
-    CLASSES_BASE,
-    CAPACITES_CLASSES,
-    INDISPONIBILITES_PROFS,
-    INDISPONIBILITES_SALLES,
-    config,
-    AFFECTATION_MATIERE_SALLE,
-    fusionner_groupes_vers_classes,
-    solve_et_verifie
-):
-    """
-    Exécute plusieurs runs du solveur avec différentes graines, affiche pour chacun le
-    pourcentage de contraintes respectées et estime le temps restant. 
-    Retourne également la meilleure solution obtenue.
-
-    Arguments:
-        NOMBRE_DE_RUNS (int): nombre de graines à tester (0..N-1).
-        model (CpModel): modèle CP-SAT à résoudre.
-        emploi_du_temps (dict): variables IntVar matières par créneau.
-        emploi_du_temps_salles (dict): variables IntVar salles par créneau.
-        emploi_du_temps_profs (dict): variables IntVar/BoolVar profs par créneau.
-        JOURS (list): liste des jours.
-        HEURES (list): liste des horaires.
-        MATIERES (list): liste des matières.
-        PROFESSEURS (dict): mapping matière → prof(s).
-        SOUS_GROUPES_SUFFIXES (dict): mapping suffixe → matière sous-groupe.
-        CLASSES (list): toutes les classes (base + sous-groupes).
-        CLASSES_BASE (list): classes de base.
-        CAPACITES_CLASSES (dict): mapping classe → capacité.
-        INDISPONIBILITES_PROFS (dict): mapping prof → indisponibilités.
-        INDISPONIBILITES_SALLES (dict): mapping salle → indisponibilités.
-        config (dict): contenu cru du JSON de config.
-        AFFECTATION_MATIERE_SALLE (dict): mapping matière/prof → salle.
-        fusionner_groupes_vers_classes (func): fonction pour fusionner groupes → texte.
-        solve_et_verifie (func): fonction de résolution+vérification par seed.
-
-    Retourne:
-        tuple:
-            - fusions_par_run: liste de tuples (seed, fusion_par_semaine, resultats_contraintes)
-            - taux_par_run: liste de tuples (seed, taux_contraintes_respectees)
-            - meilleur_seed: graine ayant donné le meilleur taux
-            - meilleure_fusion: dict {"Semaine A": ..., "Semaine B": ...} pour la meilleure graine
-            - meilleur_resultats: dictionnaire des résultats de contraintes pour meilleure graine
-    """
-
-    # Initialisation des variables pour stocker les meilleurs résultats
-    meilleur_taux_global = -1.0
-    meilleure_fusion = None
-    meilleur_seed = None
-    meilleur_resultats = None
-    fusion_choisie = None
-
-    # Listes pour stocker les résultats de chaque run
-    fusions_par_run = []
-    taux_par_run = []
-
-    # On enregistre le temps de départ
-    start_time = time.time()
-
-    # Boucle principale sur les runs
-    for idx_run, seed in enumerate(range(NOMBRE_DE_RUNS), start=1):
-        # Appel à la fonction de résolution et vérification
-        fusion_par_semaine, taux_i, resultats_i = solve_et_verifie(
-            model,
-            emploi_du_temps,
-            emploi_du_temps_salles,
-            emploi_du_temps_profs,
-            JOURS,
-            HEURES,
-            MATIERES,
-            PROFESSEURS,
-            SOUS_GROUPES_SUFFIXES,
-            CLASSES,
-            CLASSES_BASE,
-            CAPACITES_CLASSES,
-            INDISPONIBILITES_PROFS,
-            INDISPONIBILITES_SALLES,
-            config,
-            AFFECTATION_MATIERE_SALLE,
-            fusionner_groupes_vers_classes,
-            seed
-        )
-
-        if fusion_par_semaine is None:
-            # Si aucune solution n'a été trouvée, on continue avec la prochaine seed
-            print(f"[Run {idx_run}/{NOMBRE_DE_RUNS} | seed={seed}] Aucune solution trouvée.")
-        else:
-            # Si une solution a été trouvée, on stocke les résultats
-            fusions_par_run.append((seed, fusion_par_semaine, resultats_i))
-            taux_par_run.append((seed, taux_i))
-
-            # Mise à jour du meilleur résultat si nécessaire
-            if taux_i > meilleur_taux_global:
-                meilleur_taux_global = taux_i
-                meilleure_fusion = copy.deepcopy(fusion_par_semaine)
-                meilleur_seed = seed
-                meilleur_resultats = resultats_i
-            
-            print(f"[Run {idx_run}/{NOMBRE_DE_RUNS} | seed={seed}] "
-                  f"Taux contraintes respectées : {taux_i*100:.2f}%")
-
-        # Calcul de l’estimation du temps restant
-        elapsed = time.time() - start_time
-        runs_effectues = idx_run
-        avg_time_per_run = elapsed / runs_effectues
-        runs_restants = NOMBRE_DE_RUNS - runs_effectues
-        est_remaining = avg_time_per_run * runs_restants
-
-        # Formatage en minutes/secondes
-        mins, secs = divmod(est_remaining, 60)
-        print(f"    → Temps écoulé : {elapsed:.1f}s | "
-              f"Temps moyen/run : {avg_time_per_run:.1f}s | "
-              f"Estim. restant : {int(mins)}m{int(secs)}s\n")
-
-    # Fin de la boucle principale : on affiche le meilleur résultat
-    if meilleure_fusion is None:
-        print("Aucune solution valide trouvée sur aucune seed.")
-    else:
-        print(f"Meilleure seed : {meilleur_seed} "
-              f"avec {meilleur_taux_global * 100:.2f}% de contraintes respectées.\n")
-
-    # Affichage du pourctage de chaque run
-    print("\nPourcentages par run :")
-    for seed_i, taux_i in taux_par_run:
-        print(f"→ Run {seed_i} : {taux_i * 100:.2f}% de contraintes respectées")
-
-    # Retourne les résultats des runs, le meilleur seed, la meilleure fusion et les résultats
-    return fusions_par_run, taux_par_run, meilleur_seed, meilleure_fusion, meilleur_resultats
-
-# # Nombre de runs souhaité
-# NOMBRE_DE_RUNS = 1  # Ajuster selon les besoins
-
-# # Appel à la fonction `executer_runs` définie précédemment
-# fusions_par_run, taux_par_run, meilleur_seed, meilleure_fusion, meilleur_resultats = executer_runs(
-#     NOMBRE_DE_RUNS,
-#     model,
-#     emploi_du_temps,
-#     emploi_du_temps_salles,
-#     emploi_du_temps_profs,
-#     JOURS,
-#     HEURES,
-#     MATIERES,
-#     PROFESSEURS,
-#     SOUS_GROUPES_SUFFIXES,
-#     CLASSES,
-#     CLASSES_BASE,
-#     CAPACITES_CLASSES,
-#     INDISPONIBILITES_PROFS,
-#     INDISPONIBILITES_SALLES,
-#     config,
-#     AFFECTATION_MATIERE_SALLE,
-#     fusionner_groupes_vers_classes,
-#     solve_et_verifie
-# )
-
-def charger_data_interface_et_modeles():
-    """
-    Transforme data_interface.json en config utilisable,
-    puis retourne tous les objets nécessaires au solveur executer_runs.
-    """
-
-    from fonctions import charger_modele_depuis_json, transformer_interface_vers_config
-    # import json
-
-    # with open("data/data_interface.json", "r", encoding="utf-8") as f:
-    #     data_interface = json.load(f)
-
-    # config = transformer_interface_vers_config(data_interface)
-
-    with open("data/config.json", encoding="utf-8") as f:
-        donnee = json.load(f)
-    config = donnee #transformer_interface_vers_config()
-
-    model, emploi_du_temps, emploi_du_temps_salles, emploi_du_temps_profs = charger_modele_depuis_json(config)
-
-    return (
-        model,
-        emploi_du_temps,
-        emploi_du_temps_salles,
-        emploi_du_temps_profs,
-        config["JOURS"],
-        config["HEURES"],
-        config["MATIERES"],
-        config["PROFESSEURS"],
-        config["SOUS_GROUPES_SUFFIXES"],
-        config["CLASSES"],
-        config["CLASSES_BASE"],
-        config["CAPACITES_CLASSES"],
-        config["INDISPONIBILITES_PROFS"],
-        config["INDISPONIBILITES_SALLES"],
-        config,
-        config["AFFECTATION_MATIERE_SALLE"],
-        config["fusionner_groupes_vers_classes"],
-        solve_et_verifie 
-    )
-
-def lancer_depuis_interface(nombre_runs):
-    global fusions_par_run, taux_par_run, meilleur_seed, meilleure_fusion, meilleur_resultats, fusion_choisie
-
-    (
-        model,
-        emploi_du_temps,
-        emploi_du_temps_salles,
-        emploi_du_temps_profs,
-        JOURS,
-        HEURES,
-        MATIERES,
-        PROFESSEURS,
-        SOUS_GROUPES_SUFFIXES,
-        CLASSES,
-        CLASSES_BASE,
-        CAPACITES_CLASSES,
-        INDISPONIBILITES_PROFS,
-        INDISPONIBILITES_SALLES,
-        config,
-        AFFECTATION_MATIERE_SALLE,
-        fusionner_groupes_vers_classes,
-        solve_et_verifie
-    ) = charger_data_interface_et_modeles()
-
-    fusions_par_run, taux_par_run, meilleur_seed, meilleure_fusion, meilleur_resultats = executer_runs(
-        nombre_runs,
-        model,
-        emploi_du_temps,
-        emploi_du_temps_salles,
-        emploi_du_temps_profs,
-        JOURS,
-        HEURES,
-        MATIERES,
-        PROFESSEURS,
-        SOUS_GROUPES_SUFFIXES,
-        CLASSES,
-        CLASSES_BASE,
-        CAPACITES_CLASSES,
-        INDISPONIBILITES_PROFS,
-        INDISPONIBILITES_SALLES,
-        config,
-        AFFECTATION_MATIERE_SALLE,
-        fusionner_groupes_vers_classes,
-        solve_et_verifie
-    )
-    fusion_choisie, resultats_choisis = choisir_run(fusions_par_run, meilleur_seed)
-
-
 def afficher_resultat_si_disponible():
     global fusion_choisie
     if fusion_choisie:
@@ -4162,7 +4238,7 @@ def afficher_edts_elèves(fusion, CLASSES, SEMAINES, JOURS, HEURES):
                     for h in range(len(HEURES))
                 ]
                 table.append(row)
-            print(tabulate(table, headers, tablefmt="grid"))
+            #print(tabulate(table, headers, tablefmt="grid"))
 
 # Fonction pour afficher les emplois du temps des professeurs et des salles
 def afficher_edts_profs_salles(fusion, SEMAINES, CLASSES, JOURS, HEURES,
@@ -4200,31 +4276,28 @@ def afficher_edts_profs_salles(fusion, SEMAINES, CLASSES, JOURS, HEURES,
         for salle in dictSalles:
             dictSalles[salle]["emploiTemps"] = []
 
-# Fonction pour générer le fichier JSON de l'emploi du temps global
 def generer_json_edt(fusion, SEMAINES, CLASSES_BASE, JOURS, HEURES, MATIERES):
     """
-    Génère et écrit "emploi_du_temps_global.json" contenant edt_classe,
-    edt_prof et edt_salle structurés.
+    Génère et écrit "emploi_du_temps_global.json" contenant
+    edt_classe, edt_prof et edt_salle structurés comme dans l'exemple fourni.
     """
     import json
+
+    # 1. Construire 'edt_classe'
     edt_classe = {}
     for semaine in SEMAINES:
-        # Initialiser la structure pour chaque semaine
         edt_classe[semaine] = {}
         for cl in CLASSES_BASE:
-            # Dictionnaire pour chaque classe de base
             edt_classe[semaine][cl] = {}
             for j, jour in enumerate(JOURS):
-                # Clef pour chaque jour de la semaine
                 edt_classe[semaine][cl][jour] = {}
                 for h, heure in enumerate(HEURES):
                     clé = (cl, j, h)
                     contenu = meilleure_fusion[semaine].get(clé, "")
                     if not contenu or contenu.strip() == "---":
-                        # Si le contenu est vide ou un placeholder, on continue
                         continue
 
-                    # ne garder que la partie avant "-" (ex. "9h" à partir de "9h-10h")
+                    # ne garder que la partie avant "-" (ex. "8h30" à partir de "8h30-9h20")
                     heure_simple = heure.split("-", 1)[0]
 
                     # extraction des blocs (sous-groupes éventuels)
@@ -4236,22 +4309,19 @@ def generer_json_edt(fusion, SEMAINES, CLASSES_BASE, JOURS, HEURES, MATIERES):
                     for bloc in blocs:
                         lignes = bloc.split("\n")
                         if len(lignes) < 3:
-                            # Si le bloc n'a pas assez de lignes, on l'ignore
                             continue
                         mat   = lignes[0].strip()
                         prof  = lignes[1].strip()
-                        salle_brute = lignes[2].strip()  # ex. "[Salle_2 - 30 places]"
+                        salle_brute = lignes[2].strip()
                         if salle_brute.startswith("[") and "]" in salle_brute:
                             sauv = salle_brute.lstrip("[").rstrip("]")
                             salle_extr = sauv.split(" -")[0]
                         else:
-                            # Si la salle n'est pas entre crochets, on la nettoie
                             salle_extr = salle_brute.strip("[]")
                         matieres_liste.append(mat)
                         profs_liste.append(prof)
                         salles_liste.append(salle_extr)
-                    
-                    # Assigner les données à l'emploi du temps de la classe
+
                     edt_classe[semaine][cl][jour][heure_simple] = {
                         "matiere":     matieres_liste,
                         "professeurs": profs_liste,
@@ -4261,7 +4331,6 @@ def generer_json_edt(fusion, SEMAINES, CLASSES_BASE, JOURS, HEURES, MATIERES):
     # 2. Construire 'edt_profs'
     edt_profs = {}
     for semaine in SEMAINES:
-        # Initialiser la structure pour chaque semaine
         edt_profs[semaine] = {}
         # première passe : collecte de tous les profs
         profs_tous = set()
@@ -4275,7 +4344,6 @@ def generer_json_edt(fusion, SEMAINES, CLASSES_BASE, JOURS, HEURES, MATIERES):
                 profs_tous.add(lignes[1].strip())
 
         for prof in profs_tous:
-            # preparation de la structure pour chaque professeur
             edt_profs[semaine][prof] = {jour: {} for jour in JOURS}
 
         # deuxième passe : remplissage
@@ -4284,6 +4352,8 @@ def generer_json_edt(fusion, SEMAINES, CLASSES_BASE, JOURS, HEURES, MATIERES):
                 continue
             jour = JOURS[j]
             heure = HEURES[h]
+
+            # ne garder que la partie avant "-" (ex. "8h30")
             heure_simple = heure.split("-", 1)[0]
 
             for bloc in contenu.split("\n\n"):
@@ -4300,20 +4370,18 @@ def generer_json_edt(fusion, SEMAINES, CLASSES_BASE, JOURS, HEURES, MATIERES):
                     salle_extr = salle_brute.strip("[]")
 
                 if prof not in edt_profs[semaine]:
-                    # Si le professeur n'est pas encore dans le dictionnaire, on l'ajoute
                     edt_profs[semaine][prof] = {jour2: {} for jour2 in JOURS}
 
-                # Assigner les données à l'emploi du temps du professeur
                 edt_profs[semaine][prof][jour][heure_simple] = {
                     "classe":  [cl],
                     "matiere": [mat],
                     "salle":   [salle_extr]
                 }
 
+
     # 3. Construire 'edt_salles'
     edt_salles = {}
     for semaine in SEMAINES:
-        # Initialiser la structure pour chaque semaine
         edt_salles[semaine] = {}
         salles_toutes = set()
         for contenu in meilleure_fusion[semaine].values():
@@ -4332,14 +4400,15 @@ def generer_json_edt(fusion, SEMAINES, CLASSES_BASE, JOURS, HEURES, MATIERES):
                 salles_toutes.add(salle_extr)
 
         for salle_extr in salles_toutes:
-            # Préparation de la structure pour chaque salle
             edt_salles[semaine][salle_extr] = {jour: {} for jour in JOURS}
 
         for (cl, j, h), contenu in meilleure_fusion[semaine].items():
             if not contenu or contenu.strip() == "---":
                 continue
-            jour        = JOURS[j]
-            heure       = HEURES[h]
+            jour  = JOURS[j]
+            heure = HEURES[h]
+
+            # ne garder que la partie avant "-" (ex. "8h30")
             heure_simple = heure.split("-", 1)[0]
 
             for bloc in contenu.split("\n\n"):
@@ -4356,25 +4425,25 @@ def generer_json_edt(fusion, SEMAINES, CLASSES_BASE, JOURS, HEURES, MATIERES):
                     salle_extr = salle_brute.strip("[]")
 
                 if salle_extr not in edt_salles[semaine]:
-                    # Si la salle n'est pas encore dans le dictionnaire, on l'ajoute
                     edt_salles[semaine][salle_extr] = {jour2: {} for jour2 in JOURS}
 
-                # Assigner les données à l'emploi du temps de la salle
                 edt_salles[semaine][salle_extr][jour][heure_simple] = {
                     "classe":      [cl],
                     "matiere":     [mat],
                     "professeurs": [prof]
                 }
 
-    # 4. Composer l’objet final et écrire en JSON
+    # 4. Écrire le JSON final
     final_output = {
         "edt_classe": edt_classe,
         "edt_prof":   edt_profs,
         "edt_salle":  edt_salles
     }
-    with open("emploi_du_temps_global.json", "w", encoding="utf-8") as f:
+    with open("data/emploi_du_temps_global.json", "w", encoding="utf-8") as f:
         json.dump(final_output, f, ensure_ascii=False, indent=4)
-    print("→ Fichier JSON généré : emploi_du_temps_global.json")
+
+    print("→ Fichier JSON généré : data/emploi_du_temps_global.json")
+
 
 constraint_status = {
     # Définition du statut (obligatoire/optionnelle) pour chaque type de contrainte
@@ -4419,7 +4488,7 @@ def generer_json_rapports(fusions_par_run, constraint_status):
         for s in run.values():
             total += s["total"]; resp += s["respectees"]
     tous["pourcentage_global"] = round((resp/total)*100,2) if total else 100.0
-    with open("tous_rapports_contraintes.json", "w", encoding="utf-8") as f:
+    with open("data/tous_rapports_contraintes.json", "w", encoding="utf-8") as f:
         json.dump(tous, f, ensure_ascii=False, indent=4)
     print(f"→ Tous les rapports écrits (global {tous['pourcentage_global']}%)")
 
@@ -4441,3 +4510,437 @@ if fusion_choisie:
     generer_json_rapports(fusions_par_run, constraint_status)
     if resultats_choisis:
         afficher_rapport_contraintes(resultats_choisis)
+
+
+avancement_global = {
+    "run_actuel": 0,
+    "total_runs": 0,
+    "temps_debut": 0,
+    "temps_moyen_par_run": 0,
+    "temps_estime_restant": 0,
+    "meilleur_taux": 0,
+    "en_cours": False,
+    "termine": False,
+    "seed_actuelle": None,
+    "taux_actuel": 0,
+    "derniere_maj": 0,
+    "phase_actuelle": "Initialisation",
+    "etape_actuelle": ""
+}
+
+def lancer_depuis_interface(nombre_runs):
+    global fusions_par_run, taux_par_run, meilleur_seed, meilleure_fusion, meilleur_resultats, fusion_choisie
+    global avancement_global
+    
+    # Initialisation du suivi
+    avancement_global.update({
+        "run_actuel": 0,
+        "total_runs": nombre_runs,
+        "temps_debut": time.time(),
+        "temps_moyen_par_run": 0,
+        "temps_estime_restant": 0,
+        "meilleur_taux": 0,
+        "en_cours": True,
+        "termine": False,
+        "seed_actuelle": None,
+        "taux_actuel": 0,
+        "derniere_maj": time.time(),
+        "phase_actuelle": "Préparation",
+        "etape_actuelle": "Création du modèle..."
+    })
+
+    try:
+        # 1) Création du modèle et des emplois du temps
+        avancement_global["etape_actuelle"] = "Création du modèle CP-SAT..."
+        avancement_global["derniere_maj"] = time.time()
+        
+        model, emploi_du_temps, emploi_du_temps_salles, emploi_du_temps_profs = creer_modele()
+        
+        # 2) Exécution des runs avec suivi
+        avancement_global["phase_actuelle"] = "Calcul des emplois du temps"
+        avancement_global["etape_actuelle"] = f"Lancement de {nombre_runs} runs..."
+        avancement_global["derniere_maj"] = time.time()
+        
+        fusions_par_run, \
+        taux_par_run, \
+        meilleur_seed, \
+        meilleure_fusion, \
+        meilleur_resultats = executer_runs_avec_suivi(
+            nombre_runs,
+            model,
+            emploi_du_temps,
+            emploi_du_temps_salles,
+            emploi_du_temps_profs,
+            JOURS,
+            HEURES,
+            MATIERES,
+            PROFESSEURS,
+            SOUS_GROUPES_SUFFIXES,
+            CLASSES,
+            CLASSES_BASE,
+            CAPACITES_CLASSES,
+            INDISPONIBILITES_PROFS,
+            INDISPONIBILITES_SALLES,
+            config,
+            AFFECTATION_MATIERE_SALLE,
+            fusionner_groupes_vers_classes,
+            solve_et_verifie
+        )
+
+        # 3) Sélection de la meilleure fusion
+        avancement_global["phase_actuelle"] = "Finalisation"
+        avancement_global["etape_actuelle"] = "Sélection de la meilleure solution..."
+        avancement_global["derniere_maj"] = time.time()
+        
+        fusion_choisie, resultats_choisis = choisir_run(fusions_par_run, meilleur_seed)
+
+        # 4) Affichage à l'écran + génération des JSON
+        if fusion_choisie:
+            avancement_global["etape_actuelle"] = "Génération des emplois du temps..."
+            avancement_global["derniere_maj"] = time.time()
+            
+            # a) Affichage des EDT élèves
+            afficher_edts_elèves(fusion_choisie, CLASSES, SEMAINES, JOURS, HEURES)
+
+            avancement_global["etape_actuelle"] = "Génération des emplois du temps professeurs..."
+            avancement_global["derniere_maj"] = time.time()
+            
+            # b) Affichage des EDT profs et des salles
+            affichCoursProfs()
+            affichEDTSalles()
+
+            avancement_global["etape_actuelle"] = "Génération des fichiers JSON..."
+            avancement_global["derniere_maj"] = time.time()
+            
+            # c) Génération du fichier JSON global
+            generer_json_edt(fusion_choisie, SEMAINES, CLASSES_BASE, JOURS, HEURES, MATIERES)
+
+            # d) Génération de tous les rapports de contraintes
+            generer_json_rapports(fusions_par_run, constraint_status)
+
+            avancement_global["etape_actuelle"] = "Terminé avec succès !"
+            print("✅ Emplois du temps générés avec succès !")
+        else:
+            avancement_global["etape_actuelle"] = "Aucune solution valide trouvée"
+            print("❌ Aucune solution valide n'a pu être choisie.")
+
+    except Exception as e:
+        avancement_global["etape_actuelle"] = f"Erreur : {str(e)}"
+        avancement_global["en_cours"] = False
+        avancement_global["termine"] = True
+        print(f"❌ Erreur durant le calcul : {e}")
+        raise
+    
+    finally:
+        # Finalisation du suivi
+        avancement_global["en_cours"] = False
+        avancement_global["termine"] = True
+        avancement_global["derniere_maj"] = time.time()
+
+
+def executer_runs_avec_suivi(
+    NOMBRE_DE_RUNS,
+    model,
+    emploi_du_temps,
+    emploi_du_temps_salles,
+    emploi_du_temps_profs,
+    JOURS,
+    HEURES,
+    MATIERES,
+    PROFESSEURS,
+    SOUS_GROUPES_SUFFIXES,
+    CLASSES,
+    CLASSES_BASE,
+    CAPACITES_CLASSES,
+    INDISPONIBILITES_PROFS,
+    INDISPONIBILITES_SALLES,
+    config,
+    AFFECTATION_MATIERE_SALLE,
+    fusionner_groupes_vers_classes,
+    solve_et_verifie
+):
+    """
+
+    Exécute plusieurs runs d'optimisation d'emploi du temps avec suivi en temps réel.
+    
+    Met à jour les variables globales pour permettre le suivi en temps réel dans l'interface Dash.
+    Cette fonction exécute plusieurs optimisations avec des seeds différents et retourne les résultats
+    bruts sans formatage de présentation.
+    
+    Args:
+        NOMBRE_DE_RUNS (int): Nombre total de runs d'optimisation à exécuter
+        model: Modèle d'optimisation à utiliser
+        emploi_du_temps: Structure de données de l'emploi du temps principal
+        emploi_du_temps_salles: Emploi du temps spécifique aux salles
+        emploi_du_temps_profs: Emploi du temps spécifique aux professeurs
+        JOURS (list): Liste des jours de la semaine
+        HEURES (list): Liste des créneaux horaires
+        MATIERES (list): Liste des matières enseignées
+        PROFESSEURS (list): Liste des professeurs
+        SOUS_GROUPES_SUFFIXES (list): Suffixes pour les sous-groupes
+        CLASSES (list): Liste de toutes les classes
+        CLASSES_BASE (list): Liste des classes de base
+        CAPACITES_CLASSES (dict): Capacités d'accueil par classe
+        INDISPONIBILITES_PROFS (dict): Indisponibilités des professeurs
+        INDISPONIBILITES_SALLES (dict): Indisponibilités des salles
+        config (dict): Configuration générale du système
+        AFFECTATION_MATIERE_SALLE (dict): Affectation des matières aux salles
+        fusionner_groupes_vers_classes (function): Fonction de fusion des groupes
+        solve_et_verifie (function): Fonction de résolution et vérification
+    
+    Returns:
+        tuple: Un tuple contenant :
+            - fusions_par_run (list): Liste des résultats de fusion pour chaque run réussi
+            - taux_par_run (list): Liste des taux de réussite pour chaque run
+            - meilleur_seed (int): Seed ayant donné le meilleur résultat
+            - meilleure_fusion (dict): Meilleure fusion obtenue
+            - meilleur_resultats (dict): Meilleurs résultats détaillés
+    
+    Side Effects:
+        Met à jour la variable globale `avancement_global` avec les informations
+        de progression en temps réel (pourcentage, temps estimé, etc.)
+    
+    Note:
+        Cette fonction utilise des variables globales pour le suivi en temps réel
+        et est conçue pour être utilisée avec une interface Dash.
+
+    """
+    global avancement_global
+    
+    # Initialisation correcte des variables de suivi
+    avancement_global.update({
+        "total_runs": NOMBRE_DE_RUNS,
+        "run_actuel": 0,
+        "en_cours": True,
+        "termine": False,
+        "temps_debut": time.time(),
+        "heure_fin_estimee": None,  
+        "phase_actuelle": "calcul",
+        "etape_actuelle": "preparation",
+        "temps_moyen_par_run": 0,
+        "temps_estime_restant": 0,
+        "meilleur_taux": 0,
+        "taux_actuel": 0,
+        "seed_actuelle": None,
+        "derniere_maj": time.time()
+    })
+    
+    # Initialisation des variables pour stocker les meilleurs résultats
+    meilleur_taux_global = -1.0
+    meilleure_fusion = None
+    meilleur_seed = None
+    meilleur_resultats = None
+
+    # Listes pour stocker les résultats de chaque run
+    fusions_par_run = []
+    taux_par_run = []
+
+    # Boucle principale sur les runs
+    for idx_run, seed in enumerate(range(NOMBRE_DE_RUNS), start=1):
+        # Mise à jour AVANT de commencer le run
+        avancement_global["run_actuel"] = idx_run
+        avancement_global["seed_actuelle"] = seed
+        avancement_global["etape_actuelle"] = "en_cours"
+        avancement_global["derniere_maj"] = time.time()
+        avancement_global["taux_actuel"] = 0
+        
+        # Marquer le début du run pour le calcul du temps
+        debut_run = time.time()
+        
+        # Appel à la fonction de résolution et vérification
+        fusion_par_semaine, taux_i, resultats_i = solve_et_verifie(
+            model,
+            emploi_du_temps,
+            emploi_du_temps_salles,
+            emploi_du_temps_profs,
+            JOURS,
+            HEURES,
+            MATIERES,
+            PROFESSEURS,
+            SOUS_GROUPES_SUFFIXES,
+            CLASSES,
+            CLASSES_BASE,
+            CAPACITES_CLASSES,
+            INDISPONIBILITES_PROFS,
+            INDISPONIBILITES_SALLES,
+            config,
+            AFFECTATION_MATIERE_SALLE,
+            fusionner_groupes_vers_classes,
+            seed
+        )
+        
+        # Calcul du temps de ce run
+        fin_run = time.time()
+        duree_run = fin_run - debut_run
+
+        if fusion_par_semaine is None:
+            avancement_global["taux_actuel"] = 0
+        else:
+            # Si une solution a été trouvée, on stocke les résultats
+            fusions_par_run.append((seed, fusion_par_semaine, resultats_i))
+            taux_par_run.append((seed, taux_i))
+            
+            avancement_global["taux_actuel"] = taux_i
+
+            # Mise à jour du meilleur résultat si nécessaire
+            if taux_i > meilleur_taux_global:
+                meilleur_taux_global = taux_i
+                meilleure_fusion = copy.deepcopy(fusion_par_semaine)
+                meilleur_seed = seed
+                meilleur_resultats = resultats_i
+                avancement_global["meilleur_taux"] = taux_i
+
+        # Calcul de l'estimation du temps restant pour plusieurs runs
+        if NOMBRE_DE_RUNS > 1:
+            elapsed_total = time.time() - avancement_global["temps_debut"]
+            runs_effectues = idx_run
+            avg_time_per_run = elapsed_total / runs_effectues
+            runs_restants = NOMBRE_DE_RUNS - runs_effectues
+            est_remaining = avg_time_per_run * runs_restants
+
+            # CORRECTION : Calcul de l'heure de fin SEULEMENT si elle n'existe pas encore
+            # ou si l'estimation a significativement changé (pour éviter les fluctuations)
+            if (avancement_global["heure_fin_estimee"] is None or 
+                abs(est_remaining - avancement_global["temps_estime_restant"]) > 30):  # Plus de 30s de différence
+                import datetime
+                avancement_global["heure_fin_estimee"] = datetime.datetime.now() + datetime.timedelta(seconds=est_remaining)
+
+            # Mise à jour des statistiques temporelles
+            avancement_global["temps_moyen_par_run"] = avg_time_per_run
+            avancement_global["temps_estime_restant"] = est_remaining
+            avancement_global["derniere_maj"] = time.time()
+
+    # Marquer comme terminé
+    avancement_global["termine"] = True
+    avancement_global["en_cours"] = False
+    avancement_global["etape_actuelle"] = "termine"
+    
+    return fusions_par_run, taux_par_run, meilleur_seed, meilleure_fusion, meilleur_resultats
+
+def get_avancement_info():
+    """
+    Récupère les informations d'avancement de l'optimisation en cours.
+    
+    Cette fonction permet d'obtenir l'état actuel de progression des
+    runs d'optimisation depuis l'interface Dash. Elle retourne des données
+    brutes.
+    
+    Returns:
+        dict: Dictionnaire contenant les informations d'avancement :
+            - pourcentage (int): Pourcentage de progression (0-100)
+            - phase (str): Phase actuelle ('attente', 'calcul', 'finalisation')
+            - etape (str): Étape détaillée dans la phase
+            - run_actuel (int): Numéro du run en cours
+            - total_runs (int): Nombre total de runs à effectuer
+            - temps_debut (float): Timestamp du début de l'exécution
+            - temps_estime_restant (float): Temps estimé restant en secondes
+            - heure_fin_estimee (datetime): Heure estimée de fin
+            - temps_moyen_par_run (float): Temps moyen par run en secondes
+            - meilleur_taux (float): Meilleur taux obtenu jusqu'à présent
+            - taux_actuel (float): Taux du run en cours
+            - seed_actuelle (int): Seed du run en cours
+            - termine (bool): True si l'exécution est terminée
+    
+    Note:
+        Utilise la variable globale `avancement_global` pour récupérer les
+        informations de progression en temps réel.
+    """
+    global avancement_global
+    
+    if not avancement_global["en_cours"] and not avancement_global["termine"]:
+        return {
+            "pourcentage": 0,
+            "phase": "attente",
+            "etape": "pret",
+            "run_actuel": 0,
+            "total_runs": 0,
+            "temps_debut": 0,
+            "temps_estime_restant": 0,
+            "heure_fin_estimee": None,
+            "temps_moyen_par_run": 0,
+            "meilleur_taux": 0,
+            "taux_actuel": 0,
+            "seed_actuelle": None,
+            "termine": False
+        }
+    
+    # Calcul du pourcentage global
+    if avancement_global["phase_actuelle"] == "preparation":
+        pourcentage = 5
+    elif avancement_global["phase_actuelle"] == "calcul":
+        total_runs = avancement_global["total_runs"]
+        run_actuel = avancement_global["run_actuel"]
+        
+        if total_runs > 0:
+            runs_completes = max(0, run_actuel - 1)
+            progress_runs = runs_completes / total_runs
+            
+            if total_runs == 1:
+                if avancement_global["temps_debut"] > 0:
+                    temps_ecoule = time.time() - avancement_global["temps_debut"]
+                    progress_temporelle = min(0.8, temps_ecoule / 120)
+                    pourcentage = 5 + (85 * progress_temporelle)
+                else:
+                    pourcentage = 10
+            else:
+                pourcentage = 5 + (85 * progress_runs)
+        else:
+            pourcentage = 10
+    elif avancement_global["phase_actuelle"] == "finalisation":
+        pourcentage = 95
+    else:
+        pourcentage = 10
+    
+    if avancement_global["termine"]:
+        pourcentage = 100
+    
+    return {
+        "pourcentage": int(pourcentage),
+        "phase": avancement_global["phase_actuelle"],
+        "etape": avancement_global["etape_actuelle"],
+        "run_actuel": avancement_global["run_actuel"],
+        "total_runs": avancement_global["total_runs"],
+        "temps_debut": avancement_global["temps_debut"],
+        "temps_estime_restant": avancement_global["temps_estime_restant"],
+        "heure_fin_estimee": avancement_global["heure_fin_estimee"],
+        "temps_moyen_par_run": avancement_global["temps_moyen_par_run"],
+        "meilleur_taux": avancement_global["meilleur_taux"],
+        "taux_actuel": avancement_global["taux_actuel"],
+        "seed_actuelle": avancement_global["seed_actuelle"],
+        "termine": avancement_global["termine"]
+    }
+
+def reset_avancement():
+    """
+    Réinitialise les variables de suivi de l'avancement.
+    
+    Cette fonction remet à zéro toutes les variables globales utilisées pour
+    le suivi de la progression des runs d'optimisation. Elle doit être appelée
+    avant de démarrer une nouvelle série de runs ou pour nettoyer l'état
+    après une exécution terminée.
+    
+    Side Effects:
+        Remet à zéro la variable globale `avancement_global` avec les valeurs
+        par défaut pour tous les champs de suivi.
+        
+    Note:
+        Cette fonction est particulièrement utile pour s'assurer que l'interface
+        Dash affiche un état propre entre différentes exécutions.
+    """
+    global avancement_global
+    avancement_global.update({
+        "run_actuel": 0,
+        "total_runs": 0,
+        "temps_debut": 0,
+        "heure_fin_estimee": None,
+        "temps_moyen_par_run": 0,
+        "temps_estime_restant": 0,
+        "meilleur_taux": 0,
+        "en_cours": False,
+        "termine": False,
+        "seed_actuelle": None,
+        "taux_actuel": 0,
+        "derniere_maj": 0,
+        "phase_actuelle": "initialisation",
+        "etape_actuelle": ""
+    })
