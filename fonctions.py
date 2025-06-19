@@ -58,7 +58,7 @@ def generer_squelette_json_interface():
             ],
             "jours_particuliers": ["Mercredi"],
             "horaires_classiques": {},
-            "duree_creneau": None,
+            "duree_creneau": 55,
             "recreations": None,
             "pause_meridienne": "00:00"
         },
@@ -1245,9 +1245,11 @@ def charger_donnees_edt():
 
     Returns:
         tuple: Un tuple (edt_global, heures) où :
-            - edt_global (dict) : Données globales de l'emploi du temps, ou dictionnaire vide si erreur.
-            - heures (list) : Liste triée de tous les horaires trouvés dans l'emploi du temps.
-    """
+                
+        edt_global (dict) : Données globales de l'emploi du temps, ou dictionnaire vide si erreur.
+        heures (list) : Liste triée de tous les horaires trouvés dans l'emploi du temps.
+        """
+    
     try:
         with open("data/emploi_du_temps_global.json", encoding="utf-8") as f:
             edt_global = json.load(f)
@@ -1261,7 +1263,31 @@ def charger_donnees_edt():
         for classe in edt_global.get("edt_classe", {}).get(semaine, {}).values():
             for jour in classe.values():
                 heures_set.update(jour.keys())
-    heures = sorted(heures_set, key=lambda h: int(h.replace("h", "")) if h.replace("h", "").isdigit() else 99)
+
+    def parse_heure(heure_str):
+        """
+        Convertit une heure au format "Xh" en nombre pour le tri chronologique.
+
+        Args:
+            heure_str (str): Heure au format "8h", "9h", "11h", etc.
+
+        Returns:
+            int: L'heure en nombre entier, ou 99 si format invalide.
+        """
+        try:
+            if heure_str.endswith('h'):
+                heure_num = int(heure_str[:-1])  # Enlève le 'h' et convertit
+                return heure_num
+            elif heure_str.isdigit():
+                return int(heure_str)
+            else:
+                return 99  # Valeur élevée pour les formats non reconnus
+        except ValueError:
+            return 99  # En cas d'erreur de parsing
+
+    # Tri des heures par ordre chronologique
+    heures = sorted(heures_set, key=parse_heure)
+
     return edt_global, heures
 
 def sauvegarder_edt_global(edt_global):
@@ -2317,3 +2343,43 @@ def charger_statistiques_contraintes(path="data/tous_rapports_contraintes.json")
     }
 
     return pourcentage_global, table_data, violations, details_violations_grouped, stats_globales
+
+def harmoniser_intitule(matiere: str) -> str:
+    """
+    Met en forme l'intitulé d'une matière :
+    - Première lettre en majuscule, reste en minuscule
+    - Sauf si tout est déjà en majuscules (abréviation)
+
+    Args:
+        matiere (str): Intitulé brut
+
+    Returns:
+        str: Intitulé harmonisé
+    """
+    matiere = matiere.strip()
+    if not matiere:
+        return ""
+    if matiere.isupper():
+        return matiere  # EPS, SVT...
+    return matiere[0].upper() + matiere[1:].lower()
+
+def normaliser_matiere_groupe(valeur: str) -> str:
+    """
+    Normalise les intitulés de la colonne 'MatiereGroupe' pour qu'ils soient 
+    uniquement l'une des valeurs autorisées : Option, LV1, LV2, LV3, LV4.
+
+    Args:
+        valeur (str): Saisie brute utilisateur.
+
+    Returns:
+        str: Valeur normalisée (ou vide si invalide).
+    """
+    valeur = valeur.strip().lower().replace(" ", "")
+    mapping = {
+        "option": "Option",
+        "lv1": "LV1",
+        "lv2": "LV2",
+        "lv3": "LV3",
+        "lv4": "LV4"
+    }
+    return mapping.get(valeur, "")
