@@ -85,6 +85,10 @@ pip install -r requirements.txt
 python app.py
 ```
 
+## Vidéo de démonstration
+Une vidéo de démonstration est disponible sur un drive de partage de documents du projet :
+https://drive.google.com/drive/folders/17wabWpyhZQMJAIADXcFt26AeUEJ7G4MA?usp=drive_link
+
 
 ## Licence
 Ce projet a été réalisé à des fins pédagogiques dans le cadre d’un TER à l’Université Grenoble Alpes.
