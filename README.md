@@ -87,7 +87,7 @@ python app.py
 
 ## Vidéo de démonstration
 Une vidéo de démonstration est disponible sur un drive de partage de documents du projet :
-https://drive.google.com/drive/folders/17wabWpyhZQMJAIADXcFt26AeUEJ7G4MA?usp=drive_link
+[https://drive.google.com/drive/folders/17wabWpyhZQMJAIADXcFt26AeUEJ7G4MA?usp=drive_link](Vidéo de démonstration)
 
 
 ## Licence
